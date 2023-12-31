@@ -16,7 +16,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-	"lint" : "./node_modules/.bin/eslint"
+    "lint": "./node_modules/.bin/eslint"
   },
   "browserslist": {
     "production": [
@@ -36,6 +36,7 @@
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-jsx-a11y": "^6.8.0",
     "eslint-plugin-react": "^7.33.2",
-    "eslint-plugin-react-hooks": "^4.6.0"
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "tailwindcss": "^3.4.0"
   }
 }
