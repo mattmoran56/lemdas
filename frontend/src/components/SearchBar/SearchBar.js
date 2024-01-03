@@ -1,0 +1,114 @@
+/* eslint-disable import/no-extraneous-dependencies */
+// TODO: Remove this eslint-disable line
+
+import React, { useEffect, useState } from "react";
+import { ChevronDownIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { useNavigate } from "react-router-dom";
+
+import Button from "../basic/Button";
+import OptionSection from "./OptionSection";
+
+const SearchBar = () => {
+	const [searchTerm, setSearchTerm] = useState("");
+	const [expanded, setExpanded] = useState(false);
+	const [options, setOptions] = useState([{ logic: "and", field: "title", term: "" }]);
+	const [slideoutTop, setSlideoutTop] = useState(-1000);
+
+	const navigate = useNavigate();
+
+	const handleSearch = () => {
+		// TODO: handle search
+	};
+	const handleComplexSearch = () => {
+		// TODO: handle complex search
+	};
+
+	useEffect(() => {
+		const slideout = document.getElementById("slideout");
+		setSlideoutTop(slideout.clientHeight * -1);
+	}, [options]);
+
+	return (
+		<div className="w-full">
+			<div
+				className={`w-full bg-oxfordblue text-lightlavender p-4 flex items-center justify-between
+							shadow-md shadow-[#555] z-50 relative`}
+			>
+				<div className="text-indianred font-extrabold text-3xl">
+					FYP
+				</div>
+				<div className="flex flex-auto justify-center">
+					<input
+						placeholder="Search datasets"
+						className="px-3 py-2 w-96 rounded-3xl text-black outline-none"
+						value={searchTerm}
+						onChange={(event) => { return setSearchTerm(event.target.value); }}
+					/>
+					<Button className="mx-2" onClick={handleSearch}>
+						Search
+						<MagnifyingGlassIcon className="w-4 h-4 ml-2" />
+					</Button>
+					<Button className="mx-2 bg-transparent" onClick={() => { return setExpanded(!expanded); }}>
+						Options
+						<ChevronDownIcon className="w-4 h-4 ml-2" />
+					</Button>
+				</div>
+				<div>
+					<Button className="mx-2" onClick={() => { navigate("/login"); }}>
+						Login
+					</Button>
+				</div>
+			</div>
+			<div
+				className={`bg-lightlavender z-10 relative transition-all duration-500 py-2 px-12
+							flex justify-center items-center`}
+				style={{
+					top: (expanded ? "0" : `${slideoutTop}px`),
+				}}
+				id="slideout"
+			>
+				<div className="flex justify-center items-center flex-col">
+					{options.map((option, index) => {
+						return (
+							<OptionSection
+								key={option.id}
+								first={index === 0}
+								lastRemaining={options.length === 1}
+								logic={option.logic}
+								field={option.field}
+								term={option.term}
+								onChange={(event) => {
+									const newOptions = [...options];
+									newOptions[index][event.target.id] = event.target.value;
+									setOptions(newOptions);
+								}}
+								onNewOption={() => {
+									const newOptions = [...options];
+									newOptions.push({ logic: "and", field: "title", term: "" });
+									setOptions(newOptions);
+								}}
+								onDelete={() => {
+									const newOptions = [...options];
+									newOptions.splice(index, 1);
+									setOptions(newOptions);
+								}}
+							/>
+						);
+					})}
+					<div className="flex justify-end w-full">
+						<Button
+							className={`mx-2 transition-all duration-500 delay-100
+										${options.length === 1 ? "mr-12" : ""}`}
+							onClick={handleComplexSearch}
+						>
+							Search
+							<MagnifyingGlassIcon className="w-4 h-4 ml-2" />
+						</Button>
+					</div>
+				</div>
+			</div>
+		</div>
+	);
+};
+
+export default SearchBar;

@@ -1,7 +1,7 @@
 import React from "react";
-import SearchBar from "./components/SearchBar/SearchBar";
+import SearchBar from "../components/SearchBar/SearchBar";
 
-const App = () => {
+const IndexPage = () => {
 	return (
 		<div className="w-screen h-full bg-offwhite">
 			<SearchBar />
@@ -9,4 +9,4 @@ const App = () => {
 	);
 };
 
-export default App;
+export default IndexPage;
