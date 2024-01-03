@@ -1,18 +1,18 @@
-/* eslint-disable import/no-extraneous-dependencies */
-// TODO: Remove this eslint-disable line
-
 import React, { useEffect, useState } from "react";
 import { ChevronDownIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
 
 import Button from "../basic/Button";
 import OptionSection from "./OptionSection";
+import useAuth from "../../hooks/useAuth";
 
 const SearchBar = () => {
 	const [searchTerm, setSearchTerm] = useState("");
 	const [expanded, setExpanded] = useState(false);
 	const [options, setOptions] = useState([{ logic: "and", field: "title", term: "" }]);
 	const [slideoutTop, setSlideoutTop] = useState(-1000);
+
+	const { username } = useAuth();
 
 	const navigate = useNavigate();
 
@@ -54,9 +54,15 @@ const SearchBar = () => {
 					</Button>
 				</div>
 				<div>
-					<Button className="mx-2" onClick={() => { navigate("/login"); }}>
-						Login
-					</Button>
+					{!username ? (
+						<Button className="mx-2" onClick={() => { navigate("/login"); }}>
+							Login
+						</Button>
+					) : (
+						<Button className="mx-2" onClick={() => { navigate("/datasets"); }}>
+							My Datasets
+						</Button>
+					)}
 				</div>
 			</div>
 			<div
