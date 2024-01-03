@@ -4,6 +4,10 @@ module.exports = {
 		"react-app/jest",
 		"airbnb",
 	],
+	env: {
+		browser: true,
+		node: true,
+	},
 	rules: {
 		"react/jsx-filename-extension": [
 			"error",
@@ -51,5 +55,6 @@ module.exports = {
 		],
 		"no-tabs": "off",
 		"react/prop-types": "off",
+		"import/no-extraneous-dependencies": "off",
 	},
 };

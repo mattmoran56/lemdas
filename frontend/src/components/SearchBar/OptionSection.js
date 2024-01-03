@@ -1,6 +1,4 @@
 import React from "react";
-// TODO: Remove this eslint-disable line
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 
 import Button from "../basic/Button";

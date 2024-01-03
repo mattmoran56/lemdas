@@ -1,5 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
-// TODO: Remove this eslint-disable line
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
