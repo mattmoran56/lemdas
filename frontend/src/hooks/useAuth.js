@@ -13,7 +13,6 @@ const useAuth = () => {
 			try {
 				const decodedToken = jwtDecode(token);
 				const { Name } = decodedToken;
-				console.log(Name);
 				setUsername(Name);
 			} catch (err) {
 				setError("Invalid token");

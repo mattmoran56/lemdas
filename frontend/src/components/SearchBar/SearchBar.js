@@ -48,7 +48,10 @@ const SearchBar = () => {
 						Search
 						<MagnifyingGlassIcon className="w-4 h-4 ml-2" />
 					</Button>
-					<Button className="mx-2 bg-transparent" onClick={() => { return setExpanded(!expanded); }}>
+					<Button
+						className="mx-2 bg-transparent border-transparent"
+						onClick={() => { return setExpanded(!expanded); }}
+					>
 						Options
 						<ChevronDownIcon className="w-4 h-4 ml-2" />
 					</Button>
