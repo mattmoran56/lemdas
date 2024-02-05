@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import Button from "../basic/Button";
 import OptionSection from "./OptionSection";
 import useAuth from "../../hooks/useAuth";
+import logout from "../../helpers/utils/logout";
 
 const SearchBar = () => {
 	const [searchTerm, setSearchTerm] = useState("");
@@ -68,7 +69,7 @@ const SearchBar = () => {
 							</Button>
 							<Button
 								className="mx-2 bg-offwhite border-offwhite !text-indianred"
-								onClick={() => { navigate("/datasets"); }}
+								onClick={() => { logout(); }}
 							>
 								Logout
 							</Button>

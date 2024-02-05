@@ -41,21 +41,24 @@ const LoginPage = () => {
 					type="text"
 					id="username"
 					placeholder="Username"
-					className="border-2 border-gray-400 rounded-3xl px-3 py-2 my-1 w-full"
+					className="border-2 border-gray-400 rounded-3xl px-3 py-2 my-1 w-full bg-gray-300"
 					value={usernameText}
 					onChange={(event) => { return setUsernameText(event.target.value); }}
+					disabled
 				/>
 				<input
 					type="password"
 					id="password"
 					placeholder="Password"
-					className="border-2 border-gray-400 rounded-3xl px-3 py-2 my-1 w-full"
+					className="border-2 border-gray-400 rounded-3xl px-3 py-2 my-1 w-full bg-gray-300"
 					value={passwordText}
 					onChange={(event) => { return setPasswordText(event.target.value); }}
+					disabled
 				/>
 				<Button
-					className="bg-oxfordblue border-oxfordblue w-full my-3"
+					className="border-gray-500 w-full my-3 bg-gray-500"
 					onClick={handleLogin}
+					disabled
 				>
 					Login
 				</Button>
