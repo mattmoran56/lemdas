@@ -12,8 +12,8 @@ const useAuth = () => {
 		if (token) {
 			try {
 				const decodedToken = jwtDecode(token);
-				const { Name } = decodedToken;
-				setUsername(Name);
+				const name = decodedToken.first_name;
+				setUsername(name);
 			} catch (err) {
 				setError("Invalid token");
 			}

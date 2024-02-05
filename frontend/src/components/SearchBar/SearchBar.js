@@ -62,9 +62,17 @@ const SearchBar = () => {
 							Login
 						</Button>
 					) : (
-						<Button className="mx-2" onClick={() => { navigate("/datasets"); }}>
-							My Datasets
-						</Button>
+						<div className="flex">
+							<Button className="mx-2" onClick={() => { navigate("/datasets"); }}>
+								{username.slice(-1) === "s" ? `${username}'` : `${username}'s`} Datasets
+							</Button>
+							<Button
+								className="mx-2 bg-offwhite border-offwhite !text-indianred"
+								onClick={() => { navigate("/datasets"); }}
+							>
+								Logout
+							</Button>
+						</div>
 					)}
 				</div>
 			</div>
