@@ -111,6 +111,7 @@ func HandleToken(c *gin.Context) {
 	}
 
 	jwtClaims := utils.JWTPayload{
+		UserId:    user.ID,
 		Email:     user.Email,
 		FirstName: user.FirstName,
 		LastName:  user.LastName,
