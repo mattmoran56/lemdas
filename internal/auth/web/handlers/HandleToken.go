@@ -9,7 +9,6 @@ import (
 	"github.com/mattmoran/fyp/api/pkg/database"
 	"github.com/mattmoran/fyp/api/pkg/database/models"
 	"github.com/mattmoran/fyp/api/pkg/utils"
-	"go.uber.org/zap"
 	"mime/multipart"
 	"net/http"
 	"os"
@@ -36,8 +35,6 @@ func HandleToken(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
-	zap.S().Debug(r.Code)
 
 	body := &bytes.Buffer{}
 	writer := multipart.NewWriter(body)
