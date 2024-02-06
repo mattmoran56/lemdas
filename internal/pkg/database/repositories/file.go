@@ -1,0 +1,21 @@
+package repositories
+
+import (
+	"github.com/mattmoran/fyp/api/pkg/database/models"
+	"gorm.io/gorm"
+)
+
+type FileRepository struct {
+	db *gorm.DB
+}
+
+func NewFileRepository(database *gorm.DB) *FileRepository {
+	return &FileRepository{
+		db: database,
+	}
+}
+
+func (f *FileRepository) CreateFile(file models.File) error {
+	result := f.db.Create(&file)
+	return result.Error
+}
