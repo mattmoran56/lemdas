@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import Button from "../components/basic/Button";
 import useAuth from "../hooks/useAuth";
+import Logo from "../components/basic/Logo";
 
 const LoginPage = () => {
 	const [usernameText, setUsernameText] = useState("");
@@ -33,9 +34,7 @@ const LoginPage = () => {
 	return (
 		<div className="w-screen h-screen bg-offwhite flex justify-center items-center">
 			<div className="p-3 flex flex-col items-center w-80 max-w-full pb-8">
-				<div className="text-indianred font-extrabold text-3xl mb-2">
-					FYP
-				</div>
+				<Logo />
 				<h1 className="text-3xl mb-8 font-bold">Welcome back</h1>
 				<input
 					type="text"

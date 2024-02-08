@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { ChevronDownIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { ChevronDownIcon, MagnifyingGlassIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
 
 import Button from "../basic/Button";
 import OptionSection from "./OptionSection";
 import useAuth from "../../hooks/useAuth";
 import logout from "../../helpers/utils/logout";
+import Logo from "../basic/Logo";
 
 const SearchBar = () => {
 	const [searchTerm, setSearchTerm] = useState("");
@@ -35,13 +36,11 @@ const SearchBar = () => {
 				className={`w-full bg-oxfordblue text-lightlavender p-4 flex items-center justify-between
 							shadow-md shadow-[#555] z-50 relative`}
 			>
-				<div className="text-indianred font-extrabold text-3xl">
-					FYP
-				</div>
+				<Logo className="mr-4" />
 				<div className="flex flex-auto justify-center">
 					<input
 						placeholder="Search datasets"
-						className="px-3 py-2 w-96 rounded-3xl text-black outline-none"
+						className="px-3 py-2 max-w-96 w-1/2 rounded-3xl text-black outline-none"
 						value={searchTerm}
 						onChange={(event) => { return setSearchTerm(event.target.value); }}
 					/>
@@ -54,7 +53,9 @@ const SearchBar = () => {
 						onClick={() => { return setExpanded(!expanded); }}
 					>
 						Options
-						<ChevronDownIcon className="w-4 h-4 ml-2" />
+						{expanded
+							? <ChevronUpIcon className="w-4 h-4 ml-2" />
+							: <ChevronDownIcon className="w-4 h-4 ml-2" /> }
 					</Button>
 				</div>
 				<div>
@@ -65,7 +66,7 @@ const SearchBar = () => {
 					) : (
 						<div className="flex">
 							<Button className="mx-2" onClick={() => { navigate("/datasets"); }}>
-								{username.slice(-1) === "s" ? `${username}'` : `${username}'s`} Datasets
+								My Data
 							</Button>
 							<Button
 								className="mx-2 bg-offwhite border-offwhite !text-indianred"

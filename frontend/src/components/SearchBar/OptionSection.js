@@ -46,7 +46,7 @@ const OptionSection = ({
 				<PlusIcon className="w-4 h-4" />
 			</Button>
 			{lastRemaining ? <div className="w-4 mx-4" /> : (
-				<Button className="mx-2 rounded-full px-2 bg-oxfordblue" onClick={onDelete}>
+				<Button className="mx-2 rounded-full px-2 bg-oxfordblue border-oxfordblue" onClick={onDelete}>
 					<TrashIcon className="w-4 h-4" />
 				</Button>
 			)}
