@@ -3,7 +3,7 @@ package web
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/mattmoran/fyp/api/auth/web/handlers"
-	"github.com/mattmoran/fyp/api/auth/web/middleware"
+	"github.com/mattmoran/fyp/api/pkg/web/middleware"
 	"go.uber.org/zap"
 )
 
@@ -20,5 +20,5 @@ func InitiateServer() {
 		zap.S().Fatal("Couldn't start server")
 	}
 
-	zap.S().Info("Gym Server started on port 8080")
+	zap.S().Info("Auth Server started on port 8001")
 }

@@ -19,3 +19,15 @@ func (d *DatasetRepository) CreateDataset(dataset models.Dataset) error {
 	result := d.db.Create(&dataset)
 	return result.Error
 }
+
+func (d *DatasetRepository) GetDatasets() ([]models.Dataset, error) {
+	var datasets []models.Dataset
+	result := d.db.Find(&datasets)
+	return datasets, result.Error
+}
+
+func (d *DatasetRepository) GetDatasetByName(DatasetName string) (models.Dataset, error) {
+	var dataset models.Dataset
+	result := d.db.Where("dataset_name = ?", DatasetName).First(&dataset)
+	return dataset, result.Error
+}
