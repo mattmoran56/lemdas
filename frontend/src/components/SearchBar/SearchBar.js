@@ -31,7 +31,12 @@ const SearchBar = () => {
 	}, [options]);
 
 	return (
-		<div className="w-full">
+		<div
+			className="w-full max-h-min transition-all duration-500"
+			style={{
+				marginBottom: (expanded ? "0" : `${slideoutTop}px`),
+			}}
+		>
 			<div
 				className={`w-full bg-oxfordblue text-lightlavender p-4 flex items-center justify-between
 							shadow-md shadow-[#555] z-50 relative`}

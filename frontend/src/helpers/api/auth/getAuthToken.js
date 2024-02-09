@@ -2,7 +2,6 @@ const getAuthToken = async (code) => {
 	if (!code) {
 		return null;
 	}
-	console.log(code);
 	const body = {
 		code,
 	};

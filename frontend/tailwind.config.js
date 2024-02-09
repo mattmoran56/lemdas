@@ -5,6 +5,9 @@ module.exports = {
 	],
 	theme: {
 		extend: {
+			animation: {
+				'spin-slow': 'spin 0.75s linear infinite',
+			},
 			colors: {
 				offwhite: "#FEFFFE",
 				indianred: {
@@ -12,6 +15,7 @@ module.exports = {
 				},
 				oxfordblue: {
 					DEFAULT: "#0C1B33",
+					extralight: "#eaf0fa",
 				},
 				lightlavender: {
 					DEFAULT: "#E9EBF8",
