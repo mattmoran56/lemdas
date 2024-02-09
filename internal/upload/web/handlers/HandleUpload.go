@@ -9,6 +9,7 @@ import (
 	"github.com/mattmoran/fyp/api/pkg/database"
 	"github.com/mattmoran/fyp/api/pkg/database/models"
 	"github.com/mattmoran/fyp/api/pkg/utils"
+	"mime/multipart"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -24,15 +25,21 @@ func getFileExtension(filename string) string {
 }
 
 func HandleUpload(c *gin.Context) {
-	file, err := c.FormFile("file")
-	if err != nil {
+	type UploadFileRequest struct {
+		File      *multipart.FileHeader `form:"file"`
+		DatasetID string                `form:"dataset_id"`
+		IsPublic  bool                  `form:"is_public"`
+	}
+
+	var r UploadFileRequest
+	if err := c.ShouldBind(&r); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	randomFileId := uuid.New().String() + "." + getFileExtension(file.Filename)
+	randomFileId := uuid.New().String() + "." + getFileExtension(r.File.Filename)
 
-	if err := c.SaveUploadedFile(file, ".temp/"+randomFileId); err != nil {
+	if err := c.SaveUploadedFile(r.File, ".temp/"+randomFileId); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -70,9 +77,9 @@ func HandleUpload(c *gin.Context) {
 	fileObject := models.File{
 		Base:      models.Base{ID: randomFileId},
 		OwnerId:   userId,
-		DatasetID: "testdataset",
+		DatasetID: r.DatasetID,
 		Status:    "uploaded",
-		IsPublic:  false,
+		IsPublic:  r.IsPublic,
 	}
 
 	err = database.FileRepo.CreateFile(fileObject)
