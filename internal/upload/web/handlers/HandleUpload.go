@@ -76,6 +76,7 @@ func HandleUpload(c *gin.Context) {
 	userId := c.MustGet("userID").(string)
 	fileObject := models.File{
 		Base:      models.Base{ID: randomFileId},
+		Name:      r.File.Filename,
 		OwnerId:   userId,
 		DatasetID: r.DatasetID,
 		Status:    "uploaded",
