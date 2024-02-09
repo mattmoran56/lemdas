@@ -26,6 +26,12 @@ func (d *DatasetRepository) GetDatasets() ([]models.Dataset, error) {
 	return datasets, result.Error
 }
 
+func (d *DatasetRepository) GetDatasetsOrderBy(orderBy string) ([]models.Dataset, error) {
+	var datasets []models.Dataset
+	result := d.db.Order(orderBy).Find(&datasets)
+	return datasets, result.Error
+}
+
 func (d *DatasetRepository) GetDatasetByName(DatasetName string) (models.Dataset, error) {
 	var dataset models.Dataset
 	result := d.db.Where("dataset_name = ?", DatasetName).First(&dataset)
