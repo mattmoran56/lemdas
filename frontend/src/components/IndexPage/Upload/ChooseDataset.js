@@ -5,7 +5,7 @@ import Button from "../../basic/Button";
 import NewDatasetModal from "./NewDatasetModal";
 
 const ChooseDataset = ({
-	datasets, setDataset, setDatasets, handleFinish,
+	datasets, setDataset, setDatasets, handleFinish, setIsPublic,
 }) => {
 	const [showNewDatasetModal, setShowNewDatasetModal] = useState(false);
 
@@ -41,6 +41,16 @@ const ChooseDataset = ({
 				<hr />
 				<option value="new"> + New dataset</option>
 			</select>
+			<div className="flex items-center">
+				<p>Make this dataset public?</p>
+				<input
+					type="checkbox"
+					className="mx-2"
+					onChange={(e) => {
+						setIsPublic(e.target.checked);
+					}}
+				/>
+			</div>
 			<Button className="my-2" onClick={handleFinish}>
 				Finish
 				<ArrowRightIcon className="w-4 h-4 ml-2" />

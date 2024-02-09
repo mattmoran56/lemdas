@@ -11,14 +11,17 @@ import LoadingUpload from "./LoadingUpload";
 const Index = () => {
 	const [file, setFile] = useState(null);
 	const [dataset, setDataset] = useState(null);
+	const [isPublic, setIsPublic] = useState(false);
+
 	const [uploaded, setUploaded] = useState(false);
 	const [loading, setLoading] = useState(false);
+
 	const [datasets, setDatasets] = useState([]);
 
 	const handleFinish = () => {
 		// TODO: Allow upload of public files
 		setLoading(true);
-		uploadFile(file, dataset, false).then(() => {
+		uploadFile(file, dataset, isPublic).then(() => {
 			setFile(null);
 			setDataset(null);
 			setUploaded(true);
@@ -46,6 +49,7 @@ const Index = () => {
 						handleFinish={handleFinish}
 						setDataset={setDataset}
 						setDatasets={setDatasets}
+						setIsPublic={setIsPublic}
 					/>
 				)
 				: null}
