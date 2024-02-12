@@ -11,9 +11,10 @@ import (
 )
 
 var (
-	UserRepo    *repositories.UserRepo
-	FileRepo    *repositories.FileRepository
-	DatasetRepo *repositories.DatasetRepository
+	UserRepo             *repositories.UserRepo
+	FileRepo             *repositories.FileRepository
+	DatasetRepo          *repositories.DatasetRepository
+	DatasetAttributeRepo *repositories.DatasetAttributeRepository
 )
 
 func ConnectToDatabase(username, password, dbName, host, port string) error {
@@ -37,15 +38,17 @@ func ConnectToDatabase(username, password, dbName, host, port string) error {
 		&models.User{},
 		&models.File{},
 		&models.Dataset{},
+		&models.DatasetAttribute{},
 	)
 	if err != nil {
-		zap.S().Warn("Error migrating tables", err)
+		zap.S().Warn("Error migrating tables ", err)
 		return err
 	}
 
 	UserRepo = repositories.NewUserRepo(db)
 	FileRepo = repositories.NewFileRepository(db)
 	DatasetRepo = repositories.NewDatasetRepository(db)
+	DatasetAttributeRepo = repositories.NewDatasetAttributeRepository(db)
 
 	return nil
 

@@ -25,8 +25,14 @@ func InitiateServer() {
 			datasetGroup.GET("/:datasetId/files", dataset.HandleGetFiles)
 			datasetGroup.GET("/:datasetId/files/", dataset.HandleGetFiles)
 
+			datasetGroup.GET("/:datasetId/attributes", dataset.HandleGetAttributes)
+			datasetGroup.GET("/:datasetId/attributes/", dataset.HandleGetAttributes)
+
 			datasetGroup.POST("", dataset.HandleCreateDataset)
 			datasetGroup.POST("/", dataset.HandleCreateDataset)
+
+			datasetGroup.POST("/:datasetId/attribute", dataset.HandleGetAttributes)
+			datasetGroup.POST("/:datasetId/attribute/", dataset.HandleGetAttributes)
 		}
 	}
 
