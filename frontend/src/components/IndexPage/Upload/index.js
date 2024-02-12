@@ -8,7 +8,7 @@ import ChooseDataset from "./ChooseDataset";
 import getDatasets from "../../../helpers/api/webApi/dataset/getDatasets";
 import LoadingUpload from "./LoadingUpload";
 
-const Index = () => {
+const Upload = () => {
 	const [file, setFile] = useState(null);
 	const [dataset, setDataset] = useState(null);
 	const [isPublic, setIsPublic] = useState(false);
@@ -19,7 +19,6 @@ const Index = () => {
 	const [datasets, setDatasets] = useState([]);
 
 	const handleFinish = () => {
-		// TODO: Allow upload of public files
 		setLoading(true);
 		uploadFile(file, dataset, isPublic).then(() => {
 			setFile(null);
@@ -79,4 +78,4 @@ const Index = () => {
 	);
 };
 
-export default Index;
+export default Upload;

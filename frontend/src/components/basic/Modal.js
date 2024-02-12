@@ -1,10 +1,11 @@
 import React from "react";
 import M from "react-modal";
 
-const Modal = ({ children, isOpen }) => {
+const Modal = ({ children, isOpen, onClose }) => {
 	return (
 		<M
 			isOpen={isOpen}
+			onRequestClose={onClose}
 			style={{
 				overlay: {
 					backgroundColor: "rgba(0, 0, 0, 0.5)",

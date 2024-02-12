@@ -15,7 +15,7 @@ const LoginPage = () => {
 	const navigate = useNavigate();
 
 	const handleLogin = () => {
-		// TODO: handle login
+		// TODO: handle login with username and password
 	};
 
 	const handleInstitutionLogin = () => {

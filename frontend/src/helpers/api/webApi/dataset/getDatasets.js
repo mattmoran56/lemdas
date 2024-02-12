@@ -1,10 +1,10 @@
 import { getOptions } from "../../apiHelper";
 
-const GetDatasets = async () => {
+const GetDatasets = async (orderBy) => {
 	const requestOptions = getOptions("GET");
 
 	const response = await fetch(
-		`${process.env.REACT_APP_BASE_API_URL}/dataset`,
+		`${process.env.REACT_APP_BASE_API_URL}/dataset${orderBy ? `?orderBy=${orderBy}` : ""}`,
 		requestOptions,
 	);
 	if (!response.ok) {

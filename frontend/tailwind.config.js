@@ -15,6 +15,7 @@ module.exports = {
 				},
 				oxfordblue: {
 					DEFAULT: "#0C1B33",
+					200: "#acc5ec",
 					extralight: "#eaf0fa",
 				},
 				lightlavender: {
