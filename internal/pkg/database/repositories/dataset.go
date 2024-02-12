@@ -20,15 +20,15 @@ func (d *DatasetRepository) CreateDataset(dataset models.Dataset) error {
 	return result.Error
 }
 
-func (d *DatasetRepository) GetDatasets() ([]models.Dataset, error) {
+func (d *DatasetRepository) GetDatasets(userId string) ([]models.Dataset, error) {
 	var datasets []models.Dataset
-	result := d.db.Find(&datasets)
+	result := d.db.Where("owner_id = ?", userId).Find(&datasets)
 	return datasets, result.Error
 }
 
-func (d *DatasetRepository) GetDatasetsOrderBy(orderBy string) ([]models.Dataset, error) {
+func (d *DatasetRepository) GetDatasetsOrderBy(userId string, orderBy string) ([]models.Dataset, error) {
 	var datasets []models.Dataset
-	result := d.db.Order(orderBy).Find(&datasets)
+	result := d.db.Order(orderBy).Where("owner_id = ?", userId).Find(&datasets)
 	return datasets, result.Error
 }
 

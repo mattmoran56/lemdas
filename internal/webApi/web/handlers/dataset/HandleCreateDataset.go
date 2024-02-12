@@ -7,20 +7,29 @@ import (
 )
 
 func HandleCreateDataset(c *gin.Context) {
-	var dataset models.Dataset
+	type DatasetRequest struct {
+		DatasetName string `json:"dataset_name"`
+	}
+	var dataset DatasetRequest
 	err := c.BindJSON(&dataset)
 	if err != nil {
 		c.JSON(400, gin.H{"error": "Invalid request body"})
 		return
 	}
 
-	err = database.DatasetRepo.CreateDataset(dataset)
+	userId := c.MustGet("userID").(string)
+
+	newDataset := models.Dataset{
+		DatasetName: dataset.DatasetName,
+		OwnerID:     userId,
+	}
+	err = database.DatasetRepo.CreateDataset(newDataset)
 	if err != nil {
 		c.JSON(500, gin.H{"error": "Error adding new dataset to database"})
 		return
 	}
 
-	dataset, err = database.DatasetRepo.GetDatasetByName(dataset.DatasetName)
+	newDataset, err = database.DatasetRepo.GetDatasetByName(newDataset.DatasetName)
 	if err != nil {
 		c.JSON(500, gin.H{"error": "Error retrieving dataset from database"})
 		return
