@@ -14,7 +14,12 @@ const useAuth = () => {
 				// TODO: check if expired
 				const decodedToken = jwtDecode(token);
 				const name = decodedToken.first_name;
-				setUsername(name);
+				const expired = decodedToken.exp < Date.now() / 1000;
+				if (expired) {
+					setError("Token expired");
+				} else {
+					setUsername(name);
+				}
 			} catch (err) {
 				setError("Invalid token");
 			}
