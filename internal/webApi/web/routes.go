@@ -31,8 +31,8 @@ func InitiateServer() {
 			datasetGroup.POST("", dataset.HandleCreateDataset)
 			datasetGroup.POST("/", dataset.HandleCreateDataset)
 
-			datasetGroup.POST("/:datasetId/attribute", dataset.HandleGetAttributes)
-			datasetGroup.POST("/:datasetId/attribute/", dataset.HandleGetAttributes)
+			datasetGroup.POST("/:datasetId/attribute", dataset.HandleCreateAttribute)
+			datasetGroup.POST("/:datasetId/attribute/", dataset.HandleCreateAttribute)
 		}
 	}
 
