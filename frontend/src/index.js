@@ -7,6 +7,7 @@ import reportWebVitals from "./reportWebVitals";
 import IndexPage from "./pages/IndexPage/IndexPage";
 import LoginPage from "./pages/LoginPage";
 import AuthPage from "./pages/AuthPage";
+import DatasetPage from "./pages/DatasetPage";
 
 const router = createBrowserRouter([
 	{
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
 	{
 		path: "/auth",
 		element: <AuthPage />,
+	},
+	{
+		path: "/dataset/:datasetId",
+		element: <DatasetPage />,
 	},
 ]);
 

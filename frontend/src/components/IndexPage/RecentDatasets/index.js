@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FolderPlusIcon } from "@heroicons/react/24/outline";
 
-import Dataset from "./Dataset";
+import Dataset from "../../basic/Dataset";
 import NewDatasetModal from "./NewDatasetModal";
 import getDatasets from "../../../helpers/api/webApi/dataset/getDatasets";
 
