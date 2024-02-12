@@ -32,6 +32,12 @@ func (d *DatasetRepository) GetDatasetsOrderBy(userId string, orderBy string) ([
 	return datasets, result.Error
 }
 
+func (d *DatasetRepository) GetDatasetByID(DatasetID string) (models.Dataset, error) {
+	var dataset models.Dataset
+	result := d.db.Where("id = ?", DatasetID).First(&dataset)
+	return dataset, result.Error
+}
+
 func (d *DatasetRepository) GetDatasetByName(DatasetName string) (models.Dataset, error) {
 	var dataset models.Dataset
 	result := d.db.Where("dataset_name = ?", DatasetName).First(&dataset)

@@ -2,7 +2,7 @@ package models
 
 type User struct {
 	Base
-	Email     string
-	FirstName string
-	LastName  string
+	Email     string `json:"email"`
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
 }

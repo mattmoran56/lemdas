@@ -19,3 +19,9 @@ func (f *FileRepository) CreateFile(file models.File) error {
 	result := f.db.Create(&file)
 	return result.Error
 }
+
+func (f *FileRepository) GetFilesForDataset(datasetId string) ([]models.File, error) {
+	var files []models.File
+	result := f.db.Where("dataset_id = ?", datasetId).Find(&files)
+	return files, result.Error
+}
