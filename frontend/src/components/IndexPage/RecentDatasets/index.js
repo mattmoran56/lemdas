@@ -25,7 +25,11 @@ const RecentDatasets = () => {
 
 	return (
 		<div>
-			<NewDatasetModal isOpen={showNewDatasetModal} onClose={getRecentDatasets} />
+			<NewDatasetModal
+				isOpen={showNewDatasetModal}
+				setIsOpen={setShowNewDatasetModal}
+				onClose={getRecentDatasets}
+			/>
 			<h1 className="font-semibold text-2xl mx-2">Recent Datasets</h1>
 			<div className="w-full h-[2px] mx-2 mb-4 bg-oxfordblue" />
 			<div className="flex flex-wrap">

@@ -1,30 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Button from "../../basic/Button";
 import Modal from "../../basic/Modal";
 import createDataset from "../../../helpers/api/webApi/dataset/createDataset";
 
-const NewDatasetModal = ({ isOpen, onClose }) => {
-	const [newDataset, setNewDataset] = useState(null);
-	const [showModal, setShowModal] = useState(isOpen);
+const NewDatasetModal = ({ isOpen, setIsOpen, onClose }) => {
+	const [newDataset, setNewDataset] = useState("");
 
 	const handleCreateNewDataset = () => {
 		createDataset(newDataset).then(() => {
 			setNewDataset(null);
-			setShowModal(false);
+			setIsOpen(false);
 			onClose();
 		});
 	};
 	const handleCancel = () => {
-		setNewDataset(null);
-		setShowModal(false);
+		setNewDataset("");
+		setIsOpen(false);
 	};
 
-	useEffect(() => {
-		setShowModal(isOpen);
-	}, [isOpen]);
-
 	return (
-		<Modal isOpen={showModal}>
+		<Modal isOpen={isOpen}>
 			<div className="bg-white p-4 rounded-md w-max">
 				<h1 className="text-2xl font-bold">Create a new dataset</h1>
 				<input

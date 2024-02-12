@@ -6,6 +6,7 @@ const Modal = ({ children, isOpen, onClose }) => {
 		<M
 			isOpen={isOpen}
 			onRequestClose={onClose}
+			appElement={document.getElementById("root")}
 			style={{
 				overlay: {
 					backgroundColor: "rgba(0, 0, 0, 0.5)",
