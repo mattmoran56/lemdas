@@ -40,3 +40,13 @@ func (d *DatasetAttributeRepository) GetDatasetAttributeByDatasetIDOrderBy(datas
 
 	return datasetAttributes, result.Error
 }
+
+func (d *DatasetAttributeRepository) UpdateDatasetAttribute(datasetAttribute models.DatasetAttribute) error {
+	result := d.db.Model(&models.DatasetAttribute{}).Where("ID = ?", datasetAttribute.ID).Updates(&datasetAttribute)
+	return result.Error
+}
+
+func (d *DatasetAttributeRepository) DeleteDatasetAttribute(id string) error {
+	result := d.db.Where("ID = ?", id).Delete(&models.DatasetAttribute{})
+	return result.Error
+}

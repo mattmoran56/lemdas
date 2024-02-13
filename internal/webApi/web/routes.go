@@ -25,14 +25,23 @@ func InitiateServer() {
 			datasetGroup.GET("/:datasetId/files", dataset.HandleGetFiles)
 			datasetGroup.GET("/:datasetId/files/", dataset.HandleGetFiles)
 
-			datasetGroup.GET("/:datasetId/attributes", dataset.HandleGetAttributes)
-			datasetGroup.GET("/:datasetId/attributes/", dataset.HandleGetAttributes)
-
 			datasetGroup.POST("", dataset.HandleCreateDataset)
 			datasetGroup.POST("/", dataset.HandleCreateDataset)
 
-			datasetGroup.POST("/:datasetId/attribute", dataset.HandleCreateAttribute)
-			datasetGroup.POST("/:datasetId/attribute/", dataset.HandleCreateAttribute)
+			datasetAttributeGroup := datasetGroup.Group("/:datasetId/attribute")
+			{
+				datasetAttributeGroup.GET("", dataset.HandleGetAttributes)
+				datasetAttributeGroup.GET("/", dataset.HandleGetAttributes)
+
+				datasetAttributeGroup.POST("", dataset.HandleCreateAttribute)
+				datasetAttributeGroup.POST("/", dataset.HandleCreateAttribute)
+
+				datasetAttributeGroup.PUT("", dataset.HandleUpdateAttribute)
+				datasetAttributeGroup.PUT("/", dataset.HandleUpdateAttribute)
+
+				datasetAttributeGroup.DELETE("/:datasetAttributeId", dataset.HandleDeleteAttribute)
+				datasetAttributeGroup.DELETE("/:datasetAttributeId/", dataset.HandleDeleteAttribute)
+			}
 		}
 	}
 

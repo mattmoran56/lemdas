@@ -7,31 +7,36 @@ import (
 	"net/http"
 )
 
-func HandleCreateAttribute(c *gin.Context) {
+func HandleUpdateAttribute(c *gin.Context) {
 	datasetId := c.Param("datasetId")
-	type NewAttribute struct {
+
+	type attributeUpdate struct {
+		AttributeID    string `json:"attribute_id"`
 		AttributeName  string `json:"attribute_name"`
 		AttributeValue string `json:"attribute_value"`
 	}
 
-	var r NewAttribute
+	var r attributeUpdate
 	if err := c.ShouldBindJSON(&r); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	datasetAttribute := models.DatasetAttribute{
+	attribute := models.DatasetAttribute{
+		Base: models.Base{
+			ID: r.AttributeID,
+		},
 		DatasetID:      datasetId,
 		AttributeName:  r.AttributeName,
 		AttributeValue: r.AttributeValue,
 	}
 
-	id, err := database.DatasetAttributeRepo.CreateDatasetAttribute(datasetAttribute)
+	err := database.DatasetAttributeRepo.UpdateDatasetAttribute(attribute)
 	if err != nil {
-		c.JSON(500, gin.H{"error": "Error creating attribute"})
+		c.JSON(500, gin.H{"error": "Error updating attribute"})
 		return
 	}
 
-	c.JSON(200, gin.H{"attribute_id": id})
+	c.JSON(200, gin.H{})
 	return
 }

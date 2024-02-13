@@ -2,9 +2,11 @@ import React, { useEffect, useState } from "react";
 import { PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 
 import addAttribute from "../../helpers/api/webApi/datasetAttributes/addAttribute";
+import deleteDatasetAttribute from "../../helpers/api/webApi/datasetAttributes/deleteDatasetAttribute";
+import updateDatasetAttribute from "../../helpers/api/webApi/datasetAttributes/updateDatasetAttribute";
 
 const Attribute = ({
-	attribute, datasetId, addNewAttribute,
+	attribute, datasetId, setNeedRefresh, addNewAttribute,
 }) => {
 	const [clicked, setClicked] = useState(false);
 	const [error, setError] = useState(false);
@@ -23,14 +25,14 @@ const Attribute = ({
 				setAttributeId(d.id);
 			});
 		} else {
-			// update attribute
-			console.log("update attribute");
+			updateDatasetAttribute(datasetId, attribute.id, attributeName, value);
 		}
 	};
 
 	const handleDelete = () => {
-		// delete attribute
-		console.log("delete attribute");
+		deleteDatasetAttribute(datasetId, attribute.id).then(() => {
+			setNeedRefresh(true);
+		});
 	};
 
 	useEffect(() => {
