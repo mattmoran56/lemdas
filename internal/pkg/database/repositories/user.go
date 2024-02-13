@@ -34,16 +34,16 @@ func (u *UserRepo) CheckUserExistsByEmail(email string) (bool, error) {
 	return true, nil
 }
 
-func (u *UserRepo) GetUserByID(UserID string) (models.User, error) {
+func (u *UserRepo) GetUserByEmail(email string) (models.User, error) {
 	var user models.User
-	result := u.db.Where("ID = ?", UserID).First(&user)
+	result := u.db.Where("email = ?", email).First(&user)
 
 	return user, result.Error
 }
 
-func (u *UserRepo) GetUserByEmail(email string) (models.User, error) {
+func (u *UserRepo) GetUserByID(UserID string) (models.User, error) {
 	var user models.User
-	result := u.db.Where("email = ?", email).First(&user)
+	result := u.db.Where("ID = ?", UserID).First(&user)
 
 	return user, result.Error
 }

@@ -23,18 +23,12 @@ func HandleCreateDataset(c *gin.Context) {
 		DatasetName: dataset.DatasetName,
 		OwnerID:     userId,
 	}
-	err = database.DatasetRepo.CreateDataset(newDataset)
+	id, err := database.DatasetRepo.CreateDataset(newDataset)
 	if err != nil {
 		c.JSON(500, gin.H{"error": "Error adding new dataset to database"})
 		return
 	}
 
-	newDataset, err = database.DatasetRepo.GetDatasetByName(newDataset.DatasetName)
-	if err != nil {
-		c.JSON(500, gin.H{"error": "Error retrieving dataset from database"})
-		return
-	}
-
-	c.JSON(200, dataset)
+	c.JSON(200, gin.H{"dataset_id": id})
 	return
 }

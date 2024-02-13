@@ -15,15 +15,15 @@ func NewDatasetRepository(database *gorm.DB) *DatasetRepository {
 	}
 }
 
-func (d *DatasetRepository) CreateDataset(dataset models.Dataset) error {
-	result := d.db.Create(&dataset)
-	return result.Error
-}
-
 func (d *DatasetRepository) GetDatasets(userId string) ([]models.Dataset, error) {
 	var datasets []models.Dataset
 	result := d.db.Where("owner_id = ?", userId).Find(&datasets)
 	return datasets, result.Error
+}
+
+func (d *DatasetRepository) CreateDataset(dataset models.Dataset) (string, error) {
+	result := d.db.Create(&dataset)
+	return dataset.ID, result.Error
 }
 
 func (d *DatasetRepository) GetDatasetsOrderBy(userId string, orderBy string) ([]models.Dataset, error) {

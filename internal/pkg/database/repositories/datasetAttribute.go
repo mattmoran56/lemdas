@@ -15,9 +15,9 @@ func NewDatasetAttributeRepository(database *gorm.DB) *DatasetAttributeRepositor
 	}
 }
 
-func (d *DatasetAttributeRepository) CreateDatasetAttribute(datasetAttribute models.DatasetAttribute) error {
+func (d *DatasetAttributeRepository) CreateDatasetAttribute(datasetAttribute models.DatasetAttribute) (string, error) {
 	result := d.db.Create(&datasetAttribute)
-	return result.Error
+	return datasetAttribute.ID, result.Error
 }
 
 func (d *DatasetAttributeRepository) GetDatasetAttributeByID(id string) (models.DatasetAttribute, error) {
@@ -29,7 +29,14 @@ func (d *DatasetAttributeRepository) GetDatasetAttributeByID(id string) (models.
 
 func (d *DatasetAttributeRepository) GetDatasetAttributeByDatasetID(datasetID string) ([]models.DatasetAttribute, error) {
 	var datasetAttributes []models.DatasetAttribute
-	result := d.db.Where("DatasetID = ?", datasetID).Find(&datasetAttributes)
+	result := d.db.Where("Dataset_id = ?", datasetID).Find(&datasetAttributes)
+
+	return datasetAttributes, result.Error
+}
+
+func (d *DatasetAttributeRepository) GetDatasetAttributeByDatasetIDOrderBy(datasetID string, orderBy string) ([]models.DatasetAttribute, error) {
+	var datasetAttributes []models.DatasetAttribute
+	result := d.db.Where("Dataset_id = ?", datasetID).Order(orderBy).Find(&datasetAttributes)
 
 	return datasetAttributes, result.Error
 }
