@@ -20,6 +20,12 @@ func (f *FileRepository) CreateFile(file models.File) error {
 	return result.Error
 }
 
+func (f *FileRepository) GetFileByID(id string) (models.File, error) {
+	var file models.File
+	result := f.db.Where("id = ?", id).First(&file)
+	return file, result.Error
+}
+
 func (f *FileRepository) GetFilesForDataset(datasetId string) ([]models.File, error) {
 	var files []models.File
 	result := f.db.Where("dataset_id = ?", datasetId).Find(&files)

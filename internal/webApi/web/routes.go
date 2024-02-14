@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/mattmoran/fyp/api/pkg/web/middleware"
 	"github.com/mattmoran/fyp/api/webApi/web/handlers/dataset"
+	"github.com/mattmoran/fyp/api/webApi/web/handlers/file"
 	"go.uber.org/zap"
 )
 
@@ -41,6 +42,27 @@ func InitiateServer() {
 
 				datasetAttributeGroup.DELETE("/:datasetAttributeId", dataset.HandleDeleteAttribute)
 				datasetAttributeGroup.DELETE("/:datasetAttributeId/", dataset.HandleDeleteAttribute)
+			}
+		}
+
+		fileGroup := authGroup.Group("/file")
+		{
+			fileGroup.GET("/:fileId", file.HandleGetFile)
+			fileGroup.GET("/:fileId/", file.HandleGetFile)
+
+			fileAttributeGroup := fileGroup.Group("/:fileId/attribute")
+			{
+				fileAttributeGroup.GET("", file.HandleGetAttributes)
+				fileAttributeGroup.GET("/", file.HandleGetAttributes)
+
+				fileAttributeGroup.POST("", file.HandleCreateAttribute)
+				fileAttributeGroup.POST("/", file.HandleCreateAttribute)
+
+				fileAttributeGroup.PUT("", file.HandleUpdateAttribute)
+				fileAttributeGroup.PUT("/", file.HandleUpdateAttribute)
+
+				fileAttributeGroup.DELETE("/:fileAttributeId", file.HandleDeleteAttribute)
+				fileAttributeGroup.DELETE("/:fileAttributeId/", file.HandleDeleteAttribute)
 			}
 		}
 	}

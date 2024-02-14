@@ -1,0 +1,128 @@
+import React, { useEffect, useState } from "react";
+import { PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
+
+import addFileAttribute from "../../helpers/api/webApi/fileAttributes/addFileAttribute";
+import deleteFileAttribute from "../../helpers/api/webApi/fileAttributes/deleteFileAttribute";
+import updateFileAttribute from "../../helpers/api/webApi/fileAttributes/updateFileAttribute";
+
+const Attribute = ({
+	attribute, fileId, setNeedRefresh, addNewAttribute,
+}) => {
+	const [clicked, setClicked] = useState(false);
+	const [error, setError] = useState(false);
+
+	const [attributeId, setAttributeId] = useState("");
+	const [attributeName, setAttributeName] = useState("");
+	const [value, setValue] = useState("");
+
+	const handleClickOff = () => {
+		setClicked(false);
+		if (attributeName === "" || value === "") {
+			setError(true);
+		} else if (attribute.id === undefined) {
+			addFileAttribute(fileId, attributeName, value).then((d) => {
+				addNewAttribute();
+				setAttributeId(d.id);
+			});
+		} else {
+			updateFileAttribute(fileId, attribute.id, attributeName, value);
+		}
+	};
+
+	const handleDelete = () => {
+		deleteFileAttribute(fileId, attribute.id).then(() => {
+			setNeedRefresh(true);
+		});
+	};
+
+	useEffect(() => {
+		setAttributeId(attribute.id);
+		setAttributeName(attribute.attribute_name);
+		setValue(attribute.attribute_value);
+	}, []);
+
+	useEffect(() => {
+		if (attributeName !== "" && value !== "") {
+			setError(false);
+		}
+	}, [attributeName, value]);
+
+	return (
+		<tr>
+			<td className="text-right font-light pr-2 flex" aria-label="New attribute">
+				<input
+					className={`outline-none border-b-2 w-full text-right pl-2 mt-[2px] border-transparent
+								${error ? "border-red-500 bg-red-100" : ""}
+								${attributeName === "" || value === "" || clicked ? "border-gray-300" : ""}`}
+					placeholder="New attribute"
+					onFocus={() => { setClicked(true); }}
+					onBlur={handleClickOff}
+					value={attributeName}
+					onChange={(e) => { setAttributeName(e.target.value); }}
+				/>:
+			</td>
+			<td className="font-medium" aria-label="New Value">
+				<input
+					className={`outline-none border-b-2 flex-auto px-2 border-transparent
+								${error ? "border-red-500 bg-red-100" : ""}
+								${attributeName === "" || value === "" || clicked ? "border-gray-300" : ""}`}
+					placeholder="value"
+					onFocus={() => { setClicked(true); }}
+					onBlur={handleClickOff}
+					value={value}
+					onChange={(e) => { setValue(e.target.value); }}
+				/>
+			</td>
+			<td>
+				{attributeId
+					? (
+						<button type="button" aria-label="delete" onClick={handleDelete}>
+							<TrashIcon className="h-6 w-6 text-gray-500 hover:text-red-500" />
+						</button>
+					)
+					: (
+						<button type="button" aria-label="save">
+							<PlusIcon className="h-6 w-6 text-gray-300 hover:text-gray-500" />
+						</button>
+					)}
+			</td>
+		</tr>
+	);
+};
+
+const Attributes = ({ attributes, fileId, setNeedRefresh }) => {
+	const [attributeList, setAttributeList] = useState([]);
+
+	const addNewAttribute = () => {
+		setAttributeList([...attributeList, { attribute_name: "", attribute_value: "" }]);
+	};
+
+	useEffect(() => {
+		setAttributeList([...attributes, {
+			attribute_name: "",
+			attribute_value: "",
+		}]);
+	}, [attributes]);
+
+	return (
+		<div className="w-full">
+			<table className="w-fit mb-4">
+				<tbody>
+					{attributeList.map((attribute) => {
+						return (
+							<Attribute
+								key={attribute.id ? attribute.id : "new"}
+								attribute={attribute}
+								fileId={fileId}
+								setNeedRefresh={setNeedRefresh}
+								addNewAttribute={addNewAttribute}
+							/>
+						);
+					})}
+				</tbody>
+			</table>
+		</div>
+	);
+};
+
+export default Attributes;
