@@ -8,6 +8,7 @@ import IndexPage from "./pages/IndexPage/IndexPage";
 import LoginPage from "./pages/LoginPage";
 import AuthPage from "./pages/AuthPage";
 import DatasetPage from "./pages/DatasetPage";
+import FilePage from "./pages/FilePage";
 
 const router = createBrowserRouter([
 	{
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
 	{
 		path: "/dataset/:datasetId",
 		element: <DatasetPage />,
+	},
+	{
+		path: "/file/:fileId",
+		element: <FilePage />,
 	},
 ]);
 
