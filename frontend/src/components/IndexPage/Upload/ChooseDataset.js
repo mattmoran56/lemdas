@@ -1,13 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ArrowRightIcon } from "@heroicons/react/24/solid";
 
 import Button from "../../basic/Button";
 import NewDatasetModal from "./NewDatasetModal";
 
 const ChooseDataset = ({
-	datasets, setDataset, setDatasets, handleFinish, setIsPublic,
+	datasets, setDataset, setDatasets, handleFinish, setIsPublic, datasetId,
 }) => {
 	const [showNewDatasetModal, setShowNewDatasetModal] = useState(false);
+
+	useEffect(() => {
+		if (datasetId) {
+			setDataset(datasetId);
+		}
+	}, []);
 
 	return (
 		<div
@@ -20,27 +26,34 @@ const ChooseDataset = ({
 				setDatasets={setDatasets}
 			/>
 			<h1 className="text-2xl font-bold">File uploaded!</h1>
-			<p className="text-xl">
-				Choose which dataset to put the file in:
-			</p>
-			<select
-				id="field"
-				className="text-black px-3 py-2 rounded-3xl border-2 mx-2 my-2"
-				onChange={(e) => {
-					console.log(e.target.value);
-					if (e.target.value === "new") {
-						setShowNewDatasetModal(true);
-					}
-					setDataset(e.target.value);
-				}}
-			>
-				<option hidden default>Choose dataset</option>
-				{datasets.map((d) => {
-					return (<option key={d.id} value={d.id}>{d.dataset_name}</option>);
-				})}
-				<hr />
-				<option value="new"> + New dataset</option>
-			</select>
+			{datasetId
+				? null
+				: (
+					<>
+						<p className="text-xl">
+							Choose which dataset to put the file in:
+						</p>
+						<select
+							id="field"
+							className="text-black px-3 py-2 rounded-3xl border-2 mx-2 my-2"
+							onChange={(e) => {
+								console.log(e.target.value);
+								if (e.target.value === "new") {
+									setShowNewDatasetModal(true);
+								}
+								setDataset(e.target.value);
+							}}
+							aria-label="choose dataset"
+						>
+							<option hidden default>Choose dataset</option>
+							{datasets.map((d) => {
+								return (<option key={d.id} value={d.id}>{d.dataset_name}</option>);
+							})}
+							<hr />
+							<option value="new"> + New dataset</option>
+						</select>
+					</>
+				)}
 			<div className="flex items-center">
 				<p>Make this dataset public?</p>
 				<input

@@ -8,9 +8,9 @@ import ChooseDataset from "./ChooseDataset";
 import getDatasets from "../../../helpers/api/webApi/dataset/getDatasets";
 import LoadingUpload from "./LoadingUpload";
 
-const Upload = () => {
+const Upload = ({ datasetId, onFinish }) => {
 	const [file, setFile] = useState(null);
-	const [dataset, setDataset] = useState(null);
+	const [dataset, setDataset] = useState(datasetId);
 	const [isPublic, setIsPublic] = useState(false);
 
 	const [uploaded, setUploaded] = useState(false);
@@ -25,6 +25,8 @@ const Upload = () => {
 			setDataset(null);
 			setUploaded(true);
 			setLoading(false);
+
+			if (onFinish) onFinish();
 		});
 	};
 
@@ -44,6 +46,7 @@ const Upload = () => {
 			{!uploaded && file && !loading
 				? (
 					<ChooseDataset
+						datasetId={datasetId}
 						datasets={datasets}
 						handleFinish={handleFinish}
 						setDataset={setDataset}

@@ -8,6 +8,7 @@ import Loader from "../components/basic/Loader";
 import File from "../components/basic/File";
 import getDatasetAttributes from "../helpers/api/webApi/datasetAttributes/getDatasetAttributes";
 import Attributes from "../components/DatasetPage/Attribute";
+import Upload from "../components/IndexPage/Upload";
 
 const DatasetPage = () => {
 	const [dataset, setDataset] = useState({});
@@ -59,18 +60,33 @@ const DatasetPage = () => {
 								</div>
 
 								<h2 className="mt-6 text-2xl font-semibold">Dataset Attributes</h2>
-								<Attributes
-									attributes={attributes}
-									datasetId={datasetId}
-									setNeedRefresh={setRefreshAttribute}
-								/>
+								<div className="w-full max-h-64">
+									<Attributes
+										attributes={attributes}
+										datasetId={datasetId}
+										setNeedRefresh={setRefreshAttribute}
+									/>
+								</div>
 							</div>
-							<div className="w-1/2 p-2 flex flex-wrap">
-								{files.map((file) => {
-									return (
-										<File key={file.id} file={file} />
-									);
-								})}
+							<div className="w-1/2 p-2">
+								<div className="w-full flex flex-wrap">
+									{files.map((file) => {
+										return (
+											<File key={file.id} file={file} />
+										);
+									})}
+								</div>
+								<div className="w-full h-64 mt-8">
+									<Upload
+										datasetId={datasetId}
+										onFinish={() => {
+											getDatasetFiles(datasetId)
+												.then((data) => {
+													setFiles(data);
+												});
+										}}
+									/>
+								</div>
 							</div>
 						</div>
 					</div>

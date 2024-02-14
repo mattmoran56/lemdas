@@ -5,13 +5,17 @@ const File = ({ file }) => {
 	return (
 		<div>
 			<a
-				className={`min-w-16 p-6 border-2 border-oxfordblue-200 m-2 flex flex-col items-center
+				className={`w-44 p-6 border-2 border-oxfordblue-200 m-2 flex flex-col items-center
 						rounded-md shadow-md hover:shadow-lg
 						hover:bg-gray-100 transition-colors duration-300`}
 				href={`/file/${file.id}`}
 			>
 				<PhotoIcon className="h-8 w-8 mb-4" />
-				<p className="font-semibold text-base">{file.name}</p>
+				<p className="font-semibold text-base">
+					{file.name.length > 10
+						? `${file.name.substring(0, 10)}...`
+						: file.name}
+				</p>
 			</a>
 		</div>
 	);
