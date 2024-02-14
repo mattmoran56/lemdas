@@ -11,6 +11,8 @@ const UploadFile = ({ setFile }) => {
 		<FileUploader
 			handleChange={handleChangeFile}
 			name="file"
+			multiple
+			enctype="multipart/form-data"
 			classes={`text-oxfordblue !border-oxfordblue !w-full !h-full !rounded-md !p-4 !flex
 													!justify-center !items-center !border-dashed !border-2`}
 		>
