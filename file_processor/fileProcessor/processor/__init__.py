@@ -1,73 +1,42 @@
-import os
-from utils.utils import download_from_azure
+import database
+from processor.tif_scan import TifScan
 
-from database import FileDatabase
 
-class TiffScan:
+class Processor:
     def __init__(self, file_id):
-        self.database = FileDatabase()
-        self.halted = False
-
         self.file_id = file_id
-        file = self.database.get_file_by_id(file_id)
-        self.txt_file_name = file.name.replace(".tif", ".txt")
-        print("Txt file name: " + self.txt_file_name)
-        txt_file = self.database.get_file_by_name_dataset(self.txt_file_name, file.dataset_id)
-        if txt_file is None:
-            print("No txt file found")
-            self.database.update_status(self.file_id, "awaitingtxt")
-            self.halted = True
-        else:
-            print("Txt file found: " + txt_file.id)
-            self.txt_file_id = txt_file.id
+        self.file = database.FileDatabase().get_file_by_id(file_id)
+        self.processing_started = False
 
-
-    def download_files(self):
-        if self.halted:
-            return False
-        download_from_azure(self.file_id)
-        download_from_azure(self.txt_file_id)
-
-        print("Files downloaded")
-
+        if self.file.status != "uploaded":
+            print("File has already been processed, or is currently being processed")
+            self.processing_started = True
+            return
+        self.file_type = file_id.split(".")[-1]
 
     def process(self):
-        if self.halted:
-            return False
-        self.database.update_status(self.file_id, "processing")
-        self.database.update_status(self.txt_file_id, "processing")
+        if self.processing_started:
+            return
 
-        print("updated statuses")
+        database.FileDatabase().update_status(self.file_id, "processing")
 
-        with open(".temp/"+self.txt_file_id, 'r') as file:
-            for raw_line in file:
-                line = raw_line.strip()
-                print("Line: " + line)
-                if "=" not in line:
-                    continue
-                if "   " in line:
-                    primary_attribute, child_attributes = line.split("=", 1)
-                    print("Multiple attributes")
-                    attributes = child_attributes.split("   ")
-                    print(attributes)
-                    for attribute in attributes:
-                        print("Attribute: " + attribute)
-                        key, value = attribute.split("=")
-                        if value != "":
-                            print("Adding attribute: |" + primary_attribute + "-" + key + "| : |" + value + "|")
-                            self.database.add_attribute(self.file_id, primary_attribute + "-" + key, value)
-                    continue
-                key, value = line.split("=")
-                if value != "" or len(value) > 0:
-                    print("Adding attribute: |" + key + "| : |" + value + "|")
-                    self.database.add_attribute(self.file_id, key, value)
+        if self.file_type == "tif":
+            processor = TifScan(self.file_id)
+            processor.download_files()
+            processor.process()
+            processor.get_preview()
+            processor.finish_process()
 
-        self.database.update_status(self.file_id, "processed")
-        self.database.update_status(self.txt_file_id, "support_processed")
+        elif self.file_type == "txt":
+            tif_file_name = self.file.name.split(".")[0] + ".tif"
+            tif_file = database.FileDatabase().get_file_by_name_dataset(tif_file_name, self.file.dataset_id)
+            if tif_file is not None and tif_file.status == "awaitingtxt":
+                processor = Processor(tif_file.id)
+                processor.process()
+            else:
+                database.FileDatabase().update_status(self.file_id, "uploaded")
+                return
+        else:
+            print("File type not supported")
 
-
-
-    def finish_process(self):
-        os.remove(".temp/"+self.file_id)
-        os.remove(".temp/"+self.txt_file_id)
-        return True
+        database.FileDatabase().update_status(self.file_id, "processed")
