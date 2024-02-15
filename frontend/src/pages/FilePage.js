@@ -5,10 +5,12 @@ import SearchBar from "../components/SearchBar/SearchBar";
 import getFile from "../helpers/api/webApi/file/getFile";
 import Attributes from "../components/FilePage/Attributes";
 import getFileAttributes from "../helpers/api/webApi/fileAttributes/getFileAttributes";
+import getPreviewURL from "../helpers/api/webApi/file/getPreview";
 
 const FilePage = () => {
 	const [file, setFile] = useState({});
 	const [attributes, setAttributes] = useState([]);
+	const [previewUrl, setPreviewUrl] = useState("");
 
 	const [refreshAttribute, setRefreshAttribute] = useState(false);
 
@@ -30,12 +32,15 @@ const FilePage = () => {
 		getFileAttributes(fileId).then((data) => {
 			setAttributes(data);
 		});
+		getPreviewURL(fileId).then((data) => {
+			setPreviewUrl(data.url);
+		});
 	}, []);
 	return (
 		<div className="w-screen h-full bg-offwhite">
 			<SearchBar />
 			<div className="flex justify-center items-center w-full">
-				<div className="w-full p-8 max-w-7xl flex">
+				<div className="w-full p-8 max-w-7xl w-full flex">
 					<div className="w-1/2 p-2">
 						<h1 className="text-3xl font-bold">{file.name}</h1>
 						<div className="h-[2px] w-full bg-oxfordblue mb-4" />
@@ -53,7 +58,7 @@ const FilePage = () => {
 						</div>
 
 						<h2 className="mt-6 text-2xl font-semibold">File Attributes</h2>
-						<div className="w-full max-h-64">
+						<div className="w-full max-h-80 overflow-y-auto">
 							<Attributes
 								attributes={attributes}
 								fileId={fileId}
@@ -62,7 +67,14 @@ const FilePage = () => {
 						</div>
 					</div>
 					<div className="w-1/2 p-2">
-						Preview here
+						{file.status !== "processed"
+							? <p>Preview will be available when file is finished processing</p>
+							: (
+								<img
+									src={previewUrl}
+									alt="preview"
+								/>
+							)}
 					</div>
 				</div>
 			</div>

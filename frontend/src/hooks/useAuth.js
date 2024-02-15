@@ -17,6 +17,7 @@ const useAuth = () => {
 				const expired = decodedToken.exp < Date.now() / 1000;
 				if (expired) {
 					setError("Token expired");
+					if (window.location.pathname !== "/login") window.location.href = "/login";
 				} else {
 					setUsername(name);
 				}
