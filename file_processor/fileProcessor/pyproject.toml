@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "fileprocessor"
+version = "0.1.0"
+description = ""
+authors = ["mattmoran <sc20mm@leeds.ac.uk>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.109.2"
+uvicorn = "^0.27.0.post1"
+azure-storage-blob = "^12.19.0"
+azure-identity = "^1.15.0"
+sqlalchemy = "^2.0.27"
+mysql-connector-python = "^8.3.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
