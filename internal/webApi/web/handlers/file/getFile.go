@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/mattmoran/fyp/api/pkg/database"
 	"github.com/mattmoran/fyp/api/pkg/database/models"
+	"github.com/mattmoran/fyp/api/pkg/utils"
 )
 
 func HandleGetFile(c *gin.Context) {
@@ -18,6 +19,11 @@ func HandleGetFile(c *gin.Context) {
 	file, err := database.FileRepo.GetFileByID(fileId)
 	if err != nil {
 		c.JSON(500, gin.H{"error": "Error finding file"})
+		return
+	}
+
+	if utils.CheckUserHasPermission(fileId, c.MustGet("userId").(string)) == false {
+		c.JSON(401, gin.H{"error": "User does not have permission to view this file"})
 		return
 	}
 
