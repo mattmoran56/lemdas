@@ -50,6 +50,9 @@ func InitiateServer() {
 			fileGroup.GET("/:fileId", file.HandleGetFile)
 			fileGroup.GET("/:fileId/", file.HandleGetFile)
 
+			fileGroup.GET("/:fileId/preview", file.HandlePreview)
+			fileGroup.GET("/:fileId/preview/", file.HandlePreview)
+
 			fileAttributeGroup := fileGroup.Group("/:fileId/attribute")
 			{
 				fileAttributeGroup.GET("", file.HandleGetAttributes)
