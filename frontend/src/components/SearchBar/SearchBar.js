@@ -19,7 +19,7 @@ const SearchBar = () => {
 	const navigate = useNavigate();
 
 	const handleSearch = () => {
-		// TODO: handle search
+		navigate(`/search?query=${searchTerm}`);
 	};
 	const handleComplexSearch = () => {
 		// TODO: handle complex search
@@ -41,7 +41,7 @@ const SearchBar = () => {
 				className={`w-full bg-oxfordblue text-lightlavender p-4 flex items-center justify-between
 							shadow-md shadow-[#555] z-50 relative`}
 			>
-				<Logo className="mr-4" />
+				<a href="/" aria-label="home"><Logo className="mr-4" /></a>
 				<div className="flex flex-auto justify-center">
 					<input
 						placeholder="Search datasets"

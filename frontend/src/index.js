@@ -9,6 +9,7 @@ import LoginPage from "./pages/LoginPage";
 import AuthPage from "./pages/AuthPage";
 import DatasetPage from "./pages/DatasetPage";
 import FilePage from "./pages/FilePage";
+import SimpleSearchPage from "./pages/SimpleSearchPage";
 
 const router = createBrowserRouter([
 	{
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
 	{
 		path: "/file/:fileId",
 		element: <FilePage />,
+	},
+	{
+		path: "/search",
+		element: <SimpleSearchPage />,
 	},
 ]);
 
