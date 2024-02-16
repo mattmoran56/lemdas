@@ -17,7 +17,7 @@ func HandlePreview(c *gin.Context) {
 	fileId := c.Param("fileId")
 
 	// Check user has permission to view file
-	userId := c.GetString("userId")
+	userId := c.MustGet("userID").(string)
 	if utils.CheckUserHasPermission(fileId, userId) == false {
 		c.JSON(401, gin.H{"error": "User does not have permission to view this file"})
 		return

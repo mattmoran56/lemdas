@@ -22,7 +22,7 @@ func HandleGetFile(c *gin.Context) {
 		return
 	}
 
-	if utils.CheckUserHasPermission(fileId, c.MustGet("userId").(string)) == false {
+	if utils.CheckUserHasPermission(fileId, c.MustGet("userID").(string)) == false {
 		c.JSON(401, gin.H{"error": "User does not have permission to view this file"})
 		return
 	}
