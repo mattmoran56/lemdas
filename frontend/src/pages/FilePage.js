@@ -6,6 +6,7 @@ import getFile from "../helpers/api/webApi/file/getFile";
 import Attributes from "../components/FilePage/Attributes";
 import getFileAttributes from "../helpers/api/webApi/fileAttributes/getFileAttributes";
 import getPreviewURL from "../helpers/api/webApi/file/getPreview";
+import Loader from "../components/basic/Loader";
 
 const FilePage = () => {
 	const [file, setFile] = useState({});
@@ -69,12 +70,15 @@ const FilePage = () => {
 					<div className="w-1/2 p-2">
 						{file.status !== "processed"
 							? <p>Preview will be available when file is finished processing</p>
-							: (
+							: null}
+						{file.status === "processed" && previewUrl !== ""
+							? (
 								<img
 									src={previewUrl}
 									alt="preview"
 								/>
-							)}
+							)
+							: <div className="w-full h-full flex justify-center items-center"><Loader /></div> }
 					</div>
 				</div>
 			</div>
