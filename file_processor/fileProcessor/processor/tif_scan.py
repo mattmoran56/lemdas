@@ -80,6 +80,8 @@ class TifScan:
         with open(file=".temp/"+self.file_id.split(".")[0] + ".png", mode="rb") as data:
             container_client.upload_blob(name=self.file_id.split(".")[0] + ".png", data=data, overwrite=True)
 
+        os.remove(".temp/"+self.file_id.split(".")[0] + ".png")
+
     def finish_process(self):
         if self.halted:
             return False
