@@ -21,9 +21,9 @@ func (d *DatasetRepository) GetDatasets(userId string) ([]models.Dataset, error)
 	return datasets, result.Error
 }
 
-func (d *DatasetRepository) CreateDataset(dataset models.Dataset) (string, error) {
+func (d *DatasetRepository) CreateDataset(dataset models.Dataset) (models.Dataset, error) {
 	result := d.db.Create(&dataset)
-	return dataset.ID, result.Error
+	return dataset, result.Error
 }
 
 func (d *DatasetRepository) GetDatasetsOrderBy(userId string, orderBy string) ([]models.Dataset, error) {
@@ -42,4 +42,10 @@ func (d *DatasetRepository) GetDatasetByName(DatasetName string) (models.Dataset
 	var dataset models.Dataset
 	result := d.db.Where("dataset_name = ?", DatasetName).First(&dataset)
 	return dataset, result.Error
+}
+
+func (d *DatasetRepository) SearchByName(query string) ([]models.Dataset, error) {
+	var datasets []models.Dataset
+	result := d.db.Where("dataset_name LIKE ?", "%"+query+"%").Find(&datasets)
+	return datasets, result.Error
 }

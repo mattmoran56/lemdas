@@ -15,9 +15,9 @@ func NewFileRepository(database *gorm.DB) *FileRepository {
 	}
 }
 
-func (f *FileRepository) CreateFile(file models.File) error {
+func (f *FileRepository) CreateFile(file models.File) (string, error) {
 	result := f.db.Create(&file)
-	return result.Error
+	return file.ID, result.Error
 }
 
 func (f *FileRepository) GetFileByID(id string) (models.File, error) {
@@ -29,5 +29,11 @@ func (f *FileRepository) GetFileByID(id string) (models.File, error) {
 func (f *FileRepository) GetFilesForDataset(datasetId string) ([]models.File, error) {
 	var files []models.File
 	result := f.db.Where("dataset_id = ?", datasetId).Find(&files)
+	return files, result.Error
+}
+
+func (f *FileRepository) SearchByName(query string) ([]models.File, error) {
+	var files []models.File
+	result := f.db.Where("name LIKE ?", "%"+query+"%").Find(&files)
 	return files, result.Error
 }
