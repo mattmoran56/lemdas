@@ -1,7 +1,9 @@
 package handlers
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob"
 	"github.com/gin-gonic/gin"
@@ -9,7 +11,6 @@ import (
 	"github.com/mattmoran/fyp/api/pkg/database"
 	"github.com/mattmoran/fyp/api/pkg/database/models"
 	"github.com/mattmoran/fyp/api/pkg/utils"
-	"go.uber.org/zap"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -36,15 +37,10 @@ func HandleUpload(c *gin.Context) {
 		return
 	}
 
-	zap.S().Debug(r)
-
 	form, _ := c.MultipartForm()
 	files := form.File["file"]
-	zap.S().Debug(form)
-	zap.S().Debug(files)
 
 	for _, file := range files {
-		zap.S().Debug("Uploading file: ", file.Filename)
 		randomFileId := uuid.New().String() + "." + getFileExtension(file.Filename)
 
 		if err := c.SaveUploadedFile(file, ".temp/"+randomFileId); err != nil {
@@ -71,7 +67,7 @@ func HandleUpload(c *gin.Context) {
 			utils.HandleHandlerError(c, err)
 		}(fileHandler)
 
-		// delete the local file if required.
+		// delete the file after upload
 		defer func(name string) {
 			err = os.Remove(name)
 			utils.HandleHandlerError(c, err)
@@ -91,10 +87,28 @@ func HandleUpload(c *gin.Context) {
 			IsPublic:  r.IsPublic,
 		}
 
-		err = database.FileRepo.CreateFile(fileObject)
+		uploadedId, err := database.FileRepo.CreateFile(fileObject)
 		utils.HandleHandlerError(c, err)
 
 		// TODO: Trigger upload processing
+		type ProcessorRequest struct {
+			FileId string `json:"file_id"`
+		}
+		request := ProcessorRequest{
+			FileId: uploadedId,
+		}
+		// marshall data to json (like json_encode)
+		marshalled, err := json.Marshal(request)
+
+		processorUrl := os.Getenv("PROCESSOR_URL")
+
+		req, err := http.NewRequest("POST", processorUrl+"/process", bytes.NewReader(marshalled))
+		utils.HandleHandlerError(c, err)
+
+		httpClient := &http.Client{}
+		_, err = httpClient.Do(req)
+		utils.HandleHandlerError(c, err)
+
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "File uploaded successfully"})
