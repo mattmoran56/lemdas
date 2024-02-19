@@ -68,10 +68,10 @@ const FilePage = () => {
 						</div>
 					</div>
 					<div className="w-1/2 p-2">
-						{file.status !== "processed"
+						{file.status !== "processed" && file.status !== "awaitingtxt"
 							? <p>Preview will be available when file is finished processing</p>
 							: null}
-						{file.status === "processed" && previewUrl !== ""
+						{(file.status === "processed" || file.status === "awaitingtxt") && previewUrl !== ""
 							? (
 								<img
 									src={previewUrl}

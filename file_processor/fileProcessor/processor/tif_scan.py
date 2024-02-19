@@ -28,9 +28,9 @@ class TifScan:
             self.txt_file_id = txt_file.id
 
     def download_files(self):
+        download_from_azure(self.file_id)
         if self.halted:
             return False
-        download_from_azure(self.file_id)
         download_from_azure(self.txt_file_id)
 
         return True
@@ -62,8 +62,6 @@ class TifScan:
         return True
 
     def get_preview(self):
-        if self.halted:
-            return False
         image = Image.open(".temp/"+self.file_id)
 
         for i, page in enumerate(ImageSequence.Iterator(image)):
@@ -83,8 +81,8 @@ class TifScan:
         os.remove(".temp/"+self.file_id.split(".")[0] + ".png")
 
     def finish_process(self):
+        os.remove(".temp/" + self.file_id)
         if self.halted:
             return False
-        os.remove(".temp/"+self.file_id)
         os.remove(".temp/"+self.txt_file_id)
         return True

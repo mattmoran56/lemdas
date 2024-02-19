@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ExclamationTriangleIcon, PhotoIcon } from "@heroicons/react/24/outline";
+import { PhotoIcon } from "@heroicons/react/24/outline";
 import Loader from "./Loader";
 import getPreviewURL from "../../helpers/api/webApi/file/getPreview";
 
@@ -7,7 +7,7 @@ const File = ({ file }) => {
 	const [previewUrl, setPreviewUrl] = useState("");
 
 	useEffect(() => {
-		if (file.status === "processed") {
+		if (file.status === "processed" || file.status === "awaitingtxt") {
 			getPreviewURL(file.id)
 				.then((data) => {
 					setPreviewUrl(data.url);
@@ -30,13 +30,10 @@ const File = ({ file }) => {
 						{file.status === "uploaded" || file.status === "processing"
 							? <Loader className="h-6 w-6" outerClassName="p-1.5 mt-0" />
 							: null}
-						{file.status === "awaitingtxt"
-							? <ExclamationTriangleIcon className="h-6 w-6 text-indianred" />
-							: null}
-						{file.status === "processed" && previewUrl !== ""
+						{(file.status === "processed" || file.status === "awaitingtxt") && previewUrl !== ""
 							? <img src={previewUrl} alt="preview" className="h-12 w-auto mb-2" />
 							: null}
-						{file.status === "processed" && previewUrl === ""
+						{(file.status === "processed" || file.status === "awaitingtxt") && previewUrl === ""
 							? <PhotoIcon className="h-6 w-6 text-oxfordblue-400" />
 							: null}
 						<p className="font-semibold text-base">

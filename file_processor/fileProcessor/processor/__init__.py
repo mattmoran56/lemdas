@@ -25,6 +25,7 @@ class Processor:
             check = processor.download_files()
             if not check:
                 database.FileDatabase().update_status(self.file_id, "awaitingtxt")
+                processor.get_preview()
                 return
             processor.process()
             processor.get_preview()
