@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ChevronDownIcon, MagnifyingGlassIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 import Button from "../basic/Button";
 import OptionSection from "./OptionSection";
@@ -18,12 +18,20 @@ const SearchBar = () => {
 
 	const navigate = useNavigate();
 
+	const [searchParams] = useSearchParams();
+
 	const handleSearch = () => {
 		navigate(`/search?query=${searchTerm}`);
 	};
 	const handleComplexSearch = () => {
 		// TODO: handle complex search
 	};
+
+	useEffect(() => {
+		if (searchParams.get("query") !== "") {
+			setSearchTerm(searchParams.get("query"));
+		}
+	}, [searchParams]);
 
 	useEffect(() => {
 		const slideout = document.getElementById("slideout");
@@ -48,6 +56,7 @@ const SearchBar = () => {
 						className="px-3 py-2 max-w-96 w-1/2 rounded-3xl text-black outline-none"
 						value={searchTerm}
 						onChange={(event) => { return setSearchTerm(event.target.value); }}
+						onKeyPress={(e) => { if (e.key === "Enter") { handleSearch(); } }}
 					/>
 					<Button className="mx-2" onClick={handleSearch}>
 						Search

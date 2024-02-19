@@ -3,6 +3,8 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 
 import SearchBar from "../components/SearchBar/SearchBar";
 import doSimpleSearch from "../helpers/api/search/simpleSearch";
+import File from "../components/search/File";
+import Dataset from "../components/search/Dataset";
 
 const SimpleSearchPage = () => {
 	const [datasetResults, setDatasetResults] = useState([]);
@@ -30,19 +32,13 @@ const SimpleSearchPage = () => {
 					<h2 className="text-2xl font-bold text-gray-800">Datasets</h2>
 					{datasetResults.map((dataset) => {
 						return (
-							<div key={dataset.id} className="flex flex-col">
-								<p>{dataset.dataset_name}</p>
-								<p>{dataset.description}</p>
-							</div>
+							<Dataset dataset={dataset} />
 						);
 					})}
 					<h2 className="text-2xl font-bold text-gray-800">Files</h2>
 					{fileResults.map((file) => {
 						return (
-							<div key={file.id} className="flex flex-col">
-								<p>{file.name}</p>
-								<p>{file.description}</p>
-							</div>
+							<File file={file} />
 						);
 					})}
 				</div>
