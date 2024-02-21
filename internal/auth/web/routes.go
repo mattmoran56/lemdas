@@ -7,7 +7,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func InitiateServer() {
+func InitiateServer() *gin.Engine {
 	r := gin.Default()
 
 	r.Use(middleware.CORSMiddleware())
@@ -15,10 +15,16 @@ func InitiateServer() {
 	r.POST("/token", handlers.HandleToken)
 	r.POST("/verify", handlers.HandleVerify)
 
+	if gin.Mode() == "test" {
+		return r
+	}
+
 	err := r.Run(":8001")
 	if err != nil {
 		zap.S().Fatal("Couldn't start server")
 	}
 
 	zap.S().Info("Auth Server started on port 8001")
+
+	return r
 }

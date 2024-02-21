@@ -36,6 +36,11 @@ func HandleToken(c *gin.Context) {
 		return
 	}
 
+	if r.Code == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body"})
+		return
+	}
+
 	body := &bytes.Buffer{}
 	writer := multipart.NewWriter(body)
 	defer writer.Close()
@@ -64,11 +69,16 @@ func HandleToken(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
+	if resp.StatusCode != 200 {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error getting token"})
+		return
+	}
 
 	decodedResp := TokenResponse{}
 	err = json.NewDecoder(resp.Body).Decode(&decodedResp)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+
+	if decodedResp.AccessToken == "" {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "No access token returned"})
 		return
 	}
 
