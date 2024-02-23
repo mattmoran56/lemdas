@@ -3,7 +3,7 @@ package models
 type File struct {
 	Base
 	Name      string `json:"name"`
-	OwnerId   string `gorm:"foreignKey:User(ID)" json:"owner_id"`
+	OwnerID   string `gorm:"foreignKey:User(ID)" json:"owner_id"`
 	Status    string `gorm:"default:'uploaded'" json:"status"`
 	DatasetID string `gorm:"foreignKey:Dataset(ID)" json:"dataset_id"`
 	IsPublic  bool   `gorm:"default:false" json:"is_public"`

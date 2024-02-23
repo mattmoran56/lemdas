@@ -27,6 +27,6 @@ func HandleDeleteAttribute(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, gin.H{})
+	c.JSON(204, nil)
 	return
 }

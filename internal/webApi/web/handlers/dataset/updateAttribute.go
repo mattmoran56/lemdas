@@ -8,35 +8,35 @@ import (
 )
 
 func HandleUpdateAttribute(c *gin.Context) {
-	datasetId := c.Param("datasetId")
+	datasetID := c.Param("datasetId")
+	attributeID := c.Param("attributeId")
 
 	type attributeUpdate struct {
-		AttributeID    string `json:"attribute_id"`
-		AttributeName  string `json:"attribute_name"`
-		AttributeValue string `json:"attribute_value"`
+		AttributeName  string `json:"attribute_name" binding:"required"`
+		AttributeValue string `json:"attribute_value" binding:"required"`
 	}
 
 	var r attributeUpdate
 	if err := c.ShouldBindJSON(&r); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body"})
 		return
 	}
 
 	attribute := models.DatasetAttribute{
 		Base: models.Base{
-			ID: r.AttributeID,
+			ID: attributeID,
 		},
-		DatasetID:      datasetId,
+		DatasetID:      datasetID,
 		AttributeName:  r.AttributeName,
 		AttributeValue: r.AttributeValue,
 	}
 
-	err := database.DatasetAttributeRepo.UpdateDatasetAttribute(attribute)
+	attribute, err := database.DatasetAttributeRepo.UpdateDatasetAttribute(attribute)
 	if err != nil {
 		c.JSON(500, gin.H{"error": "Error updating attribute"})
 		return
 	}
 
-	c.JSON(200, gin.H{})
+	c.JSON(201, attribute)
 	return
 }

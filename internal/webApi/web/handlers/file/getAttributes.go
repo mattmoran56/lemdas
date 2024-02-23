@@ -15,7 +15,7 @@ func HandleGetAttributes(c *gin.Context) {
 			c.JSON(500, gin.H{"error": "Error fetching attributes"})
 			return
 		}
-		c.JSON(200, attributes)
+		c.JSON(200, gin.H{"attributes": attributes})
 		return
 	} else {
 		attributes, err := database.FileAttributeRepo.GetFileAttributeByFileID(fileId)
@@ -23,7 +23,7 @@ func HandleGetAttributes(c *gin.Context) {
 			c.JSON(500, gin.H{"error": "Error fetching attributes"})
 			return
 		}
-		c.JSON(200, attributes)
+		c.JSON(200, gin.H{"attributes": attributes})
 		return
 	}
 

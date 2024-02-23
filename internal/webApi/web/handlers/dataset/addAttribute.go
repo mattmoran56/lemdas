@@ -10,13 +10,13 @@ import (
 func HandleCreateAttribute(c *gin.Context) {
 	datasetId := c.Param("datasetId")
 	type NewAttribute struct {
-		AttributeName  string `json:"attribute_name"`
-		AttributeValue string `json:"attribute_value"`
+		AttributeName  string `json:"attribute_name" binding:"required"`
+		AttributeValue string `json:"attribute_value" binding:"required"`
 	}
 
 	var r NewAttribute
 	if err := c.ShouldBindJSON(&r); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body"})
 		return
 	}
 
@@ -26,12 +26,12 @@ func HandleCreateAttribute(c *gin.Context) {
 		AttributeValue: r.AttributeValue,
 	}
 
-	id, err := database.DatasetAttributeRepo.CreateDatasetAttribute(datasetAttribute)
+	attribute, err := database.DatasetAttributeRepo.CreateDatasetAttribute(datasetAttribute)
 	if err != nil {
 		c.JSON(500, gin.H{"error": "Error creating attribute"})
 		return
 	}
 
-	c.JSON(200, gin.H{"attribute_id": id})
+	c.JSON(http.StatusCreated, attribute)
 	return
 }

@@ -26,9 +26,9 @@ func (f *FileRepository) GetFileByID(id string) (models.File, error) {
 	return file, result.Error
 }
 
-func (f *FileRepository) GetFilesForDataset(datasetId string) ([]models.File, error) {
+func (f *FileRepository) GetFilesForDataset(datasetID, userID string) ([]models.File, error) {
 	var files []models.File
-	result := f.db.Where("dataset_id = ?", datasetId).Find(&files)
+	result := f.db.Where("dataset_id = ? AND (is_public = 1 OR owner_id = ?)", datasetID, userID).Find(&files)
 	return files, result.Error
 }
 

@@ -13,17 +13,10 @@ func HandleGetDataset(c *gin.Context) {
 	}
 
 	datasetID := c.Param("datasetId")
-	userId := c.MustGet("userID").(string)
 
 	dataset, err := database.DatasetRepo.GetDatasetByID(datasetID)
 	if err != nil {
 		c.JSON(500, gin.H{"error": "Error finding dataset"})
-		return
-	}
-
-	// Check authority to access dataset (inc. shares in future)
-	if dataset.OwnerID != userId {
-		c.JSON(403, gin.H{"error": "Forbidden"})
 		return
 	}
 

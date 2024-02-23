@@ -9,34 +9,34 @@ import (
 
 func HandleUpdateAttribute(c *gin.Context) {
 	fileId := c.Param("fileId")
+	attributeID := c.Param("attributeId")
 
 	type attributeUpdate struct {
-		AttributeID    string `json:"attribute_id"`
-		AttributeName  string `json:"attribute_name"`
-		AttributeValue string `json:"attribute_value"`
+		AttributeName  string `json:"attribute_name" binding:"required"`
+		AttributeValue string `json:"attribute_value" binding:"required"`
 	}
 
 	var r attributeUpdate
 	if err := c.ShouldBindJSON(&r); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body"})
 		return
 	}
 
 	attribute := models.FileAttribute{
 		Base: models.Base{
-			ID: r.AttributeID,
+			ID: attributeID,
 		},
 		FileID:         fileId,
 		AttributeName:  r.AttributeName,
 		AttributeValue: r.AttributeValue,
 	}
 
-	err := database.FileAttributeRepo.UpdateFileAttribute(attribute)
+	attribute, err := database.FileAttributeRepo.UpdateFileAttribute(attribute)
 	if err != nil {
 		c.JSON(500, gin.H{"error": "Error updating attribute"})
 		return
 	}
 
-	c.JSON(200, gin.H{})
+	c.JSON(200, attribute)
 	return
 }

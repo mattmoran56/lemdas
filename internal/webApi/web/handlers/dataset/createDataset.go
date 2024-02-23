@@ -8,7 +8,8 @@ import (
 
 func HandleCreateDataset(c *gin.Context) {
 	type DatasetRequest struct {
-		DatasetName string `json:"dataset_name"`
+		DatasetName string `json:"dataset_name" binding:"required"`
+		IsPublic    bool   `json:"is_public" default:"false"`
 	}
 	var dataset DatasetRequest
 	err := c.BindJSON(&dataset)
@@ -29,6 +30,6 @@ func HandleCreateDataset(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, createdDataset)
+	c.JSON(201, createdDataset)
 	return
 }

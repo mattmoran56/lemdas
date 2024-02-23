@@ -7,21 +7,21 @@ import (
 
 func HandleGetFiles(c *gin.Context) {
 	datasetID := c.Param("datasetId")
-	userId := c.MustGet("userID").(string)
+	userID := c.MustGet("userID").(string)
 
-	files, err := database.FileRepo.GetFilesForDataset(datasetID)
+	// check dataset exists
+	_, err := database.DatasetRepo.GetDatasetByID(datasetID)
+	if err != nil {
+		c.JSON(500, gin.H{"error": "Error finding dataset"})
+		return
+	}
+
+	files, err := database.FileRepo.GetFilesForDataset(datasetID, userID)
 	if err != nil {
 		c.JSON(500, gin.H{"error": "Error finding files"})
 		return
 	}
 
-	// Check each file has permission to be accessed by user
-	for i, el := range files {
-		if el.OwnerId != userId {
-			files = append(files[:i], files[i+1:]...)
-		}
-	}
-
-	c.JSON(200, files)
+	c.JSON(200, gin.H{"files": files})
 	return
 }

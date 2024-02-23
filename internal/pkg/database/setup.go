@@ -2,6 +2,7 @@ package database
 
 import (
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"github.com/mattmoran/fyp/api/pkg/database/models"
 	"github.com/mattmoran/fyp/api/pkg/database/repositories"
 	"github.com/mattmoran/fyp/api/pkg/logger"
@@ -33,6 +34,11 @@ func ConnectToDatabase(username, password, dbName, host, port string) error {
 	}
 
 	zap.S().Info("Successfully connected to database")
+
+	if gin.Mode() == "test" {
+		fmt.Printf("Dropping tables\n")
+		db.Migrator().DropTable("dataset_attributes", "file_attributes", "datasets", "files", "users")
+	}
 
 	zap.S().Info("Migrating tables")
 	err = db.AutoMigrate(

@@ -15,9 +15,9 @@ func NewFileAttributeRepository(database *gorm.DB) *FileAttributeRepository {
 	}
 }
 
-func (d *FileAttributeRepository) CreateFileAttribute(datasetAttribute models.FileAttribute) (string, error) {
+func (d *FileAttributeRepository) CreateFileAttribute(datasetAttribute models.FileAttribute) (models.FileAttribute, error) {
 	result := d.db.Create(&datasetAttribute)
-	return datasetAttribute.ID, result.Error
+	return datasetAttribute, result.Error
 }
 
 func (d *FileAttributeRepository) GetFileAttributeByID(id string) (models.FileAttribute, error) {
@@ -41,9 +41,9 @@ func (d *FileAttributeRepository) GetFileAttributeByFileIDOrderBy(datasetID stri
 	return datasetAttributes, result.Error
 }
 
-func (d *FileAttributeRepository) UpdateFileAttribute(datasetAttribute models.FileAttribute) error {
-	result := d.db.Model(&models.FileAttribute{}).Where("ID = ?", datasetAttribute.ID).Updates(&datasetAttribute)
-	return result.Error
+func (d *FileAttributeRepository) UpdateFileAttribute(fileAttribute models.FileAttribute) (models.FileAttribute, error) {
+	result := d.db.Model(&models.FileAttribute{}).Where("ID = ?", fileAttribute.ID).Updates(&fileAttribute)
+	return fileAttribute, result.Error
 }
 
 func (d *FileAttributeRepository) DeleteFileAttribute(id string) error {

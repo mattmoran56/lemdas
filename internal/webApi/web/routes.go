@@ -5,69 +5,81 @@ import (
 	"github.com/mattmoran/fyp/api/pkg/web/middleware"
 	"github.com/mattmoran/fyp/api/webApi/web/handlers/dataset"
 	"github.com/mattmoran/fyp/api/webApi/web/handlers/file"
+	m "github.com/mattmoran/fyp/api/webApi/web/middleware"
 	"go.uber.org/zap"
 )
 
-func InitiateServer() {
+func InitiateServer() *gin.Engine {
 	r := gin.Default()
 
 	r.Use(middleware.CORSMiddleware())
 
 	authGroup := r.Group("/", middleware.JWTAuthMiddleware())
 	{
-		datasetGroup := authGroup.Group("/dataset")
+		authGroup.GET("dataset", dataset.HandleGetDatasets)
+		authGroup.GET("dataset/", dataset.HandleGetDatasets)
+
+		authGroup.POST("dataset", dataset.HandleCreateDataset)
+		authGroup.POST("dataset/", dataset.HandleCreateDataset)
+
+		datasetGroup := authGroup.Group("/dataset/:datasetId", m.CheckDatasetAccess())
 		{
-			datasetGroup.GET("", dataset.HandleGetDatasets)
-			datasetGroup.GET("/", dataset.HandleGetDatasets)
 
-			datasetGroup.GET("/:datasetId", dataset.HandleGetDataset)
-			datasetGroup.GET("/:datasetId/", dataset.HandleGetDataset)
+			datasetGroup.GET("", dataset.HandleGetDataset)
+			datasetGroup.GET("/", dataset.HandleGetDataset)
 
-			datasetGroup.GET("/:datasetId/files", dataset.HandleGetFiles)
-			datasetGroup.GET("/:datasetId/files/", dataset.HandleGetFiles)
+			datasetGroup.GET("/files", dataset.HandleGetFiles)
+			datasetGroup.GET("/files/", dataset.HandleGetFiles)
 
-			datasetGroup.POST("", dataset.HandleCreateDataset)
-			datasetGroup.POST("/", dataset.HandleCreateDataset)
-
-			datasetAttributeGroup := datasetGroup.Group("/:datasetId/attribute")
+			datasetAttributesGroup := datasetGroup.Group("/attribute")
 			{
-				datasetAttributeGroup.GET("", dataset.HandleGetAttributes)
-				datasetAttributeGroup.GET("/", dataset.HandleGetAttributes)
+				datasetAttributesGroup.GET("", dataset.HandleGetAttributes)
+				datasetAttributesGroup.GET("/", dataset.HandleGetAttributes)
 
-				datasetAttributeGroup.POST("", dataset.HandleCreateAttribute)
-				datasetAttributeGroup.POST("/", dataset.HandleCreateAttribute)
+				datasetAttributesGroup.POST("", dataset.HandleCreateAttribute)
+				datasetAttributesGroup.POST("/", dataset.HandleCreateAttribute)
 
-				datasetAttributeGroup.PUT("", dataset.HandleUpdateAttribute)
-				datasetAttributeGroup.PUT("/", dataset.HandleUpdateAttribute)
+				datasetAttributeGroup := datasetAttributesGroup.Group("/:datasetAttributeId", m.CheckDatasetAttributeAccess())
+				{
+					datasetAttributeGroup.PUT("", dataset.HandleUpdateAttribute)
+					datasetAttributeGroup.PUT("/", dataset.HandleUpdateAttribute)
 
-				datasetAttributeGroup.DELETE("/:datasetAttributeId", dataset.HandleDeleteAttribute)
-				datasetAttributeGroup.DELETE("/:datasetAttributeId/", dataset.HandleDeleteAttribute)
+					datasetAttributeGroup.DELETE("", dataset.HandleDeleteAttribute)
+					datasetAttributeGroup.DELETE("/", dataset.HandleDeleteAttribute)
+				}
 			}
 		}
 
-		fileGroup := authGroup.Group("/file")
+		fileGroup := authGroup.Group("/file/:fileId", m.CheckFileAccess())
 		{
-			fileGroup.GET("/:fileId", file.HandleGetFile)
-			fileGroup.GET("/:fileId/", file.HandleGetFile)
+			fileGroup.GET("", file.HandleGetFile)
+			fileGroup.GET("/", file.HandleGetFile)
 
-			fileGroup.GET("/:fileId/preview", file.HandlePreview)
-			fileGroup.GET("/:fileId/preview/", file.HandlePreview)
+			fileGroup.GET("/preview", file.HandlePreview)
+			fileGroup.GET("/preview/", file.HandlePreview)
 
-			fileAttributeGroup := fileGroup.Group("/:fileId/attribute")
+			fileAttributesGroup := fileGroup.Group("/attribute")
 			{
-				fileAttributeGroup.GET("", file.HandleGetAttributes)
-				fileAttributeGroup.GET("/", file.HandleGetAttributes)
+				fileAttributesGroup.GET("", file.HandleGetAttributes)
+				fileAttributesGroup.GET("/", file.HandleGetAttributes)
 
-				fileAttributeGroup.POST("", file.HandleCreateAttribute)
-				fileAttributeGroup.POST("/", file.HandleCreateAttribute)
+				fileAttributesGroup.POST("", file.HandleCreateAttribute)
+				fileAttributesGroup.POST("/", file.HandleCreateAttribute)
 
-				fileAttributeGroup.PUT("", file.HandleUpdateAttribute)
-				fileAttributeGroup.PUT("/", file.HandleUpdateAttribute)
+				fileAttributeGroup := fileAttributesGroup.Group("/:fileAttributeId", m.CheckFileAttributeAccess())
+				{
+					fileAttributeGroup.PUT("", file.HandleUpdateAttribute)
+					fileAttributeGroup.PUT("/", file.HandleUpdateAttribute)
 
-				fileAttributeGroup.DELETE("/:fileAttributeId", file.HandleDeleteAttribute)
-				fileAttributeGroup.DELETE("/:fileAttributeId/", file.HandleDeleteAttribute)
+					fileAttributeGroup.DELETE("", file.HandleDeleteAttribute)
+					fileAttributeGroup.DELETE("/", file.HandleDeleteAttribute)
+				}
 			}
 		}
+	}
+
+	if gin.Mode() == "test" {
+		return r
 	}
 
 	err := r.Run(":8003")
@@ -76,4 +88,6 @@ func InitiateServer() {
 	}
 
 	zap.S().Info("Web API Server started on port 8003")
+
+	return r
 }

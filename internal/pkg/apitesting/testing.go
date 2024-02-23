@@ -19,8 +19,9 @@ type Test struct {
 	Auth   string
 	Body   map[string]interface{}
 
-	ResponseCode int
-	ResponseBody map[string]interface{}
+	ResponseCode      int
+	ResponseBody      map[string]interface{}
+	ManualCompareBody bool `default:"false"`
 }
 
 func mapsEqual(map1, map2 map[string]interface{}) bool {
@@ -43,6 +44,10 @@ func TestServer(t *testing.T, tests []Test, router *gin.Engine) {
 
 	for _, tt := range tests {
 		w := httptest.NewRecorder()
+
+		if tt.ManualCompareBody {
+			tt.Name = fmt.Sprintf("MANUAL CHECK: %s", tt.Name)
+		}
 		t.Run(tt.Name, func(t *testing.T) {
 			jsonBody, _ := json.Marshal(tt.Body)
 			req, _ := http.NewRequest(tt.Method, tt.Path, bytes.NewBuffer(jsonBody))
@@ -60,7 +65,10 @@ func TestServer(t *testing.T, tests []Test, router *gin.Engine) {
 				response := make(map[string]interface{})
 				_ = json.Unmarshal(w.Body.Bytes(), &response)
 				//response = make(map[string]interface{})
-				if !mapsEqual(tt.ResponseBody, response) {
+				if tt.ManualCompareBody {
+					fmt.Printf("Diff: %v\n", cmp.Diff(tt.ResponseBody, response))
+					t.Error("Manual compare body set to true, no comparison done.")
+				} else if !mapsEqual(tt.ResponseBody, response) {
 					fmt.Printf("Diff: %v\n", cmp.Diff(tt.ResponseBody, response))
 					t.Errorf("Test: %s - Expected response body %s, got %s", tt.Name, tt.ResponseBody, response)
 				}
