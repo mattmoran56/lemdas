@@ -44,8 +44,9 @@ func (d *DatasetRepository) GetDatasetByName(DatasetName string) (models.Dataset
 	return dataset, result.Error
 }
 
-func (d *DatasetRepository) SearchByName(query string) ([]models.Dataset, error) {
+func (d *DatasetRepository) SearchByName(query, userID string) ([]models.Dataset, error) {
 	var datasets []models.Dataset
-	result := d.db.Where("dataset_name LIKE ?", "%"+query+"%").Find(&datasets)
+	result := d.db.Where("dataset_name LIKE ? AND (is_public = 1 OR owner_id = ?)", "%"+query+"%", userID).
+		Find(&datasets)
 	return datasets, result.Error
 }

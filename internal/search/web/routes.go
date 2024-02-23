@@ -7,7 +7,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func InitiateServer() {
+func InitiateServer() *gin.Engine {
 	r := gin.Default()
 
 	r.Use(middleware.CORSMiddleware())
@@ -18,10 +18,16 @@ func InitiateServer() {
 		authGroup.POST("/simpleSearch/", handlers.HandleSimpleSearch)
 	}
 
+	if gin.Mode() == "test" {
+		return r
+	}
+
 	err := r.Run(":8005")
 	if err != nil {
 		zap.S().Fatal("Couldn't start server")
 	}
 
 	zap.S().Info("Search Server started on port 8005")
+
+	return r
 }
