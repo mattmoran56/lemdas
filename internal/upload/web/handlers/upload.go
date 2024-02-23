@@ -27,13 +27,13 @@ func getFileExtension(filename string) string {
 
 func HandleUpload(c *gin.Context) {
 	type UploadFileRequest struct {
-		DatasetID string `form:"dataset_id"`
-		IsPublic  bool   `form:"is_public"`
+		DatasetID string `form:"dataset_id" binding:"required"`
+		IsPublic  bool   `form:"is_public" binding:"required"`
 	}
 
 	var r UploadFileRequest
 	if err := c.ShouldBind(&r); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Error binding to request: " + err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Dataset or is_public is missing"})
 		return
 	}
 
