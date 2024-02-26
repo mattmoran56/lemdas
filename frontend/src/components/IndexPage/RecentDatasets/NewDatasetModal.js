@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Button from "../../basic/Button";
 import Modal from "../../basic/Modal";
 import createDataset from "../../../helpers/api/webApi/dataset/createDataset";
+import ErrorToast from "../../../helpers/toast/errorToast";
 
 const NewDatasetModal = ({ isOpen, setIsOpen, onClose }) => {
 	const [newDataset, setNewDataset] = useState("");
@@ -11,6 +12,8 @@ const NewDatasetModal = ({ isOpen, setIsOpen, onClose }) => {
 			setNewDataset(null);
 			setIsOpen(false);
 			onClose();
+		}).catch((error) => {
+			ErrorToast(error);
 		});
 	};
 	const handleCancel = () => {

@@ -4,6 +4,7 @@ import { FolderPlusIcon } from "@heroicons/react/24/outline";
 import Dataset from "../../basic/Dataset";
 import NewDatasetModal from "./NewDatasetModal";
 import getDatasets from "../../../helpers/api/webApi/dataset/getDatasets";
+import ErrorToast from "../../../helpers/toast/errorToast";
 
 const RecentDatasets = () => {
 	const [datasets, setDatasets] = useState([]);
@@ -16,6 +17,8 @@ const RecentDatasets = () => {
 	const getRecentDatasets = () => {
 		getDatasets("updated_at").then((data) => {
 			setDatasets(data);
+		}).catch((error) => {
+			ErrorToast(error);
 		});
 	};
 

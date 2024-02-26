@@ -5,6 +5,7 @@ import SearchBar from "../components/SearchBar/SearchBar";
 import doSimpleSearch from "../helpers/api/search/simpleSearch";
 import File from "../components/search/File";
 import Dataset from "../components/search/Dataset";
+import ErrorToast from "../helpers/toast/errorToast";
 
 const SimpleSearchPage = () => {
 	const [datasetResults, setDatasetResults] = useState([]);
@@ -21,6 +22,8 @@ const SimpleSearchPage = () => {
 		doSimpleSearch(searchParams.get("query")).then((results) => {
 			setDatasetResults(results.datasets);
 			setFileResults(results.files);
+		}).catch((error) => {
+			ErrorToast(error);
 		});
 	}, [searchParams]);
 

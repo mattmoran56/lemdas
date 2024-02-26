@@ -8,7 +8,7 @@ const GetDataset = async (datasetId) => {
 		requestOptions,
 	);
 	if (!response.ok) {
-		throw new Error("Failed to get datasets");
+		throw new Error("Failed to get dataset");
 	}
 
 	return response.json();

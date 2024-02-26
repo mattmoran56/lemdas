@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { PhotoIcon } from "@heroicons/react/24/outline";
 
 import getPreview from "../../helpers/api/webApi/file/getPreview";
+import ErrorToast from "../../helpers/toast/errorToast";
 
 const File = ({ file }) => {
 	const [preview, setPreview] = useState("");
@@ -9,6 +10,8 @@ const File = ({ file }) => {
 	useEffect(() => {
 		getPreview(file.id).then((d) => {
 			setPreview(d.url);
+		}).catch((error) => {
+			ErrorToast(error);
 		});
 	}, []);
 

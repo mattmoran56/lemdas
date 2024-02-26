@@ -3,6 +3,8 @@ import ReactDOM from "react-dom/client";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
 import "./index.css";
+import "react-toastify/dist/ReactToastify.css";
+
 import reportWebVitals from "./reportWebVitals";
 import IndexPage from "./pages/IndexPage/IndexPage";
 import LoginPage from "./pages/LoginPage";

@@ -7,6 +7,7 @@ import UploadFile from "./UploadFile";
 import ChooseDataset from "./ChooseDataset";
 import getDatasets from "../../../helpers/api/webApi/dataset/getDatasets";
 import LoadingUpload from "./LoadingUpload";
+import ErrorToast from "../../../helpers/toast/errorToast";
 
 const Upload = ({ datasetId, onFinish }) => {
 	const [file, setFile] = useState(null);
@@ -27,12 +28,16 @@ const Upload = ({ datasetId, onFinish }) => {
 			setLoading(false);
 
 			if (onFinish) onFinish();
+		}).catch((error) => {
+			ErrorToast(error);
 		});
 	};
 
 	useEffect(() => {
 		getDatasets().then((d) => {
 			setDatasets(d);
+		}).catch((error) => {
+			ErrorToast(error);
 		});
 	}, []);
 

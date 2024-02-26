@@ -4,6 +4,7 @@ import { PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 import addFileAttribute from "../../helpers/api/webApi/fileAttributes/addFileAttribute";
 import deleteFileAttribute from "../../helpers/api/webApi/fileAttributes/deleteFileAttribute";
 import updateFileAttribute from "../../helpers/api/webApi/fileAttributes/updateFileAttribute";
+import ErrorToast from "../../helpers/toast/errorToast";
 
 const Attribute = ({
 	attribute, fileId, setNeedRefresh, addNewAttribute,
@@ -23,6 +24,8 @@ const Attribute = ({
 			addFileAttribute(fileId, attributeName, value).then((d) => {
 				addNewAttribute();
 				setAttributeId(d.id);
+			}).catch((e) => {
+				ErrorToast(e);
 			});
 		} else {
 			updateFileAttribute(fileId, attribute.id, attributeName, value);
@@ -32,6 +35,8 @@ const Attribute = ({
 	const handleDelete = () => {
 		deleteFileAttribute(fileId, attribute.id).then(() => {
 			setNeedRefresh(true);
+		}).catch((e) => {
+			ErrorToast(e);
 		});
 	};
 

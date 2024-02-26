@@ -7,6 +7,7 @@ import Attributes from "../components/FilePage/Attributes";
 import getFileAttributes from "../helpers/api/webApi/fileAttributes/getFileAttributes";
 import getPreviewURL from "../helpers/api/webApi/file/getPreview";
 import Loader from "../components/basic/Loader";
+import ErrorToast from "../helpers/toast/errorToast";
 
 const FilePage = () => {
 	const [file, setFile] = useState({});
@@ -21,6 +22,8 @@ const FilePage = () => {
 		if (refreshAttribute) {
 			getFileAttributes(fileId).then((data) => {
 				setAttributes(data);
+			}).catch((error) => {
+				ErrorToast(error);
 			});
 			setRefreshAttribute(false);
 		}
@@ -29,12 +32,18 @@ const FilePage = () => {
 	useEffect(() => {
 		getFile(fileId).then((data) => {
 			setFile(data);
+		}).catch((error) => {
+			ErrorToast(error);
 		});
 		getFileAttributes(fileId).then((data) => {
 			setAttributes(data);
+		}).catch((error) => {
+			ErrorToast(error);
 		});
 		getPreviewURL(fileId).then((data) => {
 			setPreviewUrl(data.url);
+		}).catch((error) => {
+			ErrorToast(error);
 		});
 	}, []);
 	return (

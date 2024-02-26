@@ -4,6 +4,7 @@ import { PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 import addAttribute from "../../helpers/api/webApi/datasetAttributes/addAttribute";
 import deleteDatasetAttribute from "../../helpers/api/webApi/datasetAttributes/deleteDatasetAttribute";
 import updateDatasetAttribute from "../../helpers/api/webApi/datasetAttributes/updateDatasetAttribute";
+import ErrorToast from "../../helpers/toast/errorToast";
 
 const Attribute = ({
 	attribute, datasetId, setNeedRefresh, addNewAttribute,
@@ -23,15 +24,21 @@ const Attribute = ({
 			addAttribute(datasetId, attributeName, value).then((d) => {
 				addNewAttribute();
 				setAttributeId(d.id);
+			}).catch((e) => {
+				ErrorToast(e);
 			});
 		} else {
-			updateDatasetAttribute(datasetId, attribute.id, attributeName, value);
+			updateDatasetAttribute(datasetId, attribute.id, attributeName, value).catch((e) => {
+				ErrorToast(e);
+			});
 		}
 	};
 
 	const handleDelete = () => {
 		deleteDatasetAttribute(datasetId, attribute.id).then(() => {
 			setNeedRefresh(true);
+		}).catch((e) => {
+			ErrorToast(e);
 		});
 	};
 

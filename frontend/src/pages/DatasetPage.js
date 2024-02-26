@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 
 import getDataset from "../helpers/api/webApi/dataset/getDataset";
 import getDatasetFiles from "../helpers/api/webApi/file/getFilesByDataset";
@@ -9,6 +10,7 @@ import File from "../components/basic/File";
 import getDatasetAttributes from "../helpers/api/webApi/datasetAttributes/getDatasetAttributes";
 import Attributes from "../components/DatasetPage/Attribute";
 import Upload from "../components/IndexPage/Upload";
+import ErrorToast from "../helpers/toast/errorToast";
 
 const DatasetPage = () => {
 	const [dataset, setDataset] = useState({});
@@ -23,6 +25,8 @@ const DatasetPage = () => {
 		if (refreshAttribute) {
 			getDatasetAttributes(datasetId).then((data) => {
 				setAttributes(data);
+			}).catch((error) => {
+				ErrorToast(error);
 			});
 			setRefreshAttribute(false);
 		}
@@ -32,14 +36,20 @@ const DatasetPage = () => {
 		getDataset(datasetId)
 			.then((data) => {
 				setDataset(data);
+			}).catch((error) => {
+				ErrorToast(error);
 			});
 		getDatasetFiles(datasetId)
 			.then((data) => {
 				setFiles(data);
+			}).catch((error) => {
+				ErrorToast(error);
 			});
 		getDatasetAttributes(datasetId)
 			.then((data) => {
 				setAttributes(data);
+			}).catch((error) => {
+				ErrorToast(error);
 			});
 		setRefreshAttribute(false);
 	}, []);
@@ -47,6 +57,7 @@ const DatasetPage = () => {
 	return (
 		<div className="w-screen h-full bg-offwhite">
 			<SearchBar />
+			<ToastContainer />
 			{ dataset
 				? (
 					<div className="flex justify-center items-center w-full">
@@ -83,7 +94,9 @@ const DatasetPage = () => {
 											getDatasetFiles(datasetId)
 												.then((data) => {
 													setFiles(data);
-												});
+												}).catch((error) => {
+												ErrorToast(error);
+											});
 										}}
 									/>
 								</div>

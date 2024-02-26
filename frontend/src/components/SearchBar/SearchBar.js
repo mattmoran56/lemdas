@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ChevronDownIcon, MagnifyingGlassIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
 import { useNavigate, useSearchParams } from "react-router-dom";
-
 import Button from "../basic/Button";
 import OptionSection from "./OptionSection";
 import useAuth from "../../hooks/useAuth";
