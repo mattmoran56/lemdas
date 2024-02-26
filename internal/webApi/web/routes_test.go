@@ -81,6 +81,54 @@ func TestInitiateServer(t *testing.T) {
 			ResponseBody: map[string]interface{}{"error": "Dataset not found"},
 		},
 	}
+	handleUpdateDatasetTests := []apitesting.Test{
+		{
+			Name:              "Update dataset - update dataset",
+			Method:            "PUT",
+			Path:              "/dataset/test4",
+			Auth:              token1,
+			Body:              map[string]interface{}{"dataset_name": "test dataset updated", "is_public": true, "owner_id": "test1"},
+			ResponseCode:      201,
+			ResponseBody:      map[string]interface{}{"created_at": float64(100), "updated_at": float64(100), "id": "test4", "dataset_name": "test dataset updated", "owner_id": "test1", "is_public": true},
+			ManualCompareBody: true,
+		},
+		{
+			Name:         "Update dataset - update dataset with no body",
+			Method:       "PUT",
+			Path:         "/dataset/test1",
+			Auth:         token1,
+			Body:         nil,
+			ResponseCode: 400,
+			ResponseBody: map[string]interface{}{"error": "Invalid request body"},
+		},
+		{
+			Name:         "Update dataset - update dataset that doesn't exist",
+			Method:       "PUT",
+			Path:         "/dataset/invalid",
+			Auth:         token1,
+			Body:         map[string]interface{}{"dataset_name": "test dataset updated", "is_public": true},
+			ResponseCode: 404,
+			ResponseBody: map[string]interface{}{"error": "Dataset not found"},
+		},
+		{
+			Name:         "Update dataset - update dataset that is public but not owned by user",
+			Method:       "PUT",
+			Path:         "/dataset/test3",
+			Auth:         token2,
+			Body:         map[string]interface{}{"dataset_name": "test dataset updated", "is_public": true},
+			ResponseCode: 403,
+			ResponseBody: map[string]interface{}{"error": "Forbidden"},
+		},
+		{
+			Name:         "Update dataset - update dataset that is private but not owned by user",
+			Method:       "PUT",
+			Path:         "/dataset/test2",
+			Auth:         token2,
+			Body:         map[string]interface{}{"dataset_name": "test dataset updated", "is_public": true},
+			ResponseCode: 404,
+			ResponseBody: map[string]interface{}{"error": "Dataset not found"},
+		},
+	}
 	handleGetFilesForDatasetTests := []apitesting.Test{
 		{
 			Name:         "Get files for dataset - get all user's files",
@@ -532,6 +580,54 @@ func TestInitiateServer(t *testing.T) {
 			ResponseBody: map[string]interface{}{"error": "File not found"},
 		},
 	}
+	handleUpdateFileTests := []apitesting.Test{
+		{
+			Name:              "Update file - update file",
+			Method:            "PUT",
+			Path:              "/file/testfile1",
+			Auth:              token1,
+			Body:              map[string]interface{}{"id": "testfile1", "name": "testfile1 updated", "status": "processed", "dataset_id": "test1", "is_public": false, "owner_id": "test1"},
+			ResponseCode:      201,
+			ResponseBody:      map[string]interface{}{"id": "testfile1", "created_at": float64(100), "updated_at": float64(100), "name": "testfile1 updated", "owner_id": "test1", "status": "processed", "dataset_id": "test1", "is_public": true},
+			ManualCompareBody: true,
+		},
+		{
+			Name:         "Update file - update file with no body",
+			Method:       "PUT",
+			Path:         "/file/testfile1",
+			Auth:         token1,
+			Body:         nil,
+			ResponseCode: 400,
+			ResponseBody: map[string]interface{}{"error": "Invalid request body"},
+		},
+		{
+			Name:         "Update file - update file that doesn't exist",
+			Method:       "PUT",
+			Path:         "/file/invalid",
+			Auth:         token1,
+			Body:         map[string]interface{}{"name": "testfile1 updated", "status": "processed", "dataset_id": "test1", "is_public": true},
+			ResponseCode: 404,
+			ResponseBody: map[string]interface{}{"error": "File not found"},
+		},
+		{
+			Name:         "Update file - update file that is public but not owned by user",
+			Method:       "PUT",
+			Path:         "/file/testfile2",
+			Auth:         token2,
+			Body:         map[string]interface{}{"name": "testfile1 updated", "status": "processed", "dataset_id": "test1", "is_public": true},
+			ResponseCode: 403,
+			ResponseBody: map[string]interface{}{"error": "Forbidden"},
+		},
+		{
+			Name:         "Update file - update file that is private but not owned by user",
+			Method:       "PUT",
+			Path:         "/file/testfile1",
+			Auth:         token2,
+			Body:         map[string]interface{}{"name": "testfile1 updated", "status": "processed", "dataset_id": "test1", "is_public": true},
+			ResponseCode: 404,
+			ResponseBody: map[string]interface{}{"error": "File not found"},
+		},
+	}
 	handlePreviewTests := []apitesting.Test{
 		// TODO: test preview
 	}
@@ -777,6 +873,7 @@ func TestInitiateServer(t *testing.T) {
 	testsList := [][]apitesting.Test{
 		handleGetDatasetsTests,
 		handleGetDatasetTests,
+		handleUpdateDatasetTests,
 
 		handleGetFilesForDatasetTests,
 		handleCreateDatasetTests,
@@ -790,6 +887,7 @@ func TestInitiateServer(t *testing.T) {
 
 		handleGetFileTests,
 		handleDeleteFileTests,
+		handleUpdateFileTests,
 		handlePreviewTests,
 
 		handleGetFileAttributesTests,
@@ -1026,6 +1124,16 @@ func TestInitiateServer(t *testing.T) {
 			Status:    "processed",
 			DatasetID: "test3",
 			IsPublic:  true,
+		})
+		database.DatasetRepo.CreateDataset(models.Dataset{
+			Base: models.Base{
+				ID:        "test4",
+				CreatedAt: 100,
+				UpdatedAt: 100,
+			},
+			DatasetName: "test dataset",
+			OwnerID:     "test1",
+			IsPublic:    false,
 		})
 	}
 

@@ -69,3 +69,8 @@ func (d *DatasetRepository) DeleteDatasetByID(DatasetID string) error {
 	result := d.db.Where("id = ?", DatasetID).Delete(&models.Dataset{})
 	return result.Error
 }
+
+func (d *DatasetRepository) UpdateDataset(dataset models.Dataset) (models.Dataset, error) {
+	result := d.db.Where("id = ?", dataset.ID).Updates(&dataset)
+	return dataset, result.Error
+}

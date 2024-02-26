@@ -28,6 +28,9 @@ func InitiateServer() *gin.Engine {
 			datasetGroup.GET("", dataset.HandleGetDataset)
 			datasetGroup.GET("/", dataset.HandleGetDataset)
 
+			datasetGroup.PUT("", dataset.HandleUpdateDataset)
+			datasetGroup.PUT("/", dataset.HandleUpdateDataset)
+
 			datasetGroup.DELETE("", dataset.HandleDeleteDataset)
 			datasetGroup.DELETE("/", dataset.HandleDeleteDataset)
 
@@ -57,6 +60,9 @@ func InitiateServer() *gin.Engine {
 		{
 			fileGroup.GET("", file.HandleGetFile)
 			fileGroup.GET("/", file.HandleGetFile)
+
+			fileGroup.PUT("", file.HandleUpdateFile)
+			fileGroup.PUT("/", file.HandleUpdateFile)
 
 			fileGroup.DELETE("", file.HandleDeleteFile)
 			fileGroup.DELETE("/", file.HandleDeleteFile)

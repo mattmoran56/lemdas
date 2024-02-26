@@ -82,6 +82,12 @@ const DatasetPage = () => {
 									<p className="text-gray-800 mr-4">Author: </p>
 									<p className="font-medium">{dataset.owner_name}</p>
 								</div>
+								<div className="w-full flex items-center">
+									<p className="text-gray-800 mr-4">Public dataset: </p>
+									<p className="font-medium">
+										<input type="checkbox" checked={dataset.is_public} onChange={} />
+									</p>
+								</div>
 
 								<Button
 									className="mt-4"

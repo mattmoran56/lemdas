@@ -43,3 +43,8 @@ func (f *FileRepository) DeleteFile(id string) error {
 	result := f.db.Where("id = ?", id).Delete(&models.File{})
 	return result.Error
 }
+
+func (f *FileRepository) UpdateFile(file models.File) (models.File, error) {
+	result := f.db.Where("id = ? ", file.ID).Updates(&file)
+	return file, result.Error
+}
