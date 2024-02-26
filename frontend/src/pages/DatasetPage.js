@@ -40,7 +40,7 @@ const DatasetPage = () => {
 	};
 
 	const handleDelete = () => {
-		deleteDataset(datasetId).then((d) => {
+		deleteDataset(datasetId).then(() => {
 			navigate("");
 		}).catch((error) => {
 			ErrorToast(error);
