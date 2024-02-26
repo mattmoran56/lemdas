@@ -14,6 +14,7 @@ import Upload from "../components/IndexPage/Upload";
 import ErrorToast from "../helpers/toast/errorToast";
 import Button from "../components/basic/Button";
 import deleteDataset from "../helpers/api/webApi/dataset/deleteDataset";
+import updateDataset from "../helpers/api/webApi/dataset/updateDataset";
 
 const DatasetPage = () => {
 	const [dataset, setDataset] = useState({});
@@ -25,9 +26,21 @@ const DatasetPage = () => {
 	const { datasetId } = useParams();
 	const navigate = useNavigate();
 
+	const handleUpdatePublic = (e) => {
+		updateDataset(datasetId, dataset.dataset_name, e.target.checked, dataset.owner_id).then(() => {
+			getDataset(datasetId)
+				.then((data) => {
+					setDataset(data);
+				}).catch((error) => {
+					ErrorToast(error);
+				});
+		}).catch((error) => {
+			ErrorToast(error);
+		});
+	};
+
 	const handleDelete = () => {
 		deleteDataset(datasetId).then((d) => {
-			console.log(d);
 			navigate("");
 		}).catch((error) => {
 			ErrorToast(error);
@@ -85,7 +98,11 @@ const DatasetPage = () => {
 								<div className="w-full flex items-center">
 									<p className="text-gray-800 mr-4">Public dataset: </p>
 									<p className="font-medium">
-										<input type="checkbox" checked={dataset.is_public} onChange={} />
+										<input
+											type="checkbox"
+											checked={dataset.is_public}
+											onChange={handleUpdatePublic}
+										/>
 									</p>
 								</div>
 

@@ -4,7 +4,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/mattmoran/fyp/api/pkg/database"
 	"github.com/mattmoran/fyp/api/pkg/database/models"
-	"go.uber.org/zap"
 )
 
 func HandleUpdateDataset(c *gin.Context) {
@@ -13,8 +12,6 @@ func HandleUpdateDataset(c *gin.Context) {
 		IsPublic    bool   `json:"is_public"`
 		OwnerID     string `json:"owner_id" binding:"required"`
 	}
-
-	zap.S().Info(c.Request.Body)
 
 	var datasetUpdate DatasetUpdate
 	if err := c.BindJSON(&datasetUpdate); err != nil {

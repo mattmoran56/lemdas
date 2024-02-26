@@ -71,6 +71,19 @@ func (d *DatasetRepository) DeleteDatasetByID(DatasetID string) error {
 }
 
 func (d *DatasetRepository) UpdateDataset(dataset models.Dataset) (models.Dataset, error) {
-	result := d.db.Where("id = ?", dataset.ID).Updates(&dataset)
+	updates := map[string]interface{}{}
+	if dataset.DatasetName != "" {
+		updates["dataset_name"] = dataset.DatasetName
+	}
+	if dataset.IsPublic {
+		updates["is_public"] = 1
+	} else {
+		updates["is_public"] = 0
+	}
+	if dataset.OwnerID != "" {
+		updates["owner_id"] = dataset.OwnerID
+	}
+
+	result := d.db.Model(&dataset).Where("id = ?", dataset.ID).Updates(updates)
 	return dataset, result.Error
 }

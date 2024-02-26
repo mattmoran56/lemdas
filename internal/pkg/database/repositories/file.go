@@ -45,6 +45,25 @@ func (f *FileRepository) DeleteFile(id string) error {
 }
 
 func (f *FileRepository) UpdateFile(file models.File) (models.File, error) {
-	result := f.db.Where("id = ? ", file.ID).Updates(&file)
+	updates := map[string]interface{}{}
+	if file.Name != "" {
+		updates["name"] = file.Name
+	}
+	if file.IsPublic {
+		updates["is_public"] = 1
+	} else {
+		updates["is_public"] = 0
+	}
+	if file.OwnerID != "" {
+		updates["owner_id"] = file.OwnerID
+	}
+	if file.Status != "" {
+		updates["status"] = file.Status
+	}
+	if file.DatasetID != "" {
+		updates["dataset_id"] = file.DatasetID
+	}
+
+	result := f.db.Model(&file).Where("id = ? ", file.ID).Updates(updates)
 	return file, result.Error
 }
