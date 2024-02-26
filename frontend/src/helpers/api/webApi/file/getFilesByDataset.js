@@ -11,7 +11,8 @@ const getDatasetFiles = async (datasetId) => {
 		throw new Error("Failed to get files");
 	}
 
-	return response.json();
+	const data = await response.json();
+	return data.files;
 };
 
 export default getDatasetFiles;

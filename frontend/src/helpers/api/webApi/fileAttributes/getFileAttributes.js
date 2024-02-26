@@ -11,7 +11,8 @@ const getFileAttributes = async (fileId) => {
 		throw new Error("Failed to get attributes");
 	}
 
-	return response.json();
+	const data = await response.json();
+	return data.attributes;
 };
 
 export default getFileAttributes;

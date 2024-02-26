@@ -11,19 +11,19 @@ func HandleGetDatasets(c *gin.Context) {
 	userId := c.MustGet("userID").(string)
 
 	if !found {
-		datasets, err := database.DatasetRepo.GetDatasets(userId)
+		datasets, err := database.DatasetRepo.GetUsersDatasets(userId)
 		if err != nil {
 			c.JSON(500, gin.H{"error": err.Error()})
 			return
 		}
-		c.JSON(200, datasets)
+		c.JSON(200, gin.H{"datasets": datasets})
 	} else {
-		datasets, err := database.DatasetRepo.GetDatasetsOrderBy(userId, orderBy)
+		datasets, err := database.DatasetRepo.GetUsersDatasetsOrderBy(userId, orderBy)
 		if err != nil {
 			c.JSON(500, gin.H{"error": err.Error()})
 			return
 		}
-		c.JSON(200, datasets)
+		c.JSON(200, gin.H{"datasets": datasets})
 	}
 
 	return

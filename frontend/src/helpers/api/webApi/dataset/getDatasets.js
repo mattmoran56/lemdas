@@ -10,8 +10,9 @@ const GetDatasets = async (orderBy) => {
 	if (!response.ok) {
 		throw new Error("Failed to get datasets");
 	}
+	const data = await response.json();
 
-	return response.json();
+	return data.datasets;
 };
 
 export default GetDatasets;
