@@ -11,7 +11,7 @@ const deleteDatasetAttribute = async (datasetId, attributeId) => {
 		throw new Error("Failed to delete attributes");
 	}
 
-	return response.json();
+	return true;
 };
 
 export default deleteDatasetAttribute;

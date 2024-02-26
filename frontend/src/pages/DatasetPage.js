@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
+import { TrashIcon } from "@heroicons/react/24/outline";
 
 import getDataset from "../helpers/api/webApi/dataset/getDataset";
 import getDatasetFiles from "../helpers/api/webApi/file/getFilesByDataset";
@@ -11,6 +12,8 @@ import getDatasetAttributes from "../helpers/api/webApi/datasetAttributes/getDat
 import Attributes from "../components/DatasetPage/Attribute";
 import Upload from "../components/IndexPage/Upload";
 import ErrorToast from "../helpers/toast/errorToast";
+import Button from "../components/basic/Button";
+import deleteDataset from "../helpers/api/webApi/dataset/deleteDataset";
 
 const DatasetPage = () => {
 	const [dataset, setDataset] = useState({});
@@ -20,6 +23,16 @@ const DatasetPage = () => {
 	const [refreshAttribute, setRefreshAttribute] = useState(false);
 
 	const { datasetId } = useParams();
+	const navigate = useNavigate();
+
+	const handleDelete = () => {
+		deleteDataset(datasetId).then((d) => {
+			console.log(d);
+			navigate("");
+		}).catch((error) => {
+			ErrorToast(error);
+		});
+	};
 
 	useEffect(() => {
 		if (refreshAttribute) {
@@ -70,6 +83,14 @@ const DatasetPage = () => {
 									<p className="font-medium">{dataset.owner_name}</p>
 								</div>
 
+								<Button
+									className="mt-4"
+									onClick={handleDelete}
+								>
+									<TrashIcon className="h-6 w-6 mr-2" />
+									Delete Dataset
+								</Button>
+
 								<h2 className="mt-6 text-2xl font-semibold">Dataset Attributes</h2>
 								<div className="w-full max-h-64">
 									<Attributes
@@ -95,8 +116,8 @@ const DatasetPage = () => {
 												.then((data) => {
 													setFiles(data);
 												}).catch((error) => {
-												ErrorToast(error);
-											});
+													ErrorToast(error);
+												});
 										}}
 									/>
 								</div>

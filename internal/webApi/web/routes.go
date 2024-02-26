@@ -28,6 +28,9 @@ func InitiateServer() *gin.Engine {
 			datasetGroup.GET("", dataset.HandleGetDataset)
 			datasetGroup.GET("/", dataset.HandleGetDataset)
 
+			datasetGroup.DELETE("", dataset.HandleDeleteDataset)
+			datasetGroup.DELETE("/", dataset.HandleDeleteDataset)
+
 			datasetGroup.GET("/files", dataset.HandleGetFiles)
 			datasetGroup.GET("/files/", dataset.HandleGetFiles)
 

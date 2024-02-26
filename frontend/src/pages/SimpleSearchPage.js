@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 
 import SearchBar from "../components/SearchBar/SearchBar";
 import doSimpleSearch from "../helpers/api/search/simpleSearch";
@@ -30,6 +31,7 @@ const SimpleSearchPage = () => {
 	return (
 		<div className="w-screen h-full bg-offwhite">
 			<SearchBar />
+			<ToastContainer />
 			<div className="flex flex-col items-center">
 				<div className="max-w-7xl w-full p-4">
 					<h2 className="text-2xl font-bold text-gray-800">Datasets</h2>

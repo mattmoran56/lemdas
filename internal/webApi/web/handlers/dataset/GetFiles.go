@@ -7,7 +7,7 @@ import (
 
 func HandleGetFiles(c *gin.Context) {
 	datasetID := c.Param("datasetId")
-	userID := c.MustGet("userID").(string)
+	//userID := c.MustGet("userID").(string)
 
 	// check dataset exists
 	_, err := database.DatasetRepo.GetDatasetByID(datasetID)
@@ -16,7 +16,7 @@ func HandleGetFiles(c *gin.Context) {
 		return
 	}
 
-	files, err := database.FileRepo.GetFilesForDataset(datasetID, userID)
+	files, err := database.FileRepo.GetFilesForDataset(datasetID)
 	if err != nil {
 		c.JSON(500, gin.H{"error": "Error finding files"})
 		return

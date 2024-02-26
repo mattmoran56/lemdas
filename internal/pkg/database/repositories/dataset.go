@@ -64,3 +64,8 @@ func (d *DatasetRepository) SearchByName(query, userID string) ([]models.Dataset
 		Find(&datasets)
 	return datasets, result.Error
 }
+
+func (d *DatasetRepository) DeleteDatasetByID(DatasetID string) error {
+	result := d.db.Where("id = ?", DatasetID).Delete(&models.Dataset{})
+	return result.Error
+}

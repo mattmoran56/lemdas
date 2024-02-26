@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 
 import SearchBar from "../components/SearchBar/SearchBar";
 import getFile from "../helpers/api/webApi/file/getFile";
@@ -49,6 +50,7 @@ const FilePage = () => {
 	return (
 		<div className="w-screen h-full bg-offwhite">
 			<SearchBar />
+			<ToastContainer />
 			<div className="flex justify-center items-center w-full">
 				<div className="w-full p-8 max-w-7xl w-full flex">
 					<div className="w-1/2 p-2">

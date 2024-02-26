@@ -44,6 +44,7 @@ func TestInitiateServer(t *testing.T) {
 					map[string]any{"id": "test1", "created_at": float64(100), "updated_at": float64(100), "dataset_name": "test dataset", "owner_id": "test1", "is_public": false},
 					map[string]any{"id": "test2", "created_at": float64(100), "updated_at": float64(100), "dataset_name": "test dataset", "owner_id": "test1", "is_public": false},
 					map[string]any{"id": "test3", "created_at": float64(100), "updated_at": float64(100), "dataset_name": "test dataset", "owner_id": "test1", "is_public": true},
+					map[string]any{"id": "test4", "created_at": float64(100), "updated_at": float64(100), "dataset_name": "test dataset", "owner_id": "test1", "is_public": false},
 				},
 			},
 		},
@@ -154,6 +155,54 @@ func TestInitiateServer(t *testing.T) {
 			Body:         nil,
 			ResponseCode: 400,
 			ResponseBody: map[string]interface{}{"error": "Invalid request body"},
+		},
+	}
+	handleDeleteDatasetTests := []apitesting.Test{
+		{
+			Name:         "Delete dataset - delete dataset that is public but not owned by user",
+			Method:       "DELETE",
+			Path:         "/dataset/test3",
+			Auth:         token2,
+			Body:         nil,
+			ResponseCode: 403,
+			ResponseBody: map[string]interface{}{"error": "Forbidden"},
+		},
+		{
+			Name:         "Delete dataset - delete dataset that is private but not owned by user",
+			Method:       "DELETE",
+			Path:         "/dataset/test2",
+			Auth:         token2,
+			Body:         nil,
+			ResponseCode: 404,
+			ResponseBody: map[string]interface{}{"error": "Dataset not found"},
+		},
+		{
+			Name:         "Delete dataset - delete dataset that has files in it",
+			Method:       "DELETE",
+			Path:         "/dataset/test1",
+			Auth:         token1,
+			Body:         nil,
+			ResponseCode: 400,
+			ResponseBody: map[string]interface{}{"error": "Dataset has files"},
+		},
+		{
+			Name:              "Delete dataset - delete dataset",
+			Method:            "DELETE",
+			Path:              "/dataset/test4",
+			Auth:              token1,
+			Body:              nil,
+			ResponseCode:      204,
+			ResponseBody:      map[string]interface{}{},
+			ManualCompareBody: true,
+		},
+		{
+			Name:         "Delete dataset - delete dataset that doesn't exist",
+			Method:       "DELETE",
+			Path:         "/dataset/invalid",
+			Auth:         token1,
+			Body:         nil,
+			ResponseCode: 404,
+			ResponseBody: map[string]interface{}{"error": "Dataset not found"},
 		},
 	}
 
@@ -688,8 +737,10 @@ func TestInitiateServer(t *testing.T) {
 	testsList := [][]apitesting.Test{
 		handleGetDatasetsTests,
 		handleGetDatasetTests,
+
 		handleGetFilesForDatasetTests,
 		handleCreateDatasetTests,
+		handleDeleteDatasetTests,
 
 		handleGetDatasetAttributesTests,
 		handleCreateDatasetAttributeTests,
@@ -827,6 +878,17 @@ func TestInitiateServer(t *testing.T) {
 		database.DatasetRepo.CreateDataset(models.Dataset{
 			Base: models.Base{
 				ID:        "test2",
+				CreatedAt: 100,
+				UpdatedAt: 100,
+			},
+			DatasetName: "test dataset",
+			OwnerID:     "test1",
+			IsPublic:    false,
+		})
+
+		database.DatasetRepo.CreateDataset(models.Dataset{
+			Base: models.Base{
+				ID:        "test4",
 				CreatedAt: 100,
 				UpdatedAt: 100,
 			},
