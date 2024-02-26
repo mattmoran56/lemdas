@@ -38,3 +38,8 @@ func (f *FileRepository) SearchByName(query, userID string) ([]models.File, erro
 		"%"+query+"%", "processed", userID).Find(&files)
 	return files, result.Error
 }
+
+func (f *FileRepository) DeleteFile(id string) error {
+	result := f.db.Where("id = ?", id).Delete(&models.File{})
+	return result.Error
+}

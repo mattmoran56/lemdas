@@ -104,6 +104,7 @@ func TestInitiateServer(t *testing.T) {
 			ResponseCode: 200,
 			ResponseBody: map[string]interface{}{"files": []any{
 				map[string]any{"id": "testfile4", "created_at": float64(100), "updated_at": float64(100), "name": "testfile2", "owner_id": "test1", "status": "processed", "dataset_id": "test3", "is_public": true},
+				map[string]any{"id": "testfile5", "created_at": float64(100), "updated_at": float64(100), "name": "testfile5", "owner_id": "test1", "status": "processed", "dataset_id": "test3", "is_public": true},
 			},
 			},
 		},
@@ -492,6 +493,45 @@ func TestInitiateServer(t *testing.T) {
 			ResponseBody: map[string]interface{}{"error": "File not found"},
 		},
 	}
+	handleDeleteFileTests := []apitesting.Test{
+		{
+			Name:         "Delete file - delete file that is public but not owned by user",
+			Method:       "DELETE",
+			Path:         "/file/testfile2",
+			Auth:         token2,
+			Body:         nil,
+			ResponseCode: 403,
+			ResponseBody: map[string]interface{}{"error": "Forbidden"},
+		},
+		{
+			Name:         "Delete file - delete file that is private but not owned by user",
+			Method:       "DELETE",
+			Path:         "/file/testfile1",
+			Auth:         token2,
+			Body:         nil,
+			ResponseCode: 404,
+			ResponseBody: map[string]interface{}{"error": "File not found"},
+		},
+		{
+			Name:              "Delete file - delete file",
+			Method:            "DELETE",
+			Path:              "/file/testfile5",
+			Auth:              token1,
+			Body:              nil,
+			ResponseCode:      204,
+			ResponseBody:      map[string]interface{}{},
+			ManualCompareBody: true,
+		},
+		{
+			Name:         "Delete file - delete file that doesn't exist",
+			Method:       "DELETE",
+			Path:         "/file/invalid",
+			Auth:         token1,
+			Body:         nil,
+			ResponseCode: 404,
+			ResponseBody: map[string]interface{}{"error": "File not found"},
+		},
+	}
 	handlePreviewTests := []apitesting.Test{
 		// TODO: test preview
 	}
@@ -749,6 +789,7 @@ func TestInitiateServer(t *testing.T) {
 		handleDeleteDatasetAttributeTests,
 
 		handleGetFileTests,
+		handleDeleteFileTests,
 		handlePreviewTests,
 
 		handleGetFileAttributesTests,
@@ -969,6 +1010,18 @@ func TestInitiateServer(t *testing.T) {
 				UpdatedAt: 100,
 			},
 			Name:      "testfile2",
+			OwnerID:   "test1",
+			Status:    "processed",
+			DatasetID: "test3",
+			IsPublic:  true,
+		})
+		database.FileRepo.CreateFile(models.File{
+			Base: models.Base{
+				ID:        "testfile5",
+				CreatedAt: 100,
+				UpdatedAt: 100,
+			},
+			Name:      "testfile5",
 			OwnerID:   "test1",
 			Status:    "processed",
 			DatasetID: "test3",

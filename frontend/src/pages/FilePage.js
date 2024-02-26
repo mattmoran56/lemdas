@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
+import { TrashIcon } from "@heroicons/react/24/outline";
 
 import SearchBar from "../components/SearchBar/SearchBar";
 import getFile from "../helpers/api/webApi/file/getFile";
@@ -9,6 +10,8 @@ import getFileAttributes from "../helpers/api/webApi/fileAttributes/getFileAttri
 import getPreviewURL from "../helpers/api/webApi/file/getPreview";
 import Loader from "../components/basic/Loader";
 import ErrorToast from "../helpers/toast/errorToast";
+import Button from "../components/basic/Button";
+import deleteFile from "../helpers/api/webApi/file/deleteFile";
 
 const FilePage = () => {
 	const [file, setFile] = useState({});
@@ -18,6 +21,15 @@ const FilePage = () => {
 	const [refreshAttribute, setRefreshAttribute] = useState(false);
 
 	const { fileId } = useParams();
+	const navigate = useNavigate();
+
+	const handleDelete = () => {
+		deleteFile(fileId).then(() => {
+			navigate(`/dataset/${file.dataset_id}`);
+		}).catch((error) => {
+			ErrorToast(error);
+		});
+	};
 
 	useEffect(() => {
 		if (refreshAttribute) {
@@ -68,6 +80,14 @@ const FilePage = () => {
 								</a>
 							</p>
 						</div>
+
+						<Button
+							className="mt-4"
+							onClick={handleDelete}
+						>
+							<TrashIcon className="h-6 w-6 mr-2" />
+							Delete File
+						</Button>
 
 						<h2 className="mt-6 text-2xl font-semibold">File Attributes</h2>
 						<div className="w-full max-h-80 overflow-y-auto">

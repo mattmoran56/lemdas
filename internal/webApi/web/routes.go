@@ -58,6 +58,9 @@ func InitiateServer() *gin.Engine {
 			fileGroup.GET("", file.HandleGetFile)
 			fileGroup.GET("/", file.HandleGetFile)
 
+			fileGroup.DELETE("", file.HandleDeleteFile)
+			fileGroup.DELETE("/", file.HandleDeleteFile)
+
 			fileGroup.GET("/preview", file.HandlePreview)
 			fileGroup.GET("/preview/", file.HandlePreview)
 
