@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import { TrashIcon } from "@heroicons/react/24/outline";
+import { TrashIcon, StarIcon } from "@heroicons/react/24/outline";
+import { StarIcon as StarSolidIcon } from "@heroicons/react/24/solid";
 
 import getDataset from "../helpers/api/webApi/dataset/getDataset";
 import getDatasetFiles from "../helpers/api/webApi/file/getFilesByDataset";
@@ -15,16 +16,31 @@ import ErrorToast from "../helpers/toast/errorToast";
 import Button from "../components/basic/Button";
 import deleteDataset from "../helpers/api/webApi/dataset/deleteDataset";
 import updateDataset from "../helpers/api/webApi/dataset/updateDataset";
+import getStaredDataset from "../helpers/api/webApi/dataset/getStaredDataset";
+import updateStaredDataset from "../helpers/api/webApi/dataset/updateStaredDataset";
 
 const DatasetPage = () => {
 	const [dataset, setDataset] = useState({});
 	const [files, setFiles] = useState([]);
 	const [attributes, setAttributes] = useState([]);
+	const [stared, setStared] = useState(false);
 
 	const [refreshAttribute, setRefreshAttribute] = useState(false);
 
 	const { datasetId } = useParams();
 	const navigate = useNavigate();
+
+	const handleUpdateStared = () => {
+		updateStaredDataset(datasetId).then(() => {
+			getStaredDataset(datasetId).then((data) => {
+				setStared(data.stared);
+			}).catch((error) => {
+				ErrorToast(error);
+			});
+		}).catch((error) => {
+			ErrorToast(error);
+		});
+	};
 
 	const handleUpdatePublic = (e) => {
 		updateDataset(datasetId, dataset.dataset_name, e.target.checked, dataset.owner_id).then(() => {
@@ -77,6 +93,12 @@ const DatasetPage = () => {
 			}).catch((error) => {
 				ErrorToast(error);
 			});
+		getStaredDataset(datasetId)
+			.then((data) => {
+				setStared(data.stared);
+			}).catch((error) => {
+				ErrorToast(error);
+			});
 		setRefreshAttribute(false);
 	}, []);
 
@@ -89,7 +111,28 @@ const DatasetPage = () => {
 					<div className="flex justify-center items-center w-full">
 						<div className="w-full p-8 max-w-7xl flex">
 							<div className="w-1/2 p-2">
-								<h1 className="text-3xl font-bold">{dataset.dataset_name}</h1>
+								<div className="w-full flex justify-between">
+									<h1 className="text-3xl font-bold">{dataset.dataset_name}</h1>
+									{stared
+										? (
+											<button
+												type="button"
+												onClick={handleUpdateStared}
+												aria-label="unstar dataset"
+											>
+												<StarSolidIcon className="h-6 w-6 text-yellow-500" />
+											</button>
+										)
+										: (
+											<button
+												type="button"
+												onClick={handleUpdateStared}
+												aria-label="star dataset"
+											>
+												<StarIcon className="h-6 w-6 text-gray-400" />
+											</button>
+										)}
+								</div>
 								<div className="h-[2px] w-full bg-oxfordblue mb-4" />
 								<div className="w-full flex">
 									<p className="text-gray-800 mr-4">Author: </p>

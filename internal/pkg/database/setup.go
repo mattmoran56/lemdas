@@ -17,6 +17,7 @@ var (
 	DatasetRepo          *repositories.DatasetRepository
 	DatasetAttributeRepo *repositories.DatasetAttributeRepository
 	FileAttributeRepo    *repositories.FileAttributeRepository
+	StaredDatasetRepo    *repositories.StaredDatasetRepository
 )
 
 func ConnectToDatabase(username, password, dbName, host, port string) error {
@@ -47,6 +48,7 @@ func ConnectToDatabase(username, password, dbName, host, port string) error {
 		&models.Dataset{},
 		&models.DatasetAttribute{},
 		&models.FileAttribute{},
+		&models.StaredDataset{},
 	)
 	if err != nil {
 		zap.S().Warn("Error migrating tables ", err)
@@ -58,6 +60,7 @@ func ConnectToDatabase(username, password, dbName, host, port string) error {
 	DatasetRepo = repositories.NewDatasetRepository(db)
 	DatasetAttributeRepo = repositories.NewDatasetAttributeRepository(db)
 	FileAttributeRepo = repositories.NewFileAttributeRepository(db)
+	StaredDatasetRepo = repositories.NewStaredDatasetRepository(db)
 
 	return nil
 

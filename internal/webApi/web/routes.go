@@ -37,6 +37,12 @@ func InitiateServer() *gin.Engine {
 			datasetGroup.GET("/files", dataset.HandleGetFiles)
 			datasetGroup.GET("/files/", dataset.HandleGetFiles)
 
+			datasetGroup.GET("/stared", dataset.HandleGetStared)
+			datasetGroup.GET("/stared/", dataset.HandleGetStared)
+
+			datasetGroup.POST("/stared", dataset.HandleStarDataset)
+			datasetGroup.POST("/stared/", dataset.HandleStarDataset)
+
 			datasetAttributesGroup := datasetGroup.Group("/attribute")
 			{
 				datasetAttributesGroup.GET("", dataset.HandleGetAttributes)

@@ -255,6 +255,103 @@ func TestInitiateServer(t *testing.T) {
 		},
 	}
 
+	handleGetStaredDatasetTests := []apitesting.Test{
+		{
+			Name:         "Get stared datasets - get stared dataset",
+			Method:       "GET",
+			Path:         "/dataset/test1/stared",
+			Auth:         token1,
+			Body:         nil,
+			ResponseCode: 200,
+			ResponseBody: map[string]interface{}{"stared": false},
+		},
+		{
+			Name:         "Get stared datasets - get stared dataset",
+			Method:       "GET",
+			Path:         "/dataset/test3/stared",
+			Auth:         token2,
+			Body:         nil,
+			ResponseCode: 200,
+			ResponseBody: map[string]interface{}{"stared": true},
+		},
+		{
+			Name:         "Get stared datasets - get stared dataset that doesn't exist",
+			Method:       "GET",
+			Path:         "/dataset/invalid/stared",
+			Auth:         token1,
+			Body:         nil,
+			ResponseCode: 404,
+			ResponseBody: map[string]interface{}{"error": "Dataset not found"},
+		},
+		{
+			Name:         "Get stared datasets - get stared dataset that is public but not owned by user",
+			Method:       "GET",
+			Path:         "/dataset/test3/stared",
+			Auth:         token1,
+			Body:         nil,
+			ResponseCode: 200,
+			ResponseBody: map[string]interface{}{"stared": false},
+		},
+		{
+			Name:         "Get stared datasets - get stared dataset that is private but not owned by user",
+			Method:       "GET",
+			Path:         "/dataset/test1/stared",
+			Auth:         token2,
+			Body:         nil,
+			ResponseCode: 404,
+			ResponseBody: map[string]interface{}{"error": "Dataset not found"},
+		},
+	}
+	handleStarDatasetTests := []apitesting.Test{
+		{
+			Name:              "Star dataset - star dataset",
+			Method:            "POST",
+			Path:              "/dataset/test1/stared",
+			Auth:              token1,
+			Body:              nil,
+			ResponseCode:      200,
+			ResponseBody:      map[string]interface{}{"stared": true},
+			ManualCompareBody: true,
+		},
+		{
+			Name:         "Star dataset - star dataset that is public but not owned by user",
+			Method:       "POST",
+			Path:         "/dataset/test3/stared",
+			Auth:         token1,
+			Body:         nil,
+			ResponseCode: 200,
+			ResponseBody: map[string]interface{}{"stared": true},
+		},
+		{
+			Name:         "Star dataset - star dataset that is private but not owned by user",
+			Method:       "POST",
+			Path:         "/dataset/test1/stared",
+			Auth:         token2,
+			Body:         nil,
+			ResponseCode: 404,
+			ResponseBody: map[string]interface{}{"error": "Dataset not found"},
+		},
+		{
+			Name:         "Star dataset - star dataset that doesn't exist",
+			Method:       "POST",
+			Path:         "/dataset/invalid/stared",
+			Auth:         token1,
+			Body:         nil,
+			ResponseCode: 404,
+			ResponseBody: map[string]interface{}{"error": "Dataset not found"},
+		},
+		{
+			Name:              "Star dataset - star dataset that is already stared",
+			Method:            "POST",
+			Path:              "/dataset/test3/stared",
+			Auth:              token1,
+			Body:              nil,
+			ResponseCode:      200,
+			ResponseBody:      map[string]interface{}{"stared": false},
+			ManualCompareBody: true,
+		},
+	}
+
 	handleGetDatasetAttributesTests := []apitesting.Test{
 		{
 			Name:         "Get dataset attributes - get list of attributes for dataset",
@@ -879,6 +976,9 @@ func TestInitiateServer(t *testing.T) {
 		handleCreateDatasetTests,
 		handleDeleteDatasetTests,
 
+		handleGetStaredDatasetTests,
+		handleStarDatasetTests,
+
 		handleGetDatasetAttributesTests,
 		handleCreateDatasetAttributeTests,
 
@@ -1135,6 +1235,7 @@ func TestInitiateServer(t *testing.T) {
 			OwnerID:     "test1",
 			IsPublic:    false,
 		})
+		database.StaredDatasetRepo.StarDataset("test2", "test3")
 	}
 
 	router := InitiateServer()
