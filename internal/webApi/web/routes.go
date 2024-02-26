@@ -19,6 +19,9 @@ func InitiateServer() *gin.Engine {
 		authGroup.GET("dataset", dataset.HandleGetDatasets)
 		authGroup.GET("dataset/", dataset.HandleGetDatasets)
 
+		authGroup.GET("datasets/stared", dataset.HandleGetStaredDatasets)
+		authGroup.GET("datasets/stared/", dataset.HandleGetStaredDatasets)
+
 		authGroup.POST("dataset", dataset.HandleCreateDataset)
 		authGroup.POST("dataset/", dataset.HandleCreateDataset)
 

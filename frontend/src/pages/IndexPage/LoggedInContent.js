@@ -2,6 +2,7 @@ import React from "react";
 
 import RecentDatasets from "../../components/IndexPage/RecentDatasets";
 import Upload from "../../components/IndexPage/Upload/index";
+import StaredDatasets from "../../components/IndexPage/StaredDatasets";
 
 const LoggedInContent = () => {
 	return (
@@ -9,6 +10,7 @@ const LoggedInContent = () => {
 
 			<div className="flex max-w-7xl w-full">
 				<div className="w-1/2 px-2">
+					<StaredDatasets />
 					<RecentDatasets />
 				</div>
 				<div

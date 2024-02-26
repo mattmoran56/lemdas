@@ -61,6 +61,29 @@ func TestInitiateServer(t *testing.T) {
 		},
 		// TODO: test order by
 	}
+	handleGetStaredDatasetsTests := []apitesting.Test{
+		{
+			Name:         "Get stared datasets - get stared datasets (no datasets)",
+			Method:       "GET",
+			Path:         "/datasets/stared",
+			Auth:         token1,
+			Body:         nil,
+			ResponseCode: 200,
+			ResponseBody: map[string]interface{}{"datasets": []any{}},
+		},
+		{
+			Name:         "Get stared datasets - get stared datasets",
+			Method:       "GET",
+			Path:         "/datasets/stared",
+			Auth:         token2,
+			Body:         nil,
+			ResponseCode: 200,
+			ResponseBody: map[string]interface{}{"datasets": []any{
+				map[string]any{"id": "test3", "created_at": float64(100), "updated_at": float64(100), "dataset_name": "test dataset", "owner_id": "test1", "is_public": true},
+			}},
+			ManualCompareBody: true,
+		},
+	}
 	handleGetDatasetTests := []apitesting.Test{
 		{
 			Name:         "Get dataset - get user's dataset",
@@ -969,6 +992,7 @@ func TestInitiateServer(t *testing.T) {
 
 	testsList := [][]apitesting.Test{
 		handleGetDatasetsTests,
+		handleGetStaredDatasetsTests,
 		handleGetDatasetTests,
 		handleUpdateDatasetTests,
 

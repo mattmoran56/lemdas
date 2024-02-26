@@ -26,6 +26,14 @@ func (d *DatasetRepository) GetUsersDatasets(userId string) ([]models.Dataset, e
 	return datasets, result.Error
 }
 
+func (d *DatasetRepository) GetStaredDatasets(userID string) ([]models.Dataset, error) {
+	var datasets []models.Dataset
+	result := d.db.Select("datasets.*").
+		Joins("RIGHT OUTER JOIN stared_datasets ON stared_datasets.dataset_id = datasets.id").
+		Where("stared_datasets.user_id = ? AND stared_datasets.dataset_id IS NOT NULL", userID).Find(&datasets)
+	return datasets, result.Error
+}
+
 func (d *DatasetRepository) GetUsersDatasetsOrderBy(userId string, orderBy string) ([]models.Dataset, error) {
 	var datasets []models.Dataset
 	result := d.db.Order(orderBy).Where("owner_id = ?", userId).Find(&datasets)
