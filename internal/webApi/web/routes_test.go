@@ -375,6 +375,190 @@ func TestInitiateServer(t *testing.T) {
 		},
 	}
 
+	handleGetCollaboratorsTests := []apitesting.Test{
+		{
+			Name:         "Get collaborators - get list of collaborators for dataset",
+			Method:       "GET",
+			Path:         "/dataset/test3/collaborator",
+			Auth:         token1,
+			Body:         nil,
+			ResponseCode: 200,
+			ResponseBody: map[string]interface{}{"collaborators": []any{
+				map[string]any{"id": "testcollab1", "created_at": float64(100), "updated_at": float64(100), "dataset_id": "test3", "user_id": "test2"},
+			}},
+		},
+		{
+			Name:         "Get collaborators - get list of collaborators for public dataset not owned by user",
+			Method:       "GET",
+			Path:         "/dataset/test3/collaborator",
+			Auth:         token2,
+			Body:         nil,
+			ResponseCode: 200,
+			ResponseBody: map[string]interface{}{"collaborators": []any{
+				map[string]any{"id": "testcollab1", "created_at": float64(100), "updated_at": float64(100), "dataset_id": "test3", "user_id": "test2"},
+			}},
+		},
+		{
+			Name:         "Get collaborators - get list of collaborators for private dataset not owned by user",
+			Method:       "GET",
+			Path:         "/dataset/test1/collaborator",
+			Auth:         token2,
+			Body:         nil,
+			ResponseCode: 404,
+			ResponseBody: map[string]interface{}{"error": "Dataset not found"},
+		},
+		{
+			Name:         "Get collaborators - get list of collaborators for dataset that doesn't exist",
+			Method:       "GET",
+			Path:         "/dataset/invalid/collaborator",
+			Auth:         token1,
+			Body:         nil,
+			ResponseCode: 404,
+			ResponseBody: map[string]interface{}{"error": "Dataset not found"},
+		},
+		{
+			Name:         "Get collaborators - get list of collaborators for dataset that has no collaborators",
+			Method:       "GET",
+			Path:         "/dataset/test2/collaborator",
+			Auth:         token1,
+			Body:         nil,
+			ResponseCode: 200,
+			ResponseBody: map[string]interface{}{"collaborators": []any{}},
+		},
+	}
+	handleAddCollaboratorTests := []apitesting.Test{
+		{
+			Name:              "Add collaborator - add collaborator to dataset",
+			Method:            "POST",
+			Path:              "/dataset/test1/collaborator",
+			Auth:              token1,
+			Body:              map[string]interface{}{"user_id": "test2"},
+			ResponseCode:      201,
+			ResponseBody:      map[string]interface{}{"id": "testcollab2", "created_at": float64(100), "updated_at": float64(100), "dataset_id": "test1", "user_id": "test2"},
+			ManualCompareBody: true,
+		},
+		{
+			Name:         "Add collaborator - add collaborator to dataset that doesn't exist",
+			Method:       "POST",
+			Path:         "/dataset/invalid/collaborator",
+			Auth:         token1,
+			Body:         map[string]interface{}{"user_id": "test2"},
+			ResponseCode: 404,
+			ResponseBody: map[string]interface{}{"error": "Dataset not found"},
+		},
+		{
+			Name:         "Add collaborator - add collaborator to public dataset not owned by user",
+			Method:       "POST",
+			Path:         "/dataset/test3/collaborator",
+			Auth:         token2,
+			Body:         map[string]interface{}{"user_id": "test2"},
+			ResponseCode: 403,
+			ResponseBody: map[string]interface{}{"error": "Forbidden"},
+		},
+		{
+			Name:         "Add collaborator - add collaborator to private dataset not owned by user",
+			Method:       "POST",
+			Path:         "/dataset/test1/collaborator",
+			Auth:         token2,
+			Body:         map[string]interface{}{"user_id": "test2"},
+			ResponseCode: 404,
+			ResponseBody: map[string]interface{}{"error": "Dataset not found"},
+		},
+		{
+			Name:         "Add collaborator - add collaborator to dataset with no body",
+			Method:       "POST",
+			Path:         "/dataset/test1/collaborator",
+			Auth:         token1,
+			Body:         nil,
+			ResponseCode: 400,
+			ResponseBody: map[string]interface{}{"error": "Invalid request body"},
+		},
+		{
+			Name:         "Add collaborator - add collaborator to dataset with no user id",
+			Method:       "POST",
+			Path:         "/dataset/test1/collaborator",
+			Auth:         token1,
+			Body:         map[string]interface{}{"user_id": ""},
+			ResponseCode: 400,
+			ResponseBody: map[string]interface{}{"error": "Invalid request body"},
+		},
+		{
+			Name:         "Add collaborator - add collaborator to dataset with invalid user id",
+			Method:       "POST",
+			Path:         "/dataset/test1/collaborator",
+			Auth:         token1,
+			Body:         map[string]interface{}{"user_id": "invalid"},
+			ResponseCode: 404,
+			ResponseBody: map[string]interface{}{"error": "User not found"},
+		},
+		{
+			Name:         "Add collaborator - add collaborator to dataset with user id that already has access",
+			Method:       "POST",
+			Path:         "/dataset/test1/collaborator",
+			Auth:         token1,
+			Body:         map[string]interface{}{"user_id": "test2"},
+			ResponseCode: 400,
+			ResponseBody: map[string]interface{}{"error": "User is already a collaborator"},
+		},
+		{
+			Name:         "Add collaborator - add collaborator to dataset with user id that is owner",
+			Method:       "POST",
+			Path:         "/dataset/test1/collaborator",
+			Auth:         token1,
+			Body:         map[string]interface{}{"user_id": "test1"},
+			ResponseCode: 400,
+			ResponseBody: map[string]interface{}{"error": "User is owner of dataset"},
+		},
+	}
+	handleDeleteCollaboratorTests := []apitesting.Test{
+		{
+			Name:              "Delete collaborator - delete collaborator from dataset",
+			Method:            "DELETE",
+			Path:              "/dataset/test1/collaborator/testcollab1",
+			Auth:              token1,
+			Body:              nil,
+			ResponseCode:      204,
+			ResponseBody:      map[string]interface{}{},
+			ManualCompareBody: true,
+		},
+		{
+			Name:         "Delete collaborator - delete collaborator from dataset that doesn't exist",
+			Method:       "DELETE",
+			Path:         "/dataset/invalid/collaborator/testcollab1",
+			Auth:         token1,
+			Body:         nil,
+			ResponseCode: 404,
+			ResponseBody: map[string]interface{}{"error": "Dataset not found"},
+		},
+		{
+			Name:         "Delete collaborator - delete collaborator from public dataset not owned by user",
+			Method:       "DELETE",
+			Path:         "/dataset/test3/collaborator/testcollab1",
+			Auth:         token2,
+			Body:         nil,
+			ResponseCode: 403,
+			ResponseBody: map[string]interface{}{"error": "Forbidden"},
+		},
+		{
+			Name:         "Delete collaborator - delete collaborator from private dataset not owned by user",
+			Method:       "DELETE",
+			Path:         "/dataset/test1/collaborator/testcollab1",
+			Auth:         token2,
+			Body:         nil,
+			ResponseCode: 404,
+			ResponseBody: map[string]interface{}{"error": "Dataset not found"},
+		},
+		{
+			Name:         "Delete collaborator - delete collaborator that doesn't exist from dataset",
+			Method:       "DELETE",
+			Path:         "/dataset/test1/collaborator/invalid",
+			Auth:         token1,
+			Body:         nil,
+			ResponseCode: 404,
+			ResponseBody: map[string]interface{}{"error": "Collaborator not found"},
+		},
+	}
+
 	handleGetDatasetAttributesTests := []apitesting.Test{
 		{
 			Name:         "Get dataset attributes - get list of attributes for dataset",
@@ -1003,6 +1187,10 @@ func TestInitiateServer(t *testing.T) {
 		handleGetStaredDatasetTests,
 		handleStarDatasetTests,
 
+		handleGetCollaboratorsTests,
+		handleAddCollaboratorTests,
+		handleDeleteCollaboratorTests,
+
 		handleGetDatasetAttributesTests,
 		handleCreateDatasetAttributeTests,
 
@@ -1117,6 +1305,16 @@ func TestInitiateServer(t *testing.T) {
 			OwnerID:     "test1",
 			IsPublic:    true,
 		})
+		database.DatasetCollaboratorRepo.CreateDatabaseCollaborator(models.DatasetCollaborator{
+			Base: models.Base{
+				ID:        "testcollab1",
+				CreatedAt: 100,
+				UpdatedAt: 100,
+			},
+			DatasetID: "test3",
+			UserID:    "test2",
+		})
+
 		database.DatasetAttributeRepo.CreateDatasetAttribute(models.DatasetAttribute{
 			Base: models.Base{
 				ID:        "test13",

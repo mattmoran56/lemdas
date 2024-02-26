@@ -11,12 +11,13 @@ import (
 )
 
 var (
-	UserRepo             *repositories.UserRepo
-	FileRepo             *repositories.FileRepository
-	DatasetRepo          *repositories.DatasetRepository
-	DatasetAttributeRepo *repositories.DatasetAttributeRepository
-	FileAttributeRepo    *repositories.FileAttributeRepository
-	StaredDatasetRepo    *repositories.StaredDatasetRepository
+	UserRepo                *repositories.UserRepo
+	FileRepo                *repositories.FileRepository
+	DatasetRepo             *repositories.DatasetRepository
+	DatasetAttributeRepo    *repositories.DatasetAttributeRepository
+	FileAttributeRepo       *repositories.FileAttributeRepository
+	StaredDatasetRepo       *repositories.StaredDatasetRepository
+	DatasetCollaboratorRepo *repositories.DatasetCollaboratorRepository
 )
 
 func ConnectToDatabase(username, password, dbName, host, port string) error {
@@ -43,6 +44,7 @@ func ConnectToDatabase(username, password, dbName, host, port string) error {
 		&models.DatasetAttribute{},
 		&models.FileAttribute{},
 		&models.StaredDataset{},
+		&models.DatasetCollaborator{},
 	)
 	if err != nil {
 		zap.S().Warn("Error migrating tables ", err)
@@ -55,6 +57,7 @@ func ConnectToDatabase(username, password, dbName, host, port string) error {
 	DatasetAttributeRepo = repositories.NewDatasetAttributeRepository(db)
 	FileAttributeRepo = repositories.NewFileAttributeRepository(db)
 	StaredDatasetRepo = repositories.NewStaredDatasetRepository(db)
+	DatasetCollaboratorRepo = repositories.NewDatasetCollaboratorRepository(db)
 
 	return nil
 

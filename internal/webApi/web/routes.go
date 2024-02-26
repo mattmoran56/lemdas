@@ -46,6 +46,15 @@ func InitiateServer() *gin.Engine {
 			datasetGroup.POST("/stared", dataset.HandleStarDataset)
 			datasetGroup.POST("/stared/", dataset.HandleStarDataset)
 
+			datasetGroup.GET("/collaborator", dataset.HandleGetCollaborators)
+			datasetGroup.GET("/collaborator/", dataset.HandleGetCollaborators)
+
+			datasetGroup.POST("/collaborator", dataset.HandleAddCollaborator)
+			datasetGroup.POST("/collaborator/", dataset.HandleAddCollaborator)
+
+			datasetGroup.DELETE("/collaborator/:collaboratorId", dataset.HandleDeleteCollaborator)
+			datasetGroup.DELETE("/collaborator/:collaboratorId/", dataset.HandleDeleteCollaborator)
+
 			datasetAttributesGroup := datasetGroup.Group("/attribute")
 			{
 				datasetAttributesGroup.GET("", dataset.HandleGetAttributes)
