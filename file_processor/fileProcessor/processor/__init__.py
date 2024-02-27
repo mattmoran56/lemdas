@@ -48,7 +48,7 @@ class Processor:
             processor = DM3Scan(self.file_id)
             processor.download_files()
             processor.process()
-            # processor.get_preview()
+            processor.get_preview()
             processor.finish_process()
             database.FileDatabase().update_status(self.file_id, "processed")
 

@@ -1203,6 +1203,26 @@ fast = ["fastnumbers (>=2.0.0)"]
 icu = ["PyICU (>=1.0.0)"]
 
 [[package]]
+name = "ncempy"
+version = "1.11.0"
+description = "openNCEM's Python Package"
+optional = false
+python-versions = "*"
+files = [
+    {file = "ncempy-1.11.0-py3-none-any.whl", hash = "sha256:6183ccb768274d05c22c91b2d0067a058e94d37fd41bd115191e432f49554adb"},
+    {file = "ncempy-1.11.0.tar.gz", hash = "sha256:fbc15792d0d057f902beabd934fef0cdb05eead131ef707f6c259d44d1fdd258"},
+]
+
+[package.dependencies]
+h5py = ">=2.9.0"
+matplotlib = "*"
+numpy = "*"
+scipy = "*"
+
+[package.extras]
+edstomo = ["genfire", "glob2", "hyperspy", "ipyvolume", "matplotlib", "scikit-image", "scipy"]
+
+[[package]]
 name = "networkx"
 version = "3.2.1"
 description = "Python package for creating and manipulating graphs and networks"
@@ -2278,4 +2298,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "43d2ef735ba5026f1cc206a694cf31ca53c4f907d2129bb2f83b3db1d7b209fb"
+content-hash = "09b82215f794f3186c136830456c88a3cf1c5ca7b9975d341a83b18832ad8caf"

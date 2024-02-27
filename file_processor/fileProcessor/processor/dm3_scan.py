@@ -2,11 +2,14 @@ import os
 from PIL import Image, ImageSequence
 from azure.storage.blob import BlobServiceClient
 from azure.identity import DefaultAzureCredential
-from azure.storage.blob import BlobClient
 
 from database import FileDatabase
 from processor.scan import Scan
 import hyperspy.api as hs
+
+from PIL import Image
+import numpy as np
+import ncempy.io as nio
 
 class DM3Scan(Scan):
     def __init__(self, file_id):
@@ -42,14 +45,20 @@ class DM3Scan(Scan):
                 self.database.add_attribute(self.file_id, prefix + "-" + key, value)
 
     def get_preview(self):
-        image = Image.open(".temp/" + self.file_id)
+        with nio.dm.fileDM(".temp/"+self.file_id) as dm:
+            data = dm.getDataset(0)["data"]
+            data = np.array(data)
+            data = np.rot90(data, 3)
+            data = np.flip(data, 1)
 
-        for i, page in enumerate(ImageSequence.Iterator(image)):
-            try:
-                page.save(".temp/" + self.file_id.split(".")[0] + ".png")
-            except:
-                print(page)
-            break
+            data = data - np.min(data)
+            data = data / np.max(data)
+            data = data * 255
+            data = data.astype(np.uint8)
+
+            img = Image.fromarray(data)
+            img.save(".temp/"+self.file_id.split(".")[0] + ".png")
+
 
         url = "https://synopticprojectstorage.blob.core.windows.net/"
         token_credential = DefaultAzureCredential()
