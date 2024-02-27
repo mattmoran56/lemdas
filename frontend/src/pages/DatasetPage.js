@@ -133,7 +133,7 @@ const DatasetPage = () => {
 						<div className="w-full p-8 max-w-7xl flex">
 							<div className="w-1/2 p-2">
 								<div className="w-full flex justify-between">
-									<h1 className="text-3xl font-bold">{dataset.dataset_name}</h1>
+									<h1 className="text-3xl font-bold break-words">{dataset.dataset_name}</h1>
 									{stared
 										? (
 											<button

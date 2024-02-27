@@ -79,7 +79,7 @@ const FilePage = () => {
 			<div className="flex justify-center items-center w-full">
 				<div className="w-full p-8 max-w-7xl w-full flex">
 					<div className="w-1/2 p-2">
-						<h1 className="text-3xl font-bold">{file.name}</h1>
+						<h1 className="text-3xl font-bold break-words">{file.name}</h1>
 						<div className="h-[2px] w-full bg-oxfordblue mb-4" />
 						<div className="w-full flex">
 							<p className="text-gray-800 mr-4">Author: </p>
