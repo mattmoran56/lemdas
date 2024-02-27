@@ -31,6 +31,31 @@ func TestInitiateServer(t *testing.T) {
 
 	// All tests should be written for the end point ommitting the slash at the end of the path
 	// All test should be written for the end point with auth provided
+	handleSearchForUsersTests := []apitesting.Test{
+		{
+			Name:         "Search for users - search for user",
+			Method:       "GET",
+			Path:         "/user/search?query=test",
+			Auth:         token1,
+			Body:         nil,
+			ResponseCode: 200,
+			ResponseBody: map[string]interface{}{"users": []any{
+				map[string]any{"id": "test1", "created_at": float64(100), "updated_at": float64(100), "email": "test1@test.com", "first_name": "test1", "last_name": "test"},
+				map[string]any{"id": "test2", "created_at": float64(100), "updated_at": float64(100), "email": "test2@test.com", "first_name": "test2", "last_name": "test"},
+			}},
+			ManualCompareBody: true,
+		},
+		{
+			Name:         "Search for users - search for user with no query",
+			Method:       "GET",
+			Path:         "/user/search",
+			Auth:         token1,
+			Body:         nil,
+			ResponseCode: 400,
+			ResponseBody: map[string]interface{}{"error": "No query provided"},
+		},
+	}
+
 	handleGetDatasetsTests := []apitesting.Test{
 		{
 			Name:         "Get datasets - get all user's datasets",
@@ -1175,6 +1200,8 @@ func TestInitiateServer(t *testing.T) {
 	}
 
 	testsList := [][]apitesting.Test{
+		handleSearchForUsersTests,
+
 		handleGetDatasetsTests,
 		handleGetStaredDatasetsTests,
 		handleGetDatasetTests,

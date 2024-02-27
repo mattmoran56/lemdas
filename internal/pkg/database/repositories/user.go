@@ -47,3 +47,11 @@ func (u *UserRepo) GetUserByID(UserID string) (models.User, error) {
 
 	return user, result.Error
 }
+
+func (u *UserRepo) SearchForUser(query string) ([]models.User, error) {
+	var users []models.User
+	result := u.db.Where("first_name LIKE ? OR last_name LIKE ? OR email LIKE ? ", "%"+query+"%", "%"+query+"%", "%"+query+"%").Find(&users)
+
+	return users, result.Error
+
+}

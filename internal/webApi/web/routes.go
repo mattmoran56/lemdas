@@ -5,6 +5,7 @@ import (
 	"github.com/mattmoran/fyp/api/pkg/web/middleware"
 	"github.com/mattmoran/fyp/api/webApi/web/handlers/dataset"
 	"github.com/mattmoran/fyp/api/webApi/web/handlers/file"
+	"github.com/mattmoran/fyp/api/webApi/web/handlers/user"
 	m "github.com/mattmoran/fyp/api/webApi/web/middleware"
 	"go.uber.org/zap"
 )
@@ -16,6 +17,9 @@ func InitiateServer() *gin.Engine {
 
 	authGroup := r.Group("/", middleware.JWTAuthMiddleware())
 	{
+		authGroup.GET("user/search", user.HandleSearchForUser)
+		authGroup.GET("user/search/", user.HandleSearchForUser)
+
 		authGroup.GET("dataset", dataset.HandleGetDatasets)
 		authGroup.GET("dataset/", dataset.HandleGetDatasets)
 
