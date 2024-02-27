@@ -28,7 +28,7 @@ func getFileExtension(filename string) string {
 func HandleUpload(c *gin.Context) {
 	type UploadFileRequest struct {
 		DatasetID string `form:"dataset_id" binding:"required"`
-		IsPublic  bool   `form:"is_public" binding:"required"`
+		IsPublic  bool   `form:"is_public"`
 	}
 
 	var r UploadFileRequest
