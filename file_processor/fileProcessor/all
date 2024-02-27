@@ -1,0 +1,26 @@
+├── Acquisition_instrument
+│   └── TEM
+│       ├── acquisition_mode = TEM
+│       ├── beam_current = 1.0
+│       ├── beam_energy = 200.0
+│       ├── camera_length = 0.0
+│       ├── magnification = 7800.0
+│       └── microscope = FEI Tecnai Remote
+├── General
+│   ├── FileIO
+│   │   └── 0
+│   │       ├── hyperspy_version = 2.0.1
+│   │       ├── io_plugin = rsciio.digitalmicrograph
+│   │       ├── operation = load
+│   │       └── timestamp = 2024-02-27T11:12:50.435184+00:00
+│   ├── date = 2013-03-21
+│   ├── original_filename = 220dfce7-51ad-4872-b9a2-6ad146e3742e.dm3
+│   ├── time = 12:44:48
+│   └── title = C3_water_50nM_20nm_0002
+└── Signal
+    ├── Noise_properties
+    │   └── Variance_linear_model
+    │       ├── gain_factor = 1.0
+    │       └── gain_offset = 0.0
+    ├── quantity = Intensity
+    └── signal_type = 

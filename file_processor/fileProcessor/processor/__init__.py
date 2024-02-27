@@ -1,4 +1,5 @@
 import database
+from processor.dm3_scan import DM3Scan
 from processor.tif_scan import TifScan
 
 
@@ -42,6 +43,15 @@ class Processor:
                 database.FileDatabase().update_status(self.file_id, "uploaded")
                 return
             database.FileDatabase().update_status(self.file_id, "support_processed")
+
+        elif self.file_type == "dm3" or self.file_type == "dm4":
+            processor = DM3Scan(self.file_id)
+            processor.download_files()
+            processor.process()
+            # processor.get_preview()
+            processor.finish_process()
+            database.FileDatabase().update_status(self.file_id, "processed")
+
         else:
             print("File type not supported")
 

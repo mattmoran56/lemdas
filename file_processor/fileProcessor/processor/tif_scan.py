@@ -4,11 +4,11 @@ from azure.storage.blob import BlobServiceClient
 from azure.identity import DefaultAzureCredential
 from azure.storage.blob import BlobClient
 
-from utils.utils import download_from_azure
 from database import FileDatabase
+from processor.scan import Scan
 
 
-class TifScan:
+class TifScan(Scan):
     def __init__(self, file_id):
         self.database = FileDatabase()
         self.halted = False
@@ -26,14 +26,6 @@ class TifScan:
             self.halted = True
         else:
             self.txt_file_id = txt_file.id
-
-    def download_files(self):
-        download_from_azure(self.file_id)
-        if self.halted:
-            return False
-        download_from_azure(self.txt_file_id)
-
-        return True
 
     def process(self):
         if self.halted:
@@ -79,10 +71,3 @@ class TifScan:
             container_client.upload_blob(name=self.file_id.split(".")[0] + ".png", data=data, overwrite=True)
 
         os.remove(".temp/"+self.file_id.split(".")[0] + ".png")
-
-    def finish_process(self):
-        os.remove(".temp/" + self.file_id)
-        if self.halted:
-            return False
-        os.remove(".temp/"+self.txt_file_id)
-        return True
