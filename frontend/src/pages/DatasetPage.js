@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import { TrashIcon, StarIcon } from "@heroicons/react/24/outline";
+import { TrashIcon, StarIcon, PlusIcon } from "@heroicons/react/24/outline";
 import { StarIcon as StarSolidIcon } from "@heroicons/react/24/solid";
 
 import getDataset from "../helpers/api/webApi/dataset/getDataset";
@@ -18,12 +18,16 @@ import deleteDataset from "../helpers/api/webApi/dataset/deleteDataset";
 import updateDataset from "../helpers/api/webApi/dataset/updateDataset";
 import getStaredDataset from "../helpers/api/webApi/dataset/getStaredDataset";
 import updateStaredDataset from "../helpers/api/webApi/dataset/updateStaredDataset";
+import getCollaborators from "../helpers/api/webApi/datasetCollaborators/getCollaborators";
+import CollaboratorsModal from "../components/DatasetPage/CollaboratorsModal";
 
 const DatasetPage = () => {
 	const [dataset, setDataset] = useState({});
 	const [files, setFiles] = useState([]);
 	const [attributes, setAttributes] = useState([]);
 	const [stared, setStared] = useState(false);
+	const [collaborators, setCollaborators] = useState([]);
+	const [modalOpen, setModalOpen] = useState(false);
 
 	const [refreshAttribute, setRefreshAttribute] = useState(false);
 
@@ -99,6 +103,11 @@ const DatasetPage = () => {
 			}).catch((error) => {
 				ErrorToast(error);
 			});
+		getCollaborators(datasetId).then((data) => {
+			setCollaborators(data.collaborators);
+		}).catch((error) => {
+			ErrorToast(error);
+		});
 		setRefreshAttribute(false);
 	}, []);
 
@@ -106,6 +115,18 @@ const DatasetPage = () => {
 		<div className="w-screen h-full bg-offwhite">
 			<SearchBar />
 			<ToastContainer />
+			<CollaboratorsModal
+				datasetId={datasetId}
+				isOpen={modalOpen}
+				setIsOpen={setModalOpen}
+				onClose={() => {
+					getCollaborators(datasetId).then((data) => {
+						setCollaborators(data.collaborators);
+					}).catch((error) => {
+						ErrorToast(error);
+					});
+				}}
+			/>
 			{ dataset
 				? (
 					<div className="flex justify-center items-center w-full">
@@ -137,6 +158,31 @@ const DatasetPage = () => {
 								<div className="w-full flex">
 									<p className="text-gray-800 mr-4">Author: </p>
 									<p className="font-medium">{dataset.owner_name}</p>
+								</div>
+								<div className="w-full flex">
+									<p className="text-gray-800 mr-4">Collaborators: </p>
+									<p className="font-medium">
+										{
+											collaborators.map((collaborator, i) => {
+												return (
+													i === collaborators.length - 1
+														? `${collaborators.length === 1 ? "" : "and"} 
+														${collaborator.user.first_name} 
+														${collaborator.user.last_name}`
+														: `${collaborator.user.first_name} 
+														${collaborator.user.last_name}, `
+												);
+											})
+										}
+										<button
+											type="button"
+											onClick={() => { setModalOpen(true); }}
+											className="ml-2"
+											aria-label="show collaborators"
+										>
+											<PlusIcon className="h-4 w-4 text-oxfordblue-400 mt-1" />
+										</button>
+									</p>
 								</div>
 								<div className="w-full flex items-center">
 									<p className="text-gray-800 mr-4">Public dataset: </p>
