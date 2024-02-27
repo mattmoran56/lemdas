@@ -384,7 +384,7 @@ func TestInitiateServer(t *testing.T) {
 			Body:         nil,
 			ResponseCode: 200,
 			ResponseBody: map[string]interface{}{"collaborators": []any{
-				map[string]any{"id": "testcollab1", "created_at": float64(100), "updated_at": float64(100), "dataset_id": "test3", "user_id": "test2"},
+				map[string]any{"id": "testcollab1", "created_at": float64(100), "updated_at": float64(100), "dataset_id": "test3", "user_id": "test2", "user": map[string]any{"id": "test2", "created_at": float64(100), "updated_at": float64(100), "email": "test2@test.com", "first_name": "test2", "last_name": "test"}},
 			}},
 		},
 		{
@@ -395,7 +395,7 @@ func TestInitiateServer(t *testing.T) {
 			Body:         nil,
 			ResponseCode: 200,
 			ResponseBody: map[string]interface{}{"collaborators": []any{
-				map[string]any{"id": "testcollab1", "created_at": float64(100), "updated_at": float64(100), "dataset_id": "test3", "user_id": "test2"},
+				map[string]any{"id": "testcollab1", "created_at": float64(100), "updated_at": float64(100), "dataset_id": "test3", "user_id": "test2", "user": map[string]any{"id": "test2", "created_at": float64(100), "updated_at": float64(100), "email": "test2@test.com", "first_name": "test2", "last_name": "test"}},
 			}},
 		},
 		{
@@ -1249,7 +1249,9 @@ func TestInitiateServer(t *testing.T) {
 	{
 		database.UserRepo.CreateUser(models.User{
 			Base: models.Base{
-				ID: "test1",
+				ID:        "test1",
+				CreatedAt: 100,
+				UpdatedAt: 100,
 			},
 			Email:     "test1@test.com",
 			FirstName: "test1",
@@ -1257,7 +1259,9 @@ func TestInitiateServer(t *testing.T) {
 		})
 		database.UserRepo.CreateUser(models.User{
 			Base: models.Base{
-				ID: "test2",
+				ID:        "test2",
+				CreatedAt: 100,
+				UpdatedAt: 100,
 			},
 			Email:     "test2@test.com",
 			FirstName: "test2",

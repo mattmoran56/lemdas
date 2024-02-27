@@ -38,6 +38,9 @@ func (d *DatasetCollaboratorRepository) RemoveCollaborator(datasetID, userID str
 func (d *DatasetCollaboratorRepository) GetCollaborators(datasetID string) ([]models.DatasetCollaborator, error) {
 	var collaborators []models.DatasetCollaborator
 	result := d.db.Where("dataset_id = ?", datasetID).Find(&collaborators)
+	for i, _ := range collaborators {
+		d.db.Model(&collaborators[i]).Association("User").Find(&collaborators[i].User)
+	}
 	return collaborators, result.Error
 }
 

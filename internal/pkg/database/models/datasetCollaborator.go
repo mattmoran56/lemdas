@@ -2,6 +2,7 @@ package models
 
 type DatasetCollaborator struct {
 	Base
-	UserID    string `json:"user_id" gorm:"foreignKey: User(ID)"`
+	UserID    string `json:"user_id" gorm:"foreignKey:User(ID);size:191"`
 	DatasetID string `json:"dataset_id" gorm:"foreignKey: Dataset(ID)"`
+	User      User   `json:"user"`
 }
