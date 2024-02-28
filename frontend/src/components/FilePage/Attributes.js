@@ -28,7 +28,9 @@ const Attribute = ({
 				ErrorToast(e);
 			});
 		} else {
-			updateFileAttribute(fileId, attribute.id, attributeName, value);
+			updateFileAttribute(fileId, attribute.id, attributeName, value).catch((e) => {
+				ErrorToast(e);
+			});
 		}
 	};
 
