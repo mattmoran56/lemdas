@@ -5,6 +5,7 @@ import (
 	"github.com/mattmoran/fyp/api/pkg/web/middleware"
 	"github.com/mattmoran/fyp/api/webApi/web/handlers/dataset"
 	"github.com/mattmoran/fyp/api/webApi/web/handlers/file"
+	"github.com/mattmoran/fyp/api/webApi/web/handlers/group"
 	"github.com/mattmoran/fyp/api/webApi/web/handlers/user"
 	m "github.com/mattmoran/fyp/api/webApi/web/middleware"
 	"go.uber.org/zap"
@@ -110,6 +111,28 @@ func InitiateServer() *gin.Engine {
 				}
 			}
 		}
+
+		authGroup.GET("group", group.HandleGetGroups)
+		authGroup.GET("group/", group.HandleGetGroups)
+
+		authGroup.POST("group", group.HandleCreateGroup)
+		authGroup.POST("group/", group.HandleCreateGroup)
+
+		groupsGroup := authGroup.Group("/group/:groupId", m.CheckGroupAccess())
+		{
+			groupsGroup.GET("", group.HandleGetGroup)
+			groupsGroup.GET("/", group.HandleGetGroup)
+
+			groupsGroup.DELETE("", group.HandleDeleteGroup)
+			groupsGroup.DELETE("/", group.HandleDeleteGroup)
+
+			groupsGroup.POST("/member", group.HandleAddMember)
+			groupsGroup.POST("/member/", group.HandleAddMember)
+
+			groupsGroup.DELETE("/member/:userId", group.HandleDeleteMember)
+			groupsGroup.DELETE("/member/:userId/", group.HandleDeleteMember)
+		}
+
 	}
 
 	if gin.Mode() == "test" {

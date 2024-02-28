@@ -1199,6 +1199,230 @@ func TestInitiateServer(t *testing.T) {
 		},
 	}
 
+	handleGetGroupsTests := []apitesting.Test{
+		{
+			Name:         "Get groups - get list of groups",
+			Method:       "GET",
+			Path:         "/group",
+			Auth:         token1,
+			Body:         nil,
+			ResponseCode: 200,
+			ResponseBody: map[string]interface{}{"groups": []any{
+				map[string]any{"id": "testgroup1", "created_at": float64(100), "updated_at": float64(100), "group_name": "test group", "owner_id": "test1"},
+				map[string]any{"id": "testgroup2", "created_at": float64(100), "updated_at": float64(100), "group_name": "test group2", "owner_id": "test1"},
+				map[string]any{"id": "testgroup3", "created_at": float64(100), "updated_at": float64(100), "group_name": "test group 3", "owner_id": "test1"},
+			}},
+		},
+		{
+			Name:         "Get groups - get list of groups where user doesn't own groups",
+			Method:       "GET",
+			Path:         "/group",
+			Auth:         token2,
+			Body:         nil,
+			ResponseCode: 200,
+			ResponseBody: map[string]interface{}{"groups": []any{
+				map[string]any{"id": "testgroup1", "created_at": float64(100), "updated_at": float64(100), "group_name": "test group", "owner_id": "test1"},
+				map[string]any{"id": "testgroup3", "created_at": float64(100), "updated_at": float64(100), "group_name": "test group 3", "owner_id": "test1"},
+			}},
+		},
+	}
+	handleCreateGroupTests := []apitesting.Test{
+		{
+			Name:              "Create group - create group",
+			Method:            "POST",
+			Path:              "/group",
+			Auth:              token1,
+			Body:              map[string]interface{}{"group_name": "test group 3"},
+			ResponseCode:      201,
+			ResponseBody:      map[string]interface{}{"id": "testgroup3", "created_at": float64(100), "updated_at": float64(100), "group_name": "test group 3", "owner_id": "test1"},
+			ManualCompareBody: true,
+		},
+		{
+			Name:         "Create group - create group with no body",
+			Method:       "POST",
+			Path:         "/group",
+			Auth:         token1,
+			Body:         nil,
+			ResponseCode: 400,
+			ResponseBody: map[string]interface{}{"error": "Invalid request body"},
+		},
+	}
+
+	handleGetGroupTests := []apitesting.Test{
+		{
+			Name:         "Get group - get group",
+			Method:       "GET",
+			Path:         "/group/testgroup1",
+			Auth:         token1,
+			Body:         nil,
+			ResponseCode: 200,
+			ResponseBody: map[string]interface{}{"id": "testgroup1", "created_at": float64(100), "updated_at": float64(100), "group_name": "test group", "owner_id": "test1"},
+		},
+		{
+			Name:         "Get group - get group that doesn't exist",
+			Method:       "GET",
+			Path:         "/group/invalid",
+			Auth:         token1,
+			Body:         nil,
+			ResponseCode: 404,
+			ResponseBody: map[string]interface{}{"error": "Group not found"},
+		},
+		{
+			Name:         "Get group - get group that user doesn't own but is in",
+			Method:       "GET",
+			Path:         "/group/testgroup1",
+			Auth:         token2,
+			Body:         nil,
+			ResponseCode: 200,
+			ResponseBody: map[string]interface{}{"id": "testgroup1", "created_at": float64(100), "updated_at": float64(100), "group_name": "test group", "owner_id": "test1"},
+		},
+		{
+			Name:         "Get group - get group that user doesn't own and isn't in",
+			Method:       "GET",
+			Path:         "/group/testgroup2",
+			Auth:         token2,
+			Body:         nil,
+			ResponseCode: 404,
+			ResponseBody: map[string]interface{}{"error": "Group not found"},
+		},
+	}
+	handleDeleteGroupTests := []apitesting.Test{
+		{
+			Name:         "Delete group - delete group that doesn't exist",
+			Method:       "DELETE",
+			Path:         "/group/invalid",
+			Auth:         token1,
+			Body:         nil,
+			ResponseCode: 404,
+			ResponseBody: map[string]interface{}{"error": "Group not found"},
+		},
+		{
+			Name:              "Delete group - delete group that user doesn't own but is in",
+			Method:            "DELETE",
+			Path:              "/group/testgroup1",
+			Auth:              token2,
+			Body:              nil,
+			ResponseCode:      403,
+			ResponseBody:      map[string]interface{}{"error": "Forbidden"},
+			ManualCompareBody: true,
+		},
+		{
+			Name:         "Delete group - delete group that user doesn't own and isn't in",
+			Method:       "DELETE",
+			Path:         "/group/testgroup2",
+			Auth:         token2,
+			Body:         nil,
+			ResponseCode: 404,
+			ResponseBody: map[string]interface{}{"error": "Group not found"},
+		},
+		{
+			Name:              "Delete group - delete group",
+			Method:            "DELETE",
+			Path:              "/group/testgroup3",
+			Auth:              token1,
+			Body:              nil,
+			ResponseCode:      204,
+			ResponseBody:      map[string]interface{}{},
+			ManualCompareBody: true,
+		},
+	}
+
+	handleAddMemberTests := []apitesting.Test{
+		{
+			Name:         "Add member - add member to group",
+			Method:       "POST",
+			Path:         "/group/testgroup1/member",
+			Auth:         token1,
+			Body:         map[string]interface{}{"user_id": "test2"},
+			ResponseCode: 201,
+			ResponseBody: map[string]interface{}{},
+		},
+		{
+			Name:         "Add member - add member to group with no body",
+			Method:       "POST",
+			Path:         "/group/testgroup1/member",
+			Auth:         token1,
+			Body:         nil,
+			ResponseCode: 400,
+			ResponseBody: map[string]interface{}{"error": "Invalid request body"},
+		},
+		{
+			Name:         "Add member - add member to group that doesn't exist",
+			Method:       "POST",
+			Path:         "/group/invalid/member",
+			Auth:         token1,
+			Body:         map[string]interface{}{"user_id": "test2"},
+			ResponseCode: 404,
+			ResponseBody: map[string]interface{}{"error": "Group not found"},
+		},
+		{
+			Name:         "Add member - add member to group that user doesn't own but is in",
+			Method:       "POST",
+			Path:         "/group/testgroup1/member",
+			Auth:         token2,
+			Body:         map[string]interface{}{"user_id": "test2"},
+			ResponseCode: 403,
+			ResponseBody: map[string]interface{}{"error": "Forbidden"},
+		},
+		{
+			Name:         "Add member - add member to group that user doesn't own and isn't in",
+			Method:       "POST",
+			Path:         "/group/testgroup2/member",
+			Auth:         token2,
+			Body:         map[string]interface{}{"user_id": "test2"},
+			ResponseCode: 404,
+			ResponseBody: map[string]interface{}{"error": "Group not found"},
+		},
+	}
+	handleDeleteMemberTests := []apitesting.Test{
+		{
+			Name:         "Delete member - delete member from group that doesn't exist",
+			Method:       "DELETE",
+			Path:         "/group/invalid/member/test2",
+			Auth:         token1,
+			Body:         nil,
+			ResponseCode: 404,
+			ResponseBody: map[string]interface{}{"error": "Group not found"},
+		},
+		{
+			Name:         "Delete member - delete member from group that user doesn't own but is in",
+			Method:       "DELETE",
+			Path:         "/group/testgroup1/member/test2",
+			Auth:         token2,
+			Body:         nil,
+			ResponseCode: 403,
+			ResponseBody: map[string]interface{}{"error": "Forbidden"},
+		},
+		{
+			Name:         "Delete member - delete member from group that user doesn't own and isn't in",
+			Method:       "DELETE",
+			Path:         "/group/testgroup2/member/test2",
+			Auth:         token2,
+			Body:         nil,
+			ResponseCode: 404,
+			ResponseBody: map[string]interface{}{"error": "Group not found"},
+		},
+		{
+			Name:         "Delete member - delete member that doesn't exist from group",
+			Method:       "DELETE",
+			Path:         "/group/testgroup1/member/invalid",
+			Auth:         token1,
+			Body:         nil,
+			ResponseCode: 404,
+			ResponseBody: map[string]interface{}{"error": "User not found"},
+		},
+		{
+			Name:              "Delete member - delete member from group",
+			Method:            "DELETE",
+			Path:              "/group/testgroup3/member/test2",
+			Auth:              token1,
+			Body:              nil,
+			ResponseCode:      204,
+			ResponseBody:      map[string]interface{}{},
+			ManualCompareBody: true,
+		},
+	}
+
 	testsList := [][]apitesting.Test{
 		handleSearchForUsersTests,
 
@@ -1234,6 +1458,13 @@ func TestInitiateServer(t *testing.T) {
 
 		handleUpdateFileAttributeTests,
 		handleDeleteFileAttributeTests,
+
+		handleGetGroupsTests,
+		handleCreateGroupTests,
+		handleGetGroupTests,
+		handleDeleteGroupTests,
+		handleAddMemberTests,
+		handleDeleteMemberTests,
 	}
 
 	// TODO: Duplicate the tests to check with and without auth
@@ -1284,6 +1515,7 @@ func TestInitiateServer(t *testing.T) {
 			FirstName: "test1",
 			LastName:  "test",
 		})
+
 		database.UserRepo.CreateUser(models.User{
 			Base: models.Base{
 				ID:        "test2",
@@ -1294,7 +1526,6 @@ func TestInitiateServer(t *testing.T) {
 			FirstName: "test2",
 			LastName:  "test",
 		})
-
 		database.DatasetRepo.CreateDataset(models.Dataset{
 			Base: models.Base{
 				ID:        "test1",
@@ -1489,6 +1720,52 @@ func TestInitiateServer(t *testing.T) {
 			IsPublic:    false,
 		})
 		database.StaredDatasetRepo.StarDataset("test2", "test3")
+
+		database.GroupRepo.Create(models.UserGroup{
+			Base: models.Base{
+				ID:        "testgroup1",
+				CreatedAt: 100,
+				UpdatedAt: 100,
+			},
+			GroupName: "test group",
+			OwnerID:   "test1",
+		})
+		database.GroupRepo.Create(models.UserGroup{
+			Base: models.Base{
+				ID:        "testgroup2",
+				CreatedAt: 100,
+				UpdatedAt: 100,
+			},
+			GroupName: "test group2",
+			OwnerID:   "test1",
+		})
+		database.GroupRepo.Create(models.UserGroup{
+			Base: models.Base{
+				ID:        "testgroup3",
+				CreatedAt: 100,
+				UpdatedAt: 100,
+			},
+			GroupName: "test group 3",
+			OwnerID:   "test1",
+		})
+		database.GroupMemberRepo.CreateGroupMember(models.GroupMember{
+			Base: models.Base{
+				ID:        "testgroupmember1",
+				CreatedAt: 100,
+				UpdatedAt: 100,
+			},
+			GroupID: "testgroup1",
+			UserID:  "test2",
+		})
+		database.GroupMemberRepo.CreateGroupMember(models.GroupMember{
+			Base: models.Base{
+				ID:        "testgroupmember2",
+				CreatedAt: 100,
+				UpdatedAt: 100,
+			},
+			GroupID: "testgroup3",
+			UserID:  "test2",
+		})
 	}
 
 	router := InitiateServer()
