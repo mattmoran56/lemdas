@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/mattmoran/fyp/api/pkg/web/middleware"
 	"github.com/mattmoran/fyp/api/webApi/web/handlers/dataset"
+	"github.com/mattmoran/fyp/api/webApi/web/handlers/dataset/share"
 	"github.com/mattmoran/fyp/api/webApi/web/handlers/file"
 	"github.com/mattmoran/fyp/api/webApi/web/handlers/group"
 	"github.com/mattmoran/fyp/api/webApi/web/handlers/user"
@@ -76,6 +77,28 @@ func InitiateServer() *gin.Engine {
 					datasetAttributeGroup.DELETE("", dataset.HandleDeleteAttribute)
 					datasetAttributeGroup.DELETE("/", dataset.HandleDeleteAttribute)
 				}
+			}
+
+			sharingGroup := datasetGroup.Group("/share")
+			{
+				// TODO: Test all these routes
+				sharingGroup.POST("/user", share.HandleShareWithUser)
+				sharingGroup.POST("/user/", share.HandleShareWithUser)
+
+				sharingGroup.DELETE("/user/:userId", share.HandleDeleteUserShare)
+				sharingGroup.DELETE("/user/:userId/", share.HandleDeleteUserShare)
+
+				sharingGroup.POST("/group", share.HandleShareWithGroup)
+				sharingGroup.POST("/group/", share.HandleShareWithGroup)
+
+				sharingGroup.DELETE("/group/:groupId", share.HandleDeleteGroupShare)
+				sharingGroup.DELETE("/group/:groupId/", share.HandleDeleteGroupShare)
+
+				sharingGroup.GET("/user", share.HandleGetUsersSharedWith)
+				sharingGroup.GET("/user/", share.HandleGetUsersSharedWith)
+
+				sharingGroup.GET("/group", share.HandleGetGroupsSharedWith)
+				sharingGroup.GET("/group/", share.HandleGetGroupsSharedWith)
 			}
 		}
 
