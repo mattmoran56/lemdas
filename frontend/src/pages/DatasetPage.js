@@ -20,6 +20,7 @@ import getStaredDataset from "../helpers/api/webApi/dataset/getStaredDataset";
 import updateStaredDataset from "../helpers/api/webApi/dataset/updateStaredDataset";
 import getCollaborators from "../helpers/api/webApi/datasetCollaborators/getCollaborators";
 import CollaboratorsModal from "../components/DatasetPage/CollaboratorsModal";
+import Sharing from "../components/DatasetPage/Sharing";
 
 const DatasetPage = () => {
 	const [dataset, setDataset] = useState({});
@@ -211,6 +212,10 @@ const DatasetPage = () => {
 										setNeedRefresh={setRefreshAttribute}
 									/>
 								</div>
+
+								<div className="w-full h-[2px] bg-oxfordblue mt-8" />
+								<h2 className="mt-6 text-2xl font-semibold">Sharing</h2>
+								<Sharing datasetId={datasetId} />
 							</div>
 							<div className="w-1/2 p-2">
 								<div className="w-full flex flex-wrap">

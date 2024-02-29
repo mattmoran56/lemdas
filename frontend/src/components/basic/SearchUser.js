@@ -37,6 +37,8 @@ const SearchUser = ({ setUser }) => {
 											${i % 2 === 0 ? "bg-gray-100" : ""}`}
 								key={user.id}
 								onClick={() => {
+									setQuery(`${user.first_name} ${user.last_name} (${user.email})`);
+									setUsers([]);
 									setUser(user);
 								}}
 							>
