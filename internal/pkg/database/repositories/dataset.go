@@ -40,6 +40,23 @@ func (d *DatasetRepository) GetUsersDatasetsOrderBy(userId string, orderBy strin
 	return datasets, result.Error
 }
 
+func (d *DatasetRepository) GetUsersSharedDatasets(userID string) ([]models.Dataset, error) {
+	var datasets []models.Dataset
+	result := d.db.Select("datasets.*").
+		Joins("RIGHT OUTER JOIN user_share_datasets ON user_share_datasets.dataset_id = datasets.id").
+		Where("user_share_datasets.user_id = ? AND user_share_datasets.dataset_id IS NOT NULL", userID).Find(&datasets)
+
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	result = d.db.Select("datasets.*").
+		Joins("RIGHT OUTER JOIN group_share_datasets ON group_share_datasets.dataset_id = datasets.id").
+		Joins("RIGHT OUTER JOIN group_members ON group_members.group_id = group_share_datasets.group_id").
+		Where("group_members.user_id = ? AND group_share_datasets.dataset_id IS NOT NULL", userID).Find(&datasets)
+	return datasets, result.Error
+}
+
 func (d *DatasetRepository) CheckUserAccessToDataset(datasetID, userID string) (bool, error) {
 	var dataset models.Dataset
 	result := d.db.Where("id = ?", datasetID).First(&dataset)

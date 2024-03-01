@@ -13,6 +13,7 @@ import DatasetPage from "./pages/DatasetPage";
 import FilePage from "./pages/FilePage";
 import SimpleSearchPage from "./pages/SimpleSearchPage";
 import ErrorPage from "./pages/ErrorPage";
+import MyDataPage from "./pages/MyDataPage";
 
 const router = createBrowserRouter([
 	{
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
 	{
 		path: "/file/:fileId",
 		element: <FilePage />,
+	},
+	{
+		path: "/datasets",
+		element: <MyDataPage />,
 	},
 	{
 		path: "/search",

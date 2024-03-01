@@ -24,6 +24,13 @@ const StaredDatasets = () => {
 			<h1 className="font-semibold text-2xl mx-2">Stared Datasets</h1>
 			<div className="w-full h-[2px] mx-2 mb-4 bg-oxfordblue" />
 			<div className="flex flex-wrap">
+				{datasets.length === 0
+					? (
+						<p className="ml-2">
+							Your stared datasets will appear here!
+						</p>
+					)
+					: null}
 				{datasets.map((dataset) => {
 					return (
 						<Dataset key={dataset.id} dataset={dataset} stared />
