@@ -22,6 +22,9 @@ func InitiateServer() *gin.Engine {
 		authGroup.GET("user/search", user.HandleSearchForUser)
 		authGroup.GET("user/search/", user.HandleSearchForUser)
 
+		authGroup.GET("group/search", group.HandleSearchForGroup)
+		authGroup.GET("group/search/", group.HandleSearchForGroup)
+
 		authGroup.GET("dataset", dataset.HandleGetDatasets)
 		authGroup.GET("dataset/", dataset.HandleGetDatasets)
 
