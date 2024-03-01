@@ -13,11 +13,13 @@ const CollaboratorsModal = ({
 	isOpen, setIsOpen, onClose, datasetId,
 }) => {
 	const [collaborators, setCollaborators] = useState([]);
+	const [user, setUser] = useState({});
 
-	const handleAdd = (user) => {
+	const handleAdd = () => {
 		addCollaborator(datasetId, user.id).then(() => {
 			getCollaborators(datasetId).then((data) => {
 				setCollaborators(data.collaborators);
+				setUser({});
 			}).catch((error) => {
 				setIsOpen(false);
 				ErrorToast(error);
@@ -54,7 +56,13 @@ const CollaboratorsModal = ({
 			<div className="bg-white p-4 rounded-md w-max">
 				<h1 className="text-2xl font-bold">Collaborators</h1>
 				<div className="flex items-center mt-8">
-					<SearchUser setUser={handleAdd} />
+					<SearchUser key={user.id} setUser={setUser} />
+					<Button
+						className="ml-4"
+						onClick={handleAdd}
+					>
+						Add
+					</Button>
 				</div>
 				<div className="w-full mt-8">
 					<h2 className="text-lg font-semibold mb-2">Current Collaborators</h2>

@@ -28,6 +28,7 @@ const DatasetPage = () => {
 	const [attributes, setAttributes] = useState([]);
 	const [stared, setStared] = useState(false);
 	const [collaborators, setCollaborators] = useState([]);
+	const [writeAccess, setWriteAccess] = useState(false);
 	const [modalOpen, setModalOpen] = useState(false);
 
 	const [refreshAttribute, setRefreshAttribute] = useState(false);
@@ -83,6 +84,7 @@ const DatasetPage = () => {
 		getDataset(datasetId)
 			.then((data) => {
 				setDataset(data);
+				setWriteAccess(false);
 			}).catch((error) => {
 				ErrorToast(error);
 			});
@@ -116,18 +118,21 @@ const DatasetPage = () => {
 		<div className="w-screen h-full bg-offwhite">
 			<SearchBar />
 			<ToastContainer />
-			<CollaboratorsModal
-				datasetId={datasetId}
-				isOpen={modalOpen}
-				setIsOpen={setModalOpen}
-				onClose={() => {
-					getCollaborators(datasetId).then((data) => {
-						setCollaborators(data.collaborators);
-					}).catch((error) => {
-						ErrorToast(error);
-					});
-				}}
-			/>
+			{writeAccess
+				? (
+					<CollaboratorsModal
+						datasetId={datasetId}
+						isOpen={modalOpen}
+						setIsOpen={setModalOpen}
+						onClose={() => {
+							getCollaborators(datasetId).then((data) => {
+								setCollaborators(data.collaborators);
+							}).catch((error) => {
+								ErrorToast(error);
+							});
+						}}
+					/>
+				) : null }
 			{ dataset
 				? (
 					<div className="flex justify-center items-center w-full">
@@ -178,8 +183,9 @@ const DatasetPage = () => {
 										<button
 											type="button"
 											onClick={() => { setModalOpen(true); }}
-											className="ml-2"
+											className={`ml-2 ${writeAccess ? "" : "hidden"}`}
 											aria-label="show collaborators"
+											disabled={!writeAccess}
 										>
 											<PlusIcon className="h-4 w-4 text-oxfordblue-400 mt-1" />
 										</button>
@@ -192,12 +198,13 @@ const DatasetPage = () => {
 											type="checkbox"
 											checked={dataset.is_public}
 											onChange={handleUpdatePublic}
+											disabled={!writeAccess}
 										/>
 									</p>
 								</div>
 
 								<Button
-									className="mt-4"
+									className={`mt-4 ${writeAccess ? "" : "hidden"}`}
 									onClick={handleDelete}
 								>
 									<TrashIcon className="h-6 w-6 mr-2" />
@@ -210,12 +217,13 @@ const DatasetPage = () => {
 										attributes={attributes}
 										datasetId={datasetId}
 										setNeedRefresh={setRefreshAttribute}
+										writeAcces={writeAccess}
 									/>
 								</div>
 
 								<div className="w-full h-[2px] bg-oxfordblue mt-8" />
 								<h2 className="mt-6 text-2xl font-semibold">Sharing</h2>
-								<Sharing datasetId={datasetId} />
+								<Sharing datasetId={datasetId} writeAccess={writeAccess} />
 							</div>
 							<div className="w-1/2 p-2">
 								<div className="w-full flex flex-wrap">
@@ -226,17 +234,20 @@ const DatasetPage = () => {
 									})}
 								</div>
 								<div className="w-full h-64 mt-8">
-									<Upload
-										datasetId={datasetId}
-										onFinish={() => {
-											getDatasetFiles(datasetId)
-												.then((data) => {
-													setFiles(data);
-												}).catch((error) => {
-													ErrorToast(error);
-												});
-										}}
-									/>
+									{writeAccess
+										? (
+											<Upload
+												datasetId={datasetId}
+												onFinish={() => {
+													getDatasetFiles(datasetId)
+														.then((data) => {
+															setFiles(data);
+														}).catch((error) => {
+															ErrorToast(error);
+														});
+												}}
+											/>
+										) : null}
 								</div>
 							</div>
 						</div>

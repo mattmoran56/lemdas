@@ -7,7 +7,7 @@ import updateDatasetAttribute from "../../helpers/api/webApi/datasetAttributes/u
 import ErrorToast from "../../helpers/toast/errorToast";
 
 const Attribute = ({
-	attribute, datasetId, setNeedRefresh, addNewAttribute,
+	attribute, datasetId, setNeedRefresh, addNewAttribute, writeAccess,
 }) => {
 	const [clicked, setClicked] = useState(false);
 	const [error, setError] = useState(false);
@@ -66,6 +66,7 @@ const Attribute = ({
 					onBlur={handleClickOff}
 					value={attributeName}
 					onChange={(e) => { setAttributeName(e.target.value); }}
+					disabled={!writeAccess}
 				/>:
 			</td>
 			<td className="font-medium" aria-label="New Value">
@@ -78,17 +79,29 @@ const Attribute = ({
 					onBlur={handleClickOff}
 					value={value}
 					onChange={(e) => { setValue(e.target.value); }}
+					disabled={!writeAccess}
 				/>
 			</td>
 			<td>
 				{attributeId
 					? (
-						<button type="button" aria-label="delete" onClick={handleDelete}>
+						<button
+							className={writeAccess ? "" : "hidden"}
+							type="button"
+							aria-label="delete"
+							onClick={handleDelete}
+							disabled={!writeAccess}
+						>
 							<TrashIcon className="h-6 w-6 text-gray-500 hover:text-red-500" />
 						</button>
 					)
 					: (
-						<button type="button" aria-label="save">
+						<button
+							className={writeAccess ? "" : "hidden"}
+							type="button"
+							aria-label="save"
+							disabled={!writeAccess}
+						>
 							<PlusIcon className="h-6 w-6 text-gray-300 hover:text-gray-500" />
 						</button>
 					)}
@@ -97,7 +110,9 @@ const Attribute = ({
 	);
 };
 
-const Attributes = ({ attributes, datasetId, setNeedRefresh }) => {
+const Attributes = ({
+	attributes, datasetId, setNeedRefresh, writeAccess,
+}) => {
 	const [attributeList, setAttributeList] = useState([]);
 
 	const addNewAttribute = () => {
@@ -123,6 +138,7 @@ const Attributes = ({ attributes, datasetId, setNeedRefresh }) => {
 								datasetId={datasetId}
 								setNeedRefresh={setNeedRefresh}
 								addNewAttribute={addNewAttribute}
+								writeAccess={writeAccess}
 							/>
 						);
 					})}
