@@ -28,8 +28,11 @@ func (r *GroupRepository) DeleteGroup(groupId string) error {
 	return r.db.Exec("DELETE FROM user_groups WHERE id = ?", groupId).Error
 }
 
-func (r *GroupRepository) SearchForGroup(query string) ([]models.UserGroup, error) {
+func (r *GroupRepository) SearchForGroupUserIsIn(query, userID string) ([]models.UserGroup, error) {
 	var groups []models.UserGroup
-	err := r.db.Where("group_name LIKE ?", "%"+query+"%").Find(&groups).Error
+	err := r.db.Select("user_groups.*").
+		Joins("LEFT JOIN group_members ON group_members.group_id = user_groups.id").
+		Where("user_groups.group_name LIKE ? AND (user_groups.owner_id = ? OR group_members.user_id = ?)", "%"+query+"%", userID, userID).Find(&groups).Error
+
 	return groups, err
 }

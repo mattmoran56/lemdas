@@ -10,7 +10,7 @@ func HandleShareWithGroup(c *gin.Context) {
 	datasetID := c.Param("datasetId")
 
 	type ShareRequest struct {
-		ShareeEID   string `json:"user_id" binding:"required"`
+		ShareeEID   string `json:"group_id" binding:"required"`
 		WriteAccess bool   `json:"write_access" default:"false"`
 	}
 

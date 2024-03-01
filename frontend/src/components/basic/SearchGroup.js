@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import ErrorToast from "../../helpers/toast/errorToast";
-import searchUsers from "../../helpers/api/webApi/search/searchForUser";
+import searchGroups from "../../helpers/api/webApi/search/searchForGroup";
 
-const SearchUser = ({ setUser }) => {
+const SearchGroup = ({ setGroup }) => {
 	const [query, setQuery] = useState("");
-	const [users, setUsers] = useState([]);
+	const [groups, setGroups] = useState([]);
 
 	const handleSearch = () => {
-		searchUsers(query).then((data) => {
-			setUsers(data.users);
+		searchGroups(query).then((data) => {
+			setGroups(data.groups);
 		}).catch((error) => {
 			ErrorToast(error);
 		});
@@ -19,7 +19,7 @@ const SearchUser = ({ setUser }) => {
 				<input
 					type="text"
 					className="w-full p-2 border-2 outline-none rounded-3xl mb-2"
-					placeholder="Search user by email"
+					placeholder="Search group"
 					value={query}
 					onChange={(e) => {
 						setQuery(e.target.value);
@@ -27,22 +27,22 @@ const SearchUser = ({ setUser }) => {
 					}}
 				/>
 				<div className="flex flex-col w-full">
-					{users.map((user, i) => {
+					{groups.map((group, i) => {
 						return (
 							<button
 								type="button"
-								aria-label={`add ${user.first_name} ${user.last_name} to collaborators`}
+								aria-label={`add ${group.group_name} to collaborators`}
 								className={`w-full p-3 text-left hover:underline hover:bg-gray-200
 											transition-all duration-300
 											${i % 2 === 0 ? "bg-gray-100" : ""}`}
-								key={user.id}
+								key={group.id}
 								onClick={() => {
-									setQuery(`${user.first_name} ${user.last_name} (${user.email})`);
-									setUsers([]);
-									setUser(user);
+									setQuery(`${group.group_name}`);
+									setGroups([]);
+									setGroup(group);
 								}}
 							>
-								{user.first_name} {user.last_name} ({user.email})
+								{group.group_name}
 							</button>
 						);
 					})}
@@ -52,4 +52,4 @@ const SearchUser = ({ setUser }) => {
 	);
 };
 
-export default SearchUser;
+export default SearchGroup;

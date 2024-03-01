@@ -41,7 +41,7 @@ func (r *GroupShareDatasetRepository) GetGroupShareDatasetsForDatasetId(datasetI
 	err := r.db.Where("dataset_id = ?", datasetId).
 		Find(&groupShareDatasets)
 	for i, groupShareDataset := range groupShareDatasets {
-		r.db.Model(&groupShareDataset).Association("Group").Find(&groupShareDatasets[i].UserGroup)
+		r.db.Model(&groupShareDataset).Association("UserGroup").Find(&groupShareDatasets[i].UserGroup)
 	}
 	return &groupShareDatasets, err.Error
 }
