@@ -13,6 +13,7 @@ import ErrorToast from "../helpers/toast/errorToast";
 import Button from "../components/basic/Button";
 import deleteFile from "../helpers/api/webApi/file/deleteFile";
 import updateFile from "../helpers/api/webApi/file/updateFile";
+import getAccess from "../helpers/api/webApi/file/getAccess";
 
 const FilePage = () => {
 	const [file, setFile] = useState({});
@@ -60,6 +61,11 @@ const FilePage = () => {
 		getFile(fileId).then((data) => {
 			setFile(data);
 			setWriteAccess(false);
+		}).catch((error) => {
+			ErrorToast(error);
+		});
+		getAccess(fileId).then((data) => {
+			setWriteAccess(data.access === "write");
 		}).catch((error) => {
 			ErrorToast(error);
 		});

@@ -21,6 +21,7 @@ import updateStaredDataset from "../helpers/api/webApi/dataset/updateStaredDatas
 import getCollaborators from "../helpers/api/webApi/datasetCollaborators/getCollaborators";
 import CollaboratorsModal from "../components/DatasetPage/CollaboratorsModal";
 import Sharing from "../components/DatasetPage/Sharing";
+import getAccess from "../helpers/api/webApi/dataset/getAccess";
 
 const DatasetPage = () => {
 	const [dataset, setDataset] = useState({});
@@ -84,10 +85,14 @@ const DatasetPage = () => {
 		getDataset(datasetId)
 			.then((data) => {
 				setDataset(data);
-				setWriteAccess(false);
 			}).catch((error) => {
 				ErrorToast(error);
 			});
+		getAccess(datasetId).then((data) => {
+			setWriteAccess(data.access === "write");
+		}).catch((error) => {
+			ErrorToast(error);
+		});
 		getDatasetFiles(datasetId)
 			.then((data) => {
 				setFiles(data);
@@ -217,7 +222,7 @@ const DatasetPage = () => {
 										attributes={attributes}
 										datasetId={datasetId}
 										setNeedRefresh={setRefreshAttribute}
-										writeAcces={writeAccess}
+										writeAccess={writeAccess}
 									/>
 								</div>
 

@@ -46,6 +46,9 @@ func InitiateServer() *gin.Engine {
 			datasetGroup.DELETE("", dataset.HandleDeleteDataset)
 			datasetGroup.DELETE("/", dataset.HandleDeleteDataset)
 
+			datasetGroup.GET("/access", dataset.HandleGetAccessLevel)
+			datasetGroup.GET("/access/", dataset.HandleGetAccessLevel)
+
 			datasetGroup.GET("/files", dataset.HandleGetFiles)
 			datasetGroup.GET("/files/", dataset.HandleGetFiles)
 
@@ -115,6 +118,9 @@ func InitiateServer() *gin.Engine {
 
 			fileGroup.DELETE("", file.HandleDeleteFile)
 			fileGroup.DELETE("/", file.HandleDeleteFile)
+
+			fileGroup.GET("/access", file.HandleGetAccessLevel)
+			fileGroup.GET("/access/", file.HandleGetAccessLevel)
 
 			fileGroup.GET("/preview", file.HandlePreview)
 			fileGroup.GET("/preview/", file.HandlePreview)
