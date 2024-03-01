@@ -14,6 +14,7 @@ import Button from "../components/basic/Button";
 import deleteFile from "../helpers/api/webApi/file/deleteFile";
 import updateFile from "../helpers/api/webApi/file/updateFile";
 import getAccess from "../helpers/api/webApi/file/getAccess";
+import ErrorPage from "./ErrorPage";
 
 const FilePage = () => {
 	const [file, setFile] = useState({});
@@ -22,6 +23,7 @@ const FilePage = () => {
 	const [writeAccess, setWriteAccess] = useState(false);
 
 	const [refreshAttribute, setRefreshAttribute] = useState(false);
+	const [notFound, setNotFound] = useState(false);
 
 	const { fileId } = useParams();
 	const navigate = useNavigate();
@@ -62,6 +64,7 @@ const FilePage = () => {
 			setFile(data);
 			setWriteAccess(false);
 		}).catch((error) => {
+			setNotFound(true);
 			ErrorToast(error);
 		});
 		getAccess(fileId).then((data) => {
@@ -80,77 +83,79 @@ const FilePage = () => {
 			ErrorToast(error);
 		});
 	}, []);
-	return (
-		<div className="w-screen h-full bg-offwhite">
-			<SearchBar />
-			<ToastContainer />
-			<div className="flex justify-center items-center w-full">
-				<div className="w-full p-8 max-w-7xl w-full flex">
-					<div className="w-1/2 p-2">
-						<h1 className="text-3xl font-bold break-words">{file.name}</h1>
-						<div className="h-[2px] w-full bg-oxfordblue mb-4" />
-						<div className="w-full flex">
-							<p className="text-gray-800 mr-4">Author: </p>
-							<p className="font-medium">{file.owner_name}</p>
-						</div>
-						<div className="w-full flex">
-							<p className="text-gray-800 mr-4">Dataset: </p>
-							<p className="font-medium hover:underline">
-								<a href={`/dataset/${file.dataset_id}`}>
-									{file.dataset_name}
-								</a>
-							</p>
-						</div>
-						<div className="w-full flex items-center">
-							<p className="text-gray-800 mr-4">Public file: </p>
-							<p className="font-medium">
-								<input
-									type="checkbox"
-									checked={file.is_public}
-									onChange={handleUpdatePublic}
-									disabled={!writeAccess}
-								/>
-							</p>
-						</div>
+	return notFound
+		? <ErrorPage />
+		: (
+			<div className="w-screen h-full bg-offwhite">
+				<SearchBar />
+				<ToastContainer />
+				<div className="flex justify-center items-center w-full">
+					<div className="w-full p-8 max-w-7xl w-full flex">
+						<div className="w-1/2 p-2">
+							<h1 className="text-3xl font-bold break-words">{file.name}</h1>
+							<div className="h-[2px] w-full bg-oxfordblue mb-4" />
+							<div className="w-full flex">
+								<p className="text-gray-800 mr-4">Author: </p>
+								<p className="font-medium">{file.owner_name}</p>
+							</div>
+							<div className="w-full flex">
+								<p className="text-gray-800 mr-4">Dataset: </p>
+								<p className="font-medium hover:underline">
+									<a href={`/dataset/${file.dataset_id}`}>
+										{file.dataset_name}
+									</a>
+								</p>
+							</div>
+							<div className="w-full flex items-center">
+								<p className="text-gray-800 mr-4">Public file: </p>
+								<p className="font-medium">
+									<input
+										type="checkbox"
+										checked={file.is_public}
+										onChange={handleUpdatePublic}
+										disabled={!writeAccess}
+									/>
+								</p>
+							</div>
 
-						{writeAccess
-							? (
-								<Button
-									className="mt-4"
-									onClick={handleDelete}
-								>
-									<TrashIcon className="h-6 w-6 mr-2" />
-									Delete File
-								</Button>
-							) : null}
+							{writeAccess
+								? (
+									<Button
+										className="mt-4"
+										onClick={handleDelete}
+									>
+										<TrashIcon className="h-6 w-6 mr-2" />
+										Delete File
+									</Button>
+								) : null}
 
-						<h2 className="mt-6 text-2xl font-semibold">File Attributes</h2>
-						<div className="w-full max-h-80 overflow-y-auto">
-							<Attributes
-								attributes={attributes}
-								fileId={fileId}
-								setNeedRefresh={setRefreshAttribute}
-								writeAccess={writeAccess}
-							/>
-						</div>
-					</div>
-					<div className="w-1/2 p-2">
-						{file.status !== "processed" && file.status !== "awaitingtxt"
-							? <p>Preview will be available when file is finished processing</p>
-							: null}
-						{(file.status === "processed" || file.status === "awaitingtxt") && previewUrl !== ""
-							? (
-								<img
-									src={previewUrl}
-									alt="preview"
+							<h2 className="mt-6 text-2xl font-semibold">File Attributes</h2>
+							<div className="w-full max-h-80 overflow-y-auto">
+								<Attributes
+									attributes={attributes}
+									fileId={fileId}
+									setNeedRefresh={setRefreshAttribute}
+									writeAccess={writeAccess}
 								/>
-							)
-							: <div className="w-full h-full flex justify-center items-center"><Loader /></div> }
+							</div>
+						</div>
+						<div className="w-1/2 p-2">
+							{file.status !== "processed" && file.status !== "awaitingtxt"
+								? <p>Preview will be available when file is finished processing</p>
+								: null}
+							{(file.status === "processed" || file.status === "awaitingtxt") && previewUrl !== ""
+								? (
+									<img
+										src={previewUrl}
+										alt="preview"
+									/>
+								)
+								: <div className="w-full h-full flex justify-center items-center"><Loader /></div> }
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-	);
+		);
 };
 
 export default FilePage;

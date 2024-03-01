@@ -12,6 +12,7 @@ import AuthPage from "./pages/AuthPage";
 import DatasetPage from "./pages/DatasetPage";
 import FilePage from "./pages/FilePage";
 import SimpleSearchPage from "./pages/SimpleSearchPage";
+import ErrorPage from "./pages/ErrorPage";
 
 const router = createBrowserRouter([
 	{
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
 	{
 		path: "/search",
 		element: <SimpleSearchPage />,
+	},
+	{
+		path: "*",
+		element: <ErrorPage />,
 	},
 ]);
 
