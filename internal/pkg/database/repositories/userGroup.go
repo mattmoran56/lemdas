@@ -30,6 +30,6 @@ func (r *GroupRepository) DeleteGroup(groupId string) error {
 
 func (r *GroupRepository) SearchForGroup(query string) ([]models.UserGroup, error) {
 	var groups []models.UserGroup
-	err := r.db.Where("name LIKE ?", "%"+query+"%").Find(&groups).Error
+	err := r.db.Where("group_name LIKE ?", "%"+query+"%").Find(&groups).Error
 	return groups, err
 }
