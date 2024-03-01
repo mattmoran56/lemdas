@@ -18,6 +18,7 @@ const FilePage = () => {
 	const [file, setFile] = useState({});
 	const [attributes, setAttributes] = useState([]);
 	const [previewUrl, setPreviewUrl] = useState("");
+	const [writeAccess, setWriteAccess] = useState(false);
 
 	const [refreshAttribute, setRefreshAttribute] = useState(false);
 
@@ -58,6 +59,7 @@ const FilePage = () => {
 	useEffect(() => {
 		getFile(fileId).then((data) => {
 			setFile(data);
+			setWriteAccess(false);
 		}).catch((error) => {
 			ErrorToast(error);
 		});
@@ -100,17 +102,21 @@ const FilePage = () => {
 									type="checkbox"
 									checked={file.is_public}
 									onChange={handleUpdatePublic}
+									disabled={!writeAccess}
 								/>
 							</p>
 						</div>
 
-						<Button
-							className="mt-4"
-							onClick={handleDelete}
-						>
-							<TrashIcon className="h-6 w-6 mr-2" />
-							Delete File
-						</Button>
+						{writeAccess
+							? (
+								<Button
+									className="mt-4"
+									onClick={handleDelete}
+								>
+									<TrashIcon className="h-6 w-6 mr-2" />
+									Delete File
+								</Button>
+							) : null}
 
 						<h2 className="mt-6 text-2xl font-semibold">File Attributes</h2>
 						<div className="w-full max-h-80 overflow-y-auto">
@@ -118,6 +124,7 @@ const FilePage = () => {
 								attributes={attributes}
 								fileId={fileId}
 								setNeedRefresh={setRefreshAttribute}
+								writeAccess={writeAccess}
 							/>
 						</div>
 					</div>

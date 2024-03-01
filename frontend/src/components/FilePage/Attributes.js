@@ -7,7 +7,7 @@ import updateFileAttribute from "../../helpers/api/webApi/fileAttributes/updateF
 import ErrorToast from "../../helpers/toast/errorToast";
 
 const Attribute = ({
-	attribute, fileId, setNeedRefresh, addNewAttribute,
+	attribute, fileId, setNeedRefresh, addNewAttribute, writeAccess,
 }) => {
 	const [clicked, setClicked] = useState(false);
 	const [error, setError] = useState(false);
@@ -66,6 +66,7 @@ const Attribute = ({
 					onBlur={handleClickOff}
 					value={attributeName}
 					onChange={(e) => { setAttributeName(e.target.value); }}
+					disabled={!writeAccess}
 				/>:
 			</td>
 			<td className="font-medium" aria-label="New Value">
@@ -78,17 +79,29 @@ const Attribute = ({
 					onBlur={handleClickOff}
 					value={value}
 					onChange={(e) => { setValue(e.target.value); }}
+					disabled={!writeAccess}
 				/>
 			</td>
 			<td>
 				{attributeId
 					? (
-						<button type="button" aria-label="delete" onClick={handleDelete}>
+						<button
+							type="button"
+							aria-label="delete"
+							onClick={handleDelete}
+							className={writeAccess ? "" : "hidden"}
+							disabled={!writeAccess}
+						>
 							<TrashIcon className="h-6 w-6 text-gray-500 hover:text-red-500" />
 						</button>
 					)
 					: (
-						<button type="button" aria-label="save">
+						<button
+							type="button"
+							aria-label="save"
+							className={writeAccess ? "" : "hidden"}
+							disabled={!writeAccess}
+						>
 							<PlusIcon className="h-6 w-6 text-gray-300 hover:text-gray-500" />
 						</button>
 					)}
@@ -97,7 +110,9 @@ const Attribute = ({
 	);
 };
 
-const Attributes = ({ attributes, fileId, setNeedRefresh }) => {
+const Attributes = ({
+	attributes, fileId, setNeedRefresh, writeAccess,
+}) => {
 	const [attributeList, setAttributeList] = useState([]);
 
 	const addNewAttribute = () => {
@@ -123,6 +138,7 @@ const Attributes = ({ attributes, fileId, setNeedRefresh }) => {
 								fileId={fileId}
 								setNeedRefresh={setNeedRefresh}
 								addNewAttribute={addNewAttribute}
+								writeAccess={writeAccess}
 							/>
 						);
 					})}
