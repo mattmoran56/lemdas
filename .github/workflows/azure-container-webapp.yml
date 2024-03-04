@@ -38,11 +38,6 @@ permissions:
   contents: read
 
 jobs:
-  build-and-push-image:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
   build:
     runs-on: ubuntu-latest
 
