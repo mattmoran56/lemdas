@@ -20,7 +20,7 @@ WORKDIR /app/internal/webApi
 RUN ls -l
 
 # Build the Go app
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main.go
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
 
 RUN ls -l
 
@@ -32,7 +32,7 @@ FROM alpine:latest
 WORKDIR /app
 
 # Copy the built executable from the builder stage
-COPY --from=builder /app/internal/webApi/webApi .
+COPY --from=builder /app/internal/webApi/main .
 
 # Expose port 8080 to the outside world
 EXPOSE 8080
