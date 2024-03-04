@@ -38,6 +38,15 @@ func (d *DatasetAttributeRepository) GetDatasetAttributeByDatasetID(datasetID, u
 	return datasetAttributes, result.Error
 }
 
+func (d *DatasetAttributeRepository) GetAllAttributeNames() ([]string, error) {
+	var attributeNames []string
+	result := d.db.
+		Table("dataset_attributes").
+		Select("DISTINCT attribute_name").Find(&attributeNames)
+
+	return attributeNames, result.Error
+}
+
 func (d *DatasetAttributeRepository) GetDatasetAttributeByDatasetIDOrderBy(datasetID, userID string, orderBy string) ([]models.DatasetAttribute, error) {
 	var datasetAttributes []models.DatasetAttribute
 	result := d.db.

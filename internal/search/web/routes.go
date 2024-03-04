@@ -16,6 +16,16 @@ func InitiateServer() *gin.Engine {
 	{
 		authGroup.POST("/simpleSearch", handlers.HandleSimpleSearch)
 		authGroup.POST("/simpleSearch/", handlers.HandleSimpleSearch)
+
+		authGroup.POST("/search", handlers.HandleSearch)
+		authGroup.POST("/search/", handlers.HandleSearch)
+
+		// TODo: condider getting oonly user attributes
+		authGroup.GET("fileAttributes", handlers.HandleGetFileAttributes)
+		authGroup.GET("fileAttributes/", handlers.HandleGetFileAttributes)
+
+		authGroup.GET("datasetAttributes", handlers.HandleGetDatasetAttributes)
+		authGroup.GET("datasetAttributes/", handlers.HandleGetDatasetAttributes)
 	}
 
 	if gin.Mode() == "test" {

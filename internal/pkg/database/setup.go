@@ -22,6 +22,7 @@ var (
 	GroupMemberRepo         *repositories.GroupMemberRepository
 	UserShareDatasetRepo    *repositories.UserShareDatasetRepository
 	GroupShareDatasetRepo   *repositories.GroupShareDatasetRepository
+	SearchRepo              *repositories.SearchRepository
 )
 
 func ConnectToDatabase(username, password, dbName, host, port string) error {
@@ -70,6 +71,7 @@ func ConnectToDatabase(username, password, dbName, host, port string) error {
 	GroupMemberRepo = repositories.NewGroupMemberRepository(db)
 	UserShareDatasetRepo = repositories.NewUserShareDatasetRepository(db)
 	GroupShareDatasetRepo = repositories.NewGroupShareDatasetRepository(db)
+	SearchRepo = repositories.NewSearchRepository(db)
 
 	return nil
 

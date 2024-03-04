@@ -41,6 +41,16 @@ func (d *FileAttributeRepository) GetFileAttributeByFileIDOrderBy(datasetID stri
 	return datasetAttributes, result.Error
 }
 
+func (d *FileAttributeRepository) GetAllAttributeNames() ([]string, error) {
+	var attributeNames []string
+	result := d.db.
+		Table("file_attributes").
+		Select("DISTINCT attribute_name").Find(&attributeNames)
+
+	return attributeNames, result.Error
+
+}
+
 func (d *FileAttributeRepository) UpdateFileAttribute(fileAttribute models.FileAttribute) (models.FileAttribute, error) {
 	result := d.db.Model(&models.FileAttribute{}).Where("ID = ?", fileAttribute.ID).Updates(&fileAttribute)
 	return fileAttribute, result.Error
