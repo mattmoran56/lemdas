@@ -1,25 +1,40 @@
 # Use the official Golang image from the Docker Hub
-FROM golang:1.17-alpine
+FROM golang:1.22-alpine AS builder
 
 # Set the current working directory inside the container
 WORKDIR /app
 
-# Copy go.mod and go.sum files to the container
+# Copy the entire source code to the container
 COPY . .
+
+RUN ls -l
+
+# Change directory to the location of the main.go file
+
 # Download dependencies
 RUN go mod download
 
+
+RUN ls -l
+WORKDIR /app/webApi
+RUN ls -l
+
 # Build the Go app
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o ./webApi/main .
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main.go
+
+ENTRYPOINT ["./app/webApi/webApi"]
 
 # Start a new stage from scratch
-FROM alpine:latest
-
-# Set environment variables
-
-
-# Expose port 8080 to the outside world
-EXPOSE 8080
-
-# Command to run the executable
-CMD ["go run ."]
+#FROM alpine:latest
+#
+## Set the working directory
+#WORKDIR /app
+#
+## Copy the built executable from the builder stage
+#COPY --from=builder /app/webApi/webApi .
+#
+## Expose port 8080 to the outside world
+#EXPOSE 8080
+#
+## Command to run the executable
+#CMD ["./webApi"]
