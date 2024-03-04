@@ -10,19 +10,19 @@ COPY . .
 RUN ls -l
 
 # Change directory to the location of the main.go file
-
+WORKDIR /app/internal/
 # Download dependencies
 RUN go mod download
 
 
 RUN ls -l
-WORKDIR /app/webApi
+WORKDIR /app/internal/webApi
 RUN ls -l
 
 # Build the Go app
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main.go
 
-ENTRYPOINT ["./app/webApi/webApi"]
+ENTRYPOINT ["./app/internal/webApi/webApi"]
 
 # Start a new stage from scratch
 #FROM alpine:latest
