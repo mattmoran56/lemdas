@@ -19,7 +19,7 @@ FROM alpine:latest
 
 
 # Expose port 8080 to the outside world
-EXPOSE 8080:8080
+EXPOSE 8080
 
 # Command to run the executable
 CMD ["./main"]
