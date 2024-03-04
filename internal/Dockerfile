@@ -22,19 +22,18 @@ RUN ls -l
 # Build the Go app
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main.go
 
-ENTRYPOINT ["./app/internal/webApi/webApi"]
 
-# Start a new stage from scratch
-#FROM alpine:latest
-#
-## Set the working directory
-#WORKDIR /app
-#
-## Copy the built executable from the builder stage
-#COPY --from=builder /app/webApi/webApi .
-#
-## Expose port 8080 to the outside world
-#EXPOSE 8080
-#
-## Command to run the executable
-#CMD ["./webApi"]
+ Start a new stage from scratch
+FROM alpine:latest
+
+# Set the working directory
+WORKDIR /app
+
+# Copy the built executable from the builder stage
+COPY --from=builder /app/internal/webApi/webApi .
+
+# Expose port 8080 to the outside world
+EXPOSE 8080
+
+# Command to run the executable
+CMD ["./webApi"]
