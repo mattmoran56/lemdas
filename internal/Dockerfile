@@ -38,4 +38,4 @@ COPY --from=builder /app/internal/webApi/main .
 EXPOSE 8080
 
 # Command to run the executable
-CMD ["./webApi"]
+CMD ["./main"]
