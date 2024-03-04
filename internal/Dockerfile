@@ -23,7 +23,7 @@ RUN ls -l
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main.go
 
 
- Start a new stage from scratch
+# Start a new stage from scratch
 FROM alpine:latest
 
 # Set the working directory
