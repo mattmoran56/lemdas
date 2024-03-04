@@ -62,7 +62,6 @@ const FilePage = () => {
 	useEffect(() => {
 		getFile(fileId).then((data) => {
 			setFile(data);
-			setWriteAccess(false);
 		}).catch((error) => {
 			setNotFound(true);
 			ErrorToast(error);
