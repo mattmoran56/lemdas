@@ -63,12 +63,6 @@ const Groups = () => {
 			<h1 className="text-2xl font-semibold">Groups</h1>
 			<div className="w-full h-[2px] bg-oxfordblue" />
 			<div className="w-full flex flex-wrap">
-				{groups.length === 0
-					? (
-						<p className="text-gray-500 mt-2">
-							You are not a member of any group.
-						</p>
-					) : null}
 				{groups.map((group) => {
 					return (
 						<GroupButton

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ChevronDownIcon, MagnifyingGlassIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Button from "../basic/Button";
+
 import OptionSection from "./OptionSection";
 import useAuth from "../../hooks/useAuth";
 import logout from "../../helpers/utils/logout";
@@ -21,9 +22,6 @@ const SearchBar = () => {
 
 	const handleSearch = () => {
 		navigate(`/search?query=${searchTerm}`);
-	};
-	const handleComplexSearch = () => {
-		// TODO: handle complex search
 	};
 
 	useEffect(() => {
@@ -106,19 +104,17 @@ const SearchBar = () => {
 								key={option.id}
 								first={index === 0}
 								lastRemaining={options.length === 1}
-								logic={option.logic}
-								field={option.field}
-								term={option.term}
-								onChange={(event) => {
+								onChange={(value) => {
 									const newOptions = [...options];
-									newOptions[index][event.target.id] = event.target.value;
+									newOptions[index] = value;
 									setOptions(newOptions);
 								}}
 								onNewOption={() => {
 									const newOptions = [...options];
-									newOptions.push({ logic: "and", field: "title", term: "" });
+									newOptions.push({});
 									setOptions(newOptions);
 								}}
+								queryItem={option}
 								onDelete={() => {
 									const newOptions = [...options];
 									newOptions.splice(index, 1);
@@ -131,7 +127,9 @@ const SearchBar = () => {
 						<Button
 							className={`mx-2 transition-all duration-500 delay-100
 										${options.length === 1 ? "mr-12" : ""}`}
-							onClick={handleComplexSearch}
+							onClick={() => {
+								navigate("/advancedSearch", { state: options });
+							}}
 						>
 							Search
 							<MagnifyingGlassIcon className="w-4 h-4 ml-2" />

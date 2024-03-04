@@ -14,6 +14,7 @@ import FilePage from "./pages/FilePage";
 import SimpleSearchPage from "./pages/SimpleSearchPage";
 import ErrorPage from "./pages/ErrorPage";
 import MyDataPage from "./pages/MyDataPage";
+import AdvancedSearchPage from "./pages/AdvancedSearchPage";
 
 const router = createBrowserRouter([
 	{
@@ -43,6 +44,10 @@ const router = createBrowserRouter([
 	{
 		path: "/search",
 		element: <SimpleSearchPage />,
+	},
+	{
+		path: "advancedSearch",
+		element: <AdvancedSearchPage />,
 	},
 	{
 		path: "*",
