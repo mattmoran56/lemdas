@@ -3,7 +3,7 @@ import { UsersIcon } from "@heroicons/react/24/solid";
 import { MinusCircleIcon } from "@heroicons/react/24/outline";
 
 const Group = ({
-	name, access, onRemove, writeAccess,
+	name, access, onRemove, writeAccess, noAccess,
 }) => {
 	return (
 		<div className="w-44 h-36 border-2 border-oxfordblue-200 my-2 mr-4 p-4 rounded-md flex flex-col items-center">
@@ -12,7 +12,7 @@ const Group = ({
 				{name.length > 12 ? `${name.slice(0, 12)}...` : name}
 			</p>
 			<div className={`flex ${writeAccess ? "justify-between" : "justify-center"} w-full`}>
-				<p className="text-gray-500 capitalize">{access}</p>
+				{!noAccess ? <p className="text-gray-500 capitalize">{access}</p> : null}
 				<button
 					type="button"
 					aria-label="remove user"

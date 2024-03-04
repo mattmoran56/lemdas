@@ -161,6 +161,10 @@ func InitiateServer() *gin.Engine {
 			groupsGroup.DELETE("", group.HandleDeleteGroup)
 			groupsGroup.DELETE("/", group.HandleDeleteGroup)
 
+			// TODO: This needs testing
+			groupsGroup.GET("/member", group.HandleGetMembers)
+			groupsGroup.GET("/member/", group.HandleGetMembers)
+
 			groupsGroup.POST("/member", group.HandleAddMember)
 			groupsGroup.POST("/member/", group.HandleAddMember)
 
