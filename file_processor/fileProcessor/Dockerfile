@@ -2,7 +2,7 @@ FROM python:latest
 
 WORKDIR /app
 
-COPY .temp .
+COPY . .
 WORKDIR /app/file_processor/fileProcessor
 
 ENV PATH="/root/.local/bin:$PATH"
