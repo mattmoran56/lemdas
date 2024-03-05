@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy container app to Azure Web App - lemdasauth
+name: Auth build and deploy
 
 on:
   push:
@@ -31,7 +31,7 @@ jobs:
       with:
         push: true
         tags: ghcr.io/${{ secrets.AzureAppService_ContainerUsername_21c2bf6fbbf04165b3f5f51886114b8e }}/appsvc/staticsite:${{ github.sha }}
-        file: ./Dockerfile
+        file: ./internal/auth/Dockerfile
 
   deploy:
     runs-on: ubuntu-latest
