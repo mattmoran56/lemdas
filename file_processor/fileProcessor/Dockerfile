@@ -3,7 +3,7 @@ FROM python:latest
 WORKDIR /app
 
 COPY .temp .
-WORKDIR /app/fileProcessor
+WORKDIR /app/file_processor/fileProcessor
 
 ENV PATH="/root/.local/bin:$PATH"
 
