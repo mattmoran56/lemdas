@@ -19,7 +19,7 @@ func InitiateServer() *gin.Engine {
 		return r
 	}
 
-	err := r.Run(":8001")
+	err := r.Run(":8080")
 	if err != nil {
 		zap.S().Fatal("Couldn't start server")
 	}
