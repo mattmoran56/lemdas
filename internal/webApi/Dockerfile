@@ -5,7 +5,7 @@ FROM golang:1.22-alpine AS builder
 WORKDIR /app
 
 # Copy the entire source code to the container
-COPY . .
+COPY .. .
 
 RUN ls -l
 
