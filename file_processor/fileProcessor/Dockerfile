@@ -4,6 +4,7 @@ WORKDIR /app
 
 COPY . .
 WORKDIR /app/file_processor/fileProcessor
+RUN mkdir .temp
 
 ENV PATH="/root/.local/bin:$PATH"
 
