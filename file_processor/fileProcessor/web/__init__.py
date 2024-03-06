@@ -27,7 +27,7 @@ async def startup_event():
 
 @web.get("/")
 def read_root():
-    return {"message": "Service started"}
+    return {"message": "Service started updated"}
 
 
 web.include_router(router)
