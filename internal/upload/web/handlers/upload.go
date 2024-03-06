@@ -48,7 +48,7 @@ func HandleUpload(c *gin.Context) {
 			return
 		}
 
-		credential, err := azidentity.NewDefaultAzureCredential(nil)
+		credential, err := azidentity.NewAzureCLICredential(nil)
 		utils.HandleHandlerError(c, err)
 
 		url := "https://synopticprojectstorage.blob.core.windows.net/"
