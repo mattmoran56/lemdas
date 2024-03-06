@@ -19,4 +19,4 @@ RUN poetry install --no-dev --no-ansi
 
 EXPOSE 8080:8080
 
-CMD poetry run python src/main.py
+CMD poetry run python main.py
