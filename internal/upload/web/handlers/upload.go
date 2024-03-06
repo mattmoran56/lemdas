@@ -102,7 +102,7 @@ func HandleUpload(c *gin.Context) {
 
 		processorUrl := os.Getenv("PROCESSOR_URL")
 
-		req, err := http.NewRequest("POST", processorUrl+"/process", bytes.NewReader(marshalled))
+		req, err := http.NewRequest("POST", processorUrl+"/process/", bytes.NewReader(marshalled))
 		utils.HandleHandlerError(c, err)
 
 		httpClient := &http.Client{}
