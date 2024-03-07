@@ -30,7 +30,7 @@ const DownloadFileButton = ({ file }) => {
 			onClick={handleDownload}
 		>
 			{clicked
-				? <Loader className="h-3 w-3" outerClassName="m-0 mr-2 !p-1" />
+				? <Loader className="h-3 w-3" outerClassName="!m-0 !mr-2 !p-1" />
 				: <ArrowDownTrayIcon className="h-6 w-6 mr-2" />}
 			Download File
 		</Button>
