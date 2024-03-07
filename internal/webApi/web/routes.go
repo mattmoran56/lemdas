@@ -8,7 +8,6 @@ import (
 	"github.com/mattmoran/fyp/api/webApi/web/handlers/file"
 	"github.com/mattmoran/fyp/api/webApi/web/handlers/group"
 	"github.com/mattmoran/fyp/api/webApi/web/handlers/user"
-	m "github.com/mattmoran/fyp/api/webApi/web/middleware"
 	"go.uber.org/zap"
 )
 
@@ -40,7 +39,7 @@ func InitiateServer() *gin.Engine {
 		authGroup.POST("/dataset/:datasetId/stared", dataset.HandleStarDataset)
 		authGroup.POST("/dataset/:datasetId/stared/", dataset.HandleStarDataset)
 
-		datasetGroup := authGroup.Group("/dataset/:datasetId", m.CheckDatasetAccess())
+		datasetGroup := authGroup.Group("/dataset/:datasetId", middleware.CheckDatasetAccess())
 		{
 
 			datasetGroup.GET("", dataset.HandleGetDataset)
@@ -78,7 +77,7 @@ func InitiateServer() *gin.Engine {
 				datasetAttributesGroup.POST("", dataset.HandleCreateAttribute)
 				datasetAttributesGroup.POST("/", dataset.HandleCreateAttribute)
 
-				datasetAttributeGroup := datasetAttributesGroup.Group("/:datasetAttributeId", m.CheckDatasetAttributeAccess())
+				datasetAttributeGroup := datasetAttributesGroup.Group("/:datasetAttributeId", middleware.CheckDatasetAttributeAccess())
 				{
 					datasetAttributeGroup.PUT("", dataset.HandleUpdateAttribute)
 					datasetAttributeGroup.PUT("/", dataset.HandleUpdateAttribute)
@@ -111,7 +110,7 @@ func InitiateServer() *gin.Engine {
 			}
 		}
 
-		fileGroup := authGroup.Group("/file/:fileId", m.CheckFileAccess())
+		fileGroup := authGroup.Group("/file/:fileId", middleware.CheckFileAccess())
 		{
 			fileGroup.GET("", file.HandleGetFile)
 			fileGroup.GET("/", file.HandleGetFile)
@@ -136,7 +135,7 @@ func InitiateServer() *gin.Engine {
 				fileAttributesGroup.POST("", file.HandleCreateAttribute)
 				fileAttributesGroup.POST("/", file.HandleCreateAttribute)
 
-				fileAttributeGroup := fileAttributesGroup.Group("/:fileAttributeId", m.CheckFileAttributeAccess())
+				fileAttributeGroup := fileAttributesGroup.Group("/:fileAttributeId", middleware.CheckFileAttributeAccess())
 				{
 					fileAttributeGroup.PUT("", file.HandleUpdateAttribute)
 					fileAttributeGroup.PUT("/", file.HandleUpdateAttribute)
@@ -153,7 +152,7 @@ func InitiateServer() *gin.Engine {
 		authGroup.POST("group", group.HandleCreateGroup)
 		authGroup.POST("group/", group.HandleCreateGroup)
 
-		groupsGroup := authGroup.Group("/group/:groupId", m.CheckGroupAccess())
+		groupsGroup := authGroup.Group("/group/:groupId", middleware.CheckGroupAccess())
 		{
 			groupsGroup.GET("", group.HandleGetGroup)
 			groupsGroup.GET("/", group.HandleGetGroup)
