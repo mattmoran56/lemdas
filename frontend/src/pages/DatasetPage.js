@@ -23,6 +23,7 @@ import CollaboratorsModal from "../components/DatasetPage/CollaboratorsModal";
 import Sharing from "../components/DatasetPage/Sharing";
 import getAccess from "../helpers/api/webApi/dataset/getAccess";
 import ErrorPage from "./ErrorPage";
+import DownloadDatasetButton from "../components/DatasetPage/DownloadDatasetButton";
 
 const DatasetPage = () => {
 	const [dataset, setDataset] = useState({});
@@ -214,13 +215,16 @@ const DatasetPage = () => {
 										</p>
 									</div>
 
-									<Button
-										className={`mt-4 ${writeAccess ? "" : "hidden"}`}
-										onClick={handleDelete}
-									>
-										<TrashIcon className="h-6 w-6 mr-2" />
-										Delete Dataset
-									</Button>
+									<div className="w-full flex">
+										<Button
+											className={`mt-4 ${writeAccess ? "" : "hidden"}`}
+											onClick={handleDelete}
+										>
+											<TrashIcon className="h-6 w-6 mr-2" />
+											Delete Dataset
+										</Button>
+										<DownloadDatasetButton dataset={dataset} />
+									</div>
 
 									<h2 className="mt-6 text-2xl font-semibold">Dataset Attributes</h2>
 									<div className="w-full max-h-64">

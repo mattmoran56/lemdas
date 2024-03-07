@@ -24,8 +24,6 @@ func HandleDownload(c *gin.Context) {
 		return
 	}
 
-	// TODO: Check file permissions
-
 	credential, err := azidentity.NewDefaultAzureCredential(nil)
 	utils.HandleHandlerError(c, err)
 
@@ -43,13 +41,7 @@ func HandleDownload(c *gin.Context) {
 
 	defer downloadStream.Body.Close()
 
-	//_, err = io.ReadAll(downloadStream.Body)
-	//if err != nil {
-	//	c.JSON(http.StatusInternalServerError, gin.H{"error": "Error reading file from storage: " + err.Error()})
-	//	return
-	//}
-
-	c.Header("Content-Disposition", "attachment; filename="+file.Name)
+	c.Header("Content-Disposition", "attachment; filename="+file.Name+".zip")
 	c.Header("Content-Type", "application/octet-stream")
 
 	// Copy the file content to the response writer
