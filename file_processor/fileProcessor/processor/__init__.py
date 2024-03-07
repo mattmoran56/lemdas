@@ -7,6 +7,7 @@ class Processor:
     def __init__(self, file_id):
         self.file_id = file_id
         self.file = database.FileDatabase().get_file_by_id(file_id)
+        print(self.file)
         self.processing_started = False
 
         if self.file.status != "uploaded" and self.file.status != "awaitingtxt":
@@ -21,7 +22,7 @@ class Processor:
         database.FileDatabase().update_status(self.file_id, "processing")
 
 
-        if self.file_type == "tif":
+        if self.file_type == "tif" or self.file_type == "tiff":
             processor = TifScan(self.file_id)
             check = processor.download_files()
             if not check:
