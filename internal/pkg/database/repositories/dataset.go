@@ -41,19 +41,23 @@ func (d *DatasetRepository) GetUsersDatasetsOrderBy(userId string, orderBy strin
 }
 
 func (d *DatasetRepository) GetUsersSharedDatasets(userID string) ([]models.Dataset, error) {
-	var datasets []models.Dataset
+	var datasetsUser []models.Dataset
 	result := d.db.Select("datasets.*").
 		Joins("RIGHT OUTER JOIN user_share_datasets ON user_share_datasets.dataset_id = datasets.id").
-		Where("user_share_datasets.user_id = ? AND user_share_datasets.dataset_id IS NOT NULL", userID).Find(&datasets)
+		Where("user_share_datasets.user_id = ? AND user_share_datasets.dataset_id IS NOT NULL", userID).Find(&datasetsUser)
 
 	if result.Error != nil {
 		return nil, result.Error
 	}
 
+	var datasetsGroup []models.Dataset
 	result = d.db.Select("datasets.*").
 		Joins("RIGHT OUTER JOIN group_share_datasets ON group_share_datasets.dataset_id = datasets.id").
 		Joins("RIGHT OUTER JOIN group_members ON group_members.group_id = group_share_datasets.group_id").
-		Where("group_members.user_id = ? AND group_share_datasets.dataset_id IS NOT NULL", userID).Find(&datasets)
+		Where("group_members.user_id = ? AND group_share_datasets.dataset_id IS NOT NULL", userID).Find(&datasetsGroup)
+
+	var datasets []models.Dataset
+	datasets = append(datasetsUser, datasetsGroup...)
 	return datasets, result.Error
 }
 

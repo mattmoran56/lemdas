@@ -37,6 +37,9 @@ func InitiateServer() *gin.Engine {
 		authGroup.POST("dataset", dataset.HandleCreateDataset)
 		authGroup.POST("dataset/", dataset.HandleCreateDataset)
 
+		authGroup.POST("/dataset/:datasetId/stared", dataset.HandleStarDataset)
+		authGroup.POST("/dataset/:datasetId/stared/", dataset.HandleStarDataset)
+
 		datasetGroup := authGroup.Group("/dataset/:datasetId", m.CheckDatasetAccess())
 		{
 
@@ -57,9 +60,6 @@ func InitiateServer() *gin.Engine {
 
 			datasetGroup.GET("/stared", dataset.HandleGetStared)
 			datasetGroup.GET("/stared/", dataset.HandleGetStared)
-
-			datasetGroup.POST("/stared", dataset.HandleStarDataset)
-			datasetGroup.POST("/stared/", dataset.HandleStarDataset)
 
 			datasetGroup.GET("/collaborator", dataset.HandleGetCollaborators)
 			datasetGroup.GET("/collaborator/", dataset.HandleGetCollaborators)
