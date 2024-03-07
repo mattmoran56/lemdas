@@ -74,7 +74,10 @@ func HandleUpload(c *gin.Context) {
 		}(".temp/" + randomFileId)
 
 		_, err = client.UploadFile(context.TODO(), containerName, randomFileId, fileHandler, &azblob.UploadBufferOptions{})
-		utils.HandleHandlerError(c, err)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Error uploading file to storage: " + err.Error()})
+			return
+		}
 
 		// Add the file to the database
 		userId := c.MustGet("userID").(string)
