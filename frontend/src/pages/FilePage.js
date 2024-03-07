@@ -15,6 +15,7 @@ import deleteFile from "../helpers/api/webApi/file/deleteFile";
 import updateFile from "../helpers/api/webApi/file/updateFile";
 import getAccess from "../helpers/api/webApi/file/getAccess";
 import ErrorPage from "./ErrorPage";
+import DownloadFileButton from "../components/FilePage/DownloadFileButton";
 
 const FilePage = () => {
 	const [file, setFile] = useState({});
@@ -116,17 +117,19 @@ const FilePage = () => {
 									/>
 								</p>
 							</div>
-
-							{writeAccess
-								? (
-									<Button
-										className="mt-4"
-										onClick={handleDelete}
-									>
-										<TrashIcon className="h-6 w-6 mr-2" />
-										Delete File
-									</Button>
-								) : null}
+							<div className="w-full flex">
+								{writeAccess
+									? (
+										<Button
+											className="mt-4"
+											onClick={handleDelete}
+										>
+											<TrashIcon className="h-6 w-6 mr-2" />
+											Delete File
+										</Button>
+									) : null}
+								<DownloadFileButton file={file} />
+							</div>
 
 							<h2 className="mt-6 text-2xl font-semibold">File Attributes</h2>
 							<div className="w-full max-h-80 overflow-y-auto">
