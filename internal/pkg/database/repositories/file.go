@@ -49,11 +49,6 @@ func (f *FileRepository) UpdateFile(file models.File) (models.File, error) {
 	if file.Name != "" {
 		updates["name"] = file.Name
 	}
-	if file.IsPublic {
-		updates["is_public"] = 1
-	} else {
-		updates["is_public"] = 0
-	}
 	if file.OwnerID != "" {
 		updates["owner_id"] = file.OwnerID
 	}

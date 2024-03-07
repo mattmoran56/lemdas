@@ -5,7 +5,7 @@ import Button from "../../basic/Button";
 import NewDatasetModal from "./NewDatasetModal";
 
 const ChooseDataset = ({
-	datasets, setDataset, setDatasets, handleFinish, setIsPublic, datasetId,
+	datasets, setDataset, setDatasets, handleFinish, datasetId,
 }) => {
 	const [showNewDatasetModal, setShowNewDatasetModal] = useState(false);
 
@@ -25,7 +25,7 @@ const ChooseDataset = ({
 				setDataset={setDataset}
 				setDatasets={setDatasets}
 			/>
-			<h1 className="text-2xl font-bold">File uploaded!</h1>
+			<h1 className="text-2xl font-bold">File selected!</h1>
 			{datasetId
 				? null
 				: (
@@ -54,18 +54,8 @@ const ChooseDataset = ({
 						</select>
 					</>
 				)}
-			<div className="flex items-center">
-				<p>Make this dataset public?</p>
-				<input
-					type="checkbox"
-					className="mx-2"
-					onChange={(e) => {
-						setIsPublic(e.target.checked);
-					}}
-				/>
-			</div>
 			<Button className="my-2" onClick={handleFinish}>
-				Finish
+				Upload
 				<ArrowRightIcon className="w-4 h-4 ml-2" />
 			</Button>
 		</div>

@@ -12,7 +12,6 @@ import Loader from "../components/basic/Loader";
 import ErrorToast from "../helpers/toast/errorToast";
 import Button from "../components/basic/Button";
 import deleteFile from "../helpers/api/webApi/file/deleteFile";
-import updateFile from "../helpers/api/webApi/file/updateFile";
 import getAccess from "../helpers/api/webApi/file/getAccess";
 import ErrorPage from "./ErrorPage";
 import DownloadFileButton from "../components/FilePage/DownloadFileButton";
@@ -28,18 +27,6 @@ const FilePage = () => {
 
 	const { fileId } = useParams();
 	const navigate = useNavigate();
-
-	const handleUpdatePublic = (e) => {
-		updateFile(fileId, file.name, e.target.checked, file.owner_id, file.dataset_id, file.status).then(() => {
-			getFile(fileId).then((data) => {
-				setFile(data);
-			}).catch((error) => {
-				ErrorToast(error);
-			});
-		}).catch((error) => {
-			ErrorToast(error);
-		});
-	};
 
 	const handleDelete = () => {
 		deleteFile(fileId).then(() => {
@@ -104,17 +91,6 @@ const FilePage = () => {
 									<a href={`/dataset/${file.dataset_id}`}>
 										{file.dataset_name}
 									</a>
-								</p>
-							</div>
-							<div className="w-full flex items-center">
-								<p className="text-gray-800 mr-4">Public file: </p>
-								<p className="font-medium">
-									<input
-										type="checkbox"
-										checked={file.is_public}
-										onChange={handleUpdatePublic}
-										disabled={!writeAccess}
-									/>
 								</p>
 							</div>
 							<div className="w-full flex">

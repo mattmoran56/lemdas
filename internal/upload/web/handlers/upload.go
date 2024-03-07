@@ -86,7 +86,6 @@ func HandleUpload(c *gin.Context) {
 			OwnerID:   userId,
 			DatasetID: r.DatasetID,
 			Status:    "uploaded",
-			IsPublic:  r.IsPublic,
 		}
 
 		uploadedId, err := database.FileRepo.CreateFile(fileObject)
