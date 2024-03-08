@@ -65,11 +65,6 @@ func CheckFileAccess() gin.HandlerFunc {
 		} else {
 			access = "write"
 		}
-		if access == "none" {
-			if file.IsPublic {
-				access = "read"
-			}
-		}
 		c.Set("access", access)
 
 		if access == "none" {

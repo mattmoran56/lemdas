@@ -25,7 +25,6 @@ func HandleUpdateFile(c *gin.Context) {
 
 	updatedFile := models.File{
 		Base:      models.Base{ID: fileID},
-		IsPublic:  fileUpdate.IsPublic,
 		OwnerID:   fileUpdate.OwnerID,
 		Name:      fileUpdate.Name,
 		Status:    fileUpdate.Status,

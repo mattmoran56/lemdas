@@ -1,9 +1,8 @@
 import { getOptionsWithBody } from "../../apiHelper";
 
-const updateFile = async (fileId, name, isPublic, ownerId, datasetId, status) => {
+const updateFile = async (fileId, name, ownerId, datasetId, status) => {
 	const data = {
 		name,
-		is_public: isPublic,
 		owner_id: ownerId,
 		dataset_id: datasetId,
 		status,

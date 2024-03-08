@@ -12,7 +12,6 @@ import ErrorToast from "../../../helpers/toast/errorToast";
 const Upload = ({ datasetId, onFinish }) => {
 	const [file, setFile] = useState(null);
 	const [dataset, setDataset] = useState(datasetId);
-	const [isPublic, setIsPublic] = useState(false);
 
 	const [uploaded, setUploaded] = useState(false);
 	const [loading, setLoading] = useState(false);
@@ -21,7 +20,7 @@ const Upload = ({ datasetId, onFinish }) => {
 
 	const handleFinish = () => {
 		setLoading(true);
-		uploadFile(file, dataset, isPublic).then(() => {
+		uploadFile(file, dataset).then(() => {
 			setFile(null);
 			setDataset(null);
 			setUploaded(true);
@@ -56,7 +55,6 @@ const Upload = ({ datasetId, onFinish }) => {
 						handleFinish={handleFinish}
 						setDataset={setDataset}
 						setDatasets={setDatasets}
-						setIsPublic={setIsPublic}
 					/>
 				)
 				: null}
