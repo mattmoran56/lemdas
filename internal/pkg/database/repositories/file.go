@@ -34,7 +34,7 @@ func (f *FileRepository) GetFilesForDataset(datasetID string) ([]models.File, er
 
 func (f *FileRepository) SearchByName(query, userID string) ([]models.File, error) {
 	var files []models.File
-	result := f.db.Where("name LIKE ? AND status = ? AND (owner_id = ? OR is_public = 1)",
+	result := f.db.Where("name LIKE ? AND status = ? AND (owner_id = ?)",
 		"%"+query+"%", "processed", userID).Find(&files)
 	return files, result.Error
 }
