@@ -15,6 +15,13 @@ func InitiateServer() *gin.Engine {
 	authGroup := r.Group("/", middleware.JWTAuthMiddleware())
 	{
 		authGroup.POST("/upload", handlers.HandleUpload)
+		authGroup.POST("/upload/", handlers.HandleUpload)
+
+		authGroup.GET("/download/:fileId", middleware.CheckFileAccess(), handlers.HandleDownload)
+		authGroup.GET("/download/:fileId/", middleware.CheckFileAccess(), handlers.HandleDownload)
+
+		authGroup.GET("/download/dataset/:datasetId", middleware.CheckDatasetAccess(), handlers.HandleDownloadDataset)
+		authGroup.GET("/download/dataset/:datasetId/", middleware.CheckDatasetAccess(), handlers.HandleDownloadDataset)
 	}
 
 	if gin.Mode() == "test" {
