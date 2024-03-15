@@ -27,7 +27,10 @@ func CheckDatasetAccess() gin.HandlerFunc {
 			if err != nil && err.Error() != "record not found" {
 				utils.HandleHandlerError(c, err)
 			}
-			if err != nil && err.Error() == "record not found" {
+			if (err != nil && err.Error() == "record not found") || userShare.WriteAccess == false {
+				if userShare.WriteAccess == false && err == nil {
+					access = "read"
+				}
 				groups, err := database.GroupMemberRepo.GetGroupsForUser(userID)
 				if err != nil && err.Error() != "record not found" {
 					utils.HandleHandlerError(c, err)
