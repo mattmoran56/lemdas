@@ -20,8 +20,22 @@ func TestHandleGetAttributes(t *testing.T) {
 		Engine:       router,
 		ResponseCode: 200,
 		ResponseBody: map[string]interface{}{"attributes": []interface{}{
-			map[string]interface{}{"id": "testattribute1", "updated_at": 100, "created_at": 100, "dataset_id": "testdataset", "attribute_name": "test1", "attribute_value": "value1"},
-			map[string]interface{}{"id": "testattribute2", "updated_at": 100, "created_at": 100, "dataset_id": "testdataset", "attribute_name": "test2", "attribute_value": "value2"},
+			map[string]interface{}{
+				"id":              "testattribute1",
+				"updated_at":      float64(100),
+				"created_at":      float64(100),
+				"dataset_id":      "testdataset",
+				"attribute_name":  "test1",
+				"attribute_value": "value1",
+			},
+			map[string]interface{}{
+				"id":              "testattribute2",
+				"updated_at":      float64(100),
+				"created_at":      float64(100),
+				"dataset_id":      "testdataset",
+				"attribute_name":  "test2",
+				"attribute_value": "value2",
+			},
 		}},
 		BodyIgnoredFields: nil,
 	})

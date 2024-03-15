@@ -59,15 +59,38 @@ func AuthGroupTest(t *testing.T, r Request, jwt string) {
 				assert.Equal(t, r.ResponseCode, w.Code)
 				if r.BodyIgnoredFields != nil {
 					for _, field := range r.BodyIgnoredFields {
-						delete(r.ResponseBody, field)
-						delete(unmarshalledBody, field)
-						fmt.Printf("Deleted field: %v\n", field)
+						deleteKey(&unmarshalledBody, field)
+						deleteKey(&r.ResponseBody, field)
 					}
 				}
 				if r.ResponseBody != nil {
 					assert.Equal(t, r.ResponseBody, unmarshalledBody)
 				} else {
 					assert.Equal(t, map[string]interface{}{}, unmarshalledBody)
+				}
+			}
+		}
+	}
+}
+
+func deleteKey(m *map[string]interface{}, key string) {
+	for k, v := range *m {
+		if k == key {
+			delete(*m, k)
+		} else {
+			switch v.(type) {
+			case map[string]interface{}:
+				newMap := v.(map[string]interface{})
+				deleteKey(&newMap, key)
+				v = newMap
+			case []interface{}:
+				for _, i := range v.([]interface{}) {
+					switch i.(type) {
+					case map[string]interface{}:
+						newMap := i.(map[string]interface{})
+						deleteKey(&newMap, key)
+						i = newMap
+					}
 				}
 			}
 		}

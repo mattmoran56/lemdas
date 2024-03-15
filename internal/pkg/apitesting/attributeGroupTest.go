@@ -37,4 +37,9 @@ func AttributeGroupTest(t *testing.T, r Request) {
 	})
 
 	DatasetGroupTest(t, r)
+
+	database.DatasetAttributeRepo.DeleteDatasetAttribute("testattribute1")
+	database.DatasetAttributeRepo.DeleteDatasetAttribute("testattribute2")
+	database.DatasetAttributeRepo.DeleteDatasetAttributeByDatasetID("testdataset")
+
 }

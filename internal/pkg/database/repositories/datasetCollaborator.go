@@ -27,6 +27,8 @@ func (d *DatasetCollaboratorRepository) AddCollaborator(datasetID, userID string
 	}
 
 	result := d.db.Create(&datasetCollaborator)
+
+	d.db.Model(&datasetCollaborator).Association("User").Find(&datasetCollaborator.User)
 	return datasetCollaborator, result.Error
 }
 

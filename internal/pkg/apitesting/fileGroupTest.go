@@ -10,7 +10,7 @@ import (
 	"testing"
 )
 
-func DatasetGroupTest(t *testing.T, r Request) {
+func FileGroupTest(t *testing.T, r Request) {
 	dbUsername := os.Getenv("DB_USERNAME")
 	dbPassword := os.Getenv("DB_PASSWORD")
 	dbName := "fyp_test"

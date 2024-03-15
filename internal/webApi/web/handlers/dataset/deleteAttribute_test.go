@@ -7,15 +7,15 @@ import (
 	"testing"
 )
 
-func TestHandleDeleteCollaborator(t *testing.T) {
+func TestHandleDeleteAttribute(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	router := gin.New()
 	group := router.Group("/", middleware.JWTAuthMiddleware(), middleware.CheckDatasetAccess())
-	group.DELETE("dataset/:datasetId/collaborators/:collaboratorId", HandleDeleteCollaborator)
+	group.DELETE("dataset/:datasetId/attribute/:datasetAttributeId", HandleDeleteAttribute)
 
-	apitesting.DatasetGroupTest(t, apitesting.Request{
+	apitesting.AttributeGroupTest(t, apitesting.Request{
 		Method:            "DELETE",
-		Url:               "/dataset/testdataset/collaborators/testusernotowner",
+		Url:               "/dataset/testdataset/attribute/testattribute1",
 		Body:              nil,
 		Engine:            router,
 		ResponseCode:      204,
