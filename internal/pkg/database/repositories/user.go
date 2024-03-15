@@ -53,5 +53,9 @@ func (u *UserRepo) SearchForUser(query string) ([]models.User, error) {
 	result := u.db.Where("first_name LIKE ? OR last_name LIKE ? OR email LIKE ? ", "%"+query+"%", "%"+query+"%", "%"+query+"%").Find(&users)
 
 	return users, result.Error
+}
 
+func (u *UserRepo) DeleteUserByID(UserID string) error {
+	result := u.db.Where("ID = ?", UserID).Delete(&models.User{})
+	return result.Error
 }
