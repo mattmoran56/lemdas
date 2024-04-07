@@ -50,7 +50,9 @@ func (r *UserShareDatasetRepository) GetUserShareDatasetsForDatasetId(datasetId 
 
 func (r *UserShareDatasetRepository) GetUserShareDatasetForDatasetIdAndUserId(datasetId, userId string) (*models.UserShareDataset, error) {
 	var userShareDataset models.UserShareDataset
-	err := r.db.Where("dataset_id = ? AND user_id = ?", datasetId, userId).First(&userShareDataset)
+	err := r.db.Where("dataset_id = ? AND user_id = ?", datasetId, userId).
+		Order("write_access DESC").First(&userShareDataset)
+
 	return &userShareDataset, err.Error
 
 }

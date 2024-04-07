@@ -51,6 +51,6 @@ func HandleAddCollaborator(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, collaborator)
+	c.JSON(201, collaborator)
 	return
 }

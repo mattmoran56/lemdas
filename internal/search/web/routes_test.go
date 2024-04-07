@@ -60,10 +60,33 @@ func TestInitiateServer(t *testing.T) {
 			Body:         map[string]interface{}{"query": "test"},
 			ResponseCode: 200,
 			ResponseBody: map[string]interface{}{"files": []any{
-				map[string]any{"id": "testfile1", "created_at": float64(100), "updated_at": float64(100), "name": "testfile1", "owner_id": "test1", "status": "processed", "dataset_id": "test1", "is_public": false},
-				map[string]any{"id": "testfile2", "created_at": float64(100), "updated_at": float64(100), "name": "testfile2", "owner_id": "test1", "status": "processed", "dataset_id": "test1", "is_public": true},
+				map[string]any{
+					"id":         "testfile1",
+					"created_at": float64(100),
+					"updated_at": float64(100),
+					"name":       "testfile1",
+					"owner_id":   "test1",
+					"status":     "processed",
+					"dataset_id": "test1",
+				},
+				map[string]any{
+					"id":         "testfile2",
+					"created_at": float64(100),
+					"updated_at": float64(100),
+					"name":       "testfile2",
+					"owner_id":   "test1",
+					"status":     "processed",
+					"dataset_id": "test1",
+				},
 			}, "datasets": []any{
-				map[string]any{"id": "test1", "created_at": float64(100), "updated_at": float64(100), "dataset_name": "test dataset", "owner_id": "test1", "is_public": false},
+				map[string]any{
+					"id":           "test1",
+					"created_at":   float64(100),
+					"updated_at":   float64(100),
+					"dataset_name": "test dataset",
+					"owner_id":     "test1",
+					"is_public":    false,
+				},
 			},
 			},
 		},
@@ -74,9 +97,7 @@ func TestInitiateServer(t *testing.T) {
 			Auth:         token2,
 			Body:         map[string]interface{}{"query": "test"},
 			ResponseCode: 200,
-			ResponseBody: map[string]interface{}{"files": []any{
-				map[string]any{"id": "testfile2", "created_at": float64(100), "updated_at": float64(100), "name": "testfile2", "owner_id": "test1", "status": "processed", "dataset_id": "test1", "is_public": true},
-			}, "datasets": []any{}},
+			ResponseBody: map[string]interface{}{"files": []any{}, "datasets": []any{}},
 		},
 	}
 
@@ -129,7 +150,6 @@ func TestInitiateServer(t *testing.T) {
 		OwnerID:   "test1",
 		Status:    "processed",
 		DatasetID: "test1",
-		IsPublic:  false,
 	})
 	database.FileRepo.CreateFile(models.File{
 		Base: models.Base{
@@ -141,7 +161,6 @@ func TestInitiateServer(t *testing.T) {
 		OwnerID:   "test1",
 		Status:    "processed",
 		DatasetID: "test1",
-		IsPublic:  true,
 	})
 
 	router := InitiateServer()

@@ -48,6 +48,7 @@ func (r *GroupShareDatasetRepository) GetGroupShareDatasetsForDatasetId(datasetI
 
 func (r *GroupShareDatasetRepository) GetGroupShareDatasetForDatasetIdAndGroupId(datasetId, groupId string) (*models.GroupShareDataset, error) {
 	var groupShareDataset models.GroupShareDataset
-	err := r.db.Where("dataset_id = ? AND group_id = ?", datasetId, groupId).First(&groupShareDataset)
+	err := r.db.Where("dataset_id = ? AND group_id = ?", datasetId, groupId).
+		Order("write_access DESC").First(&groupShareDataset)
 	return &groupShareDataset, err.Error
 }
