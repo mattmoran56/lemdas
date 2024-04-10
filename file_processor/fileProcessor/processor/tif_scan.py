@@ -32,7 +32,7 @@ class TifScan(Scan):
             return False
 
         with open(".temp/"+self.txt_file_id, 'r') as file:
-            group_id = self.database.add_attribute_group(self.file_id, "root")
+            group_id = self.database.add_attribute_group(self.file_id, "rootgroup")
             for raw_line in file:
                 line = raw_line.strip()
                 if "=" not in line:

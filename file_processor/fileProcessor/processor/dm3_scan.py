@@ -38,9 +38,11 @@ class DM3Scan(Scan):
         s = hs.load(".temp/"+self.file_id)
         metadata = s.original_metadata.as_dictionary()
 
+        print(s.original_metadata)
+
         print(metadata)
         
-        group_id = self.database.add_attribute_group(self.file_id, "root")
+        group_id = self.database.add_attribute_group(self.file_id, "rootgroup")
 
         for (key, value) in metadata.items():
             if isinstance(value, dict):
