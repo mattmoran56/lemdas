@@ -3,7 +3,6 @@ package web
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/mattmoran/fyp/api/pkg/web/middleware"
-	"github.com/mattmoran/fyp/api/webApi/web/handlers"
 	"github.com/mattmoran/fyp/api/webApi/web/handlers/dataset"
 	"github.com/mattmoran/fyp/api/webApi/web/handlers/dataset/share"
 	"github.com/mattmoran/fyp/api/webApi/web/handlers/file"
@@ -16,8 +15,6 @@ func InitiateServer() *gin.Engine {
 	r := gin.Default()
 
 	r.Use(middleware.CORSMiddleware())
-
-	r.GET("/fix", handlers.HandleFix)
 
 	authGroup := r.Group("/", middleware.JWTAuthMiddleware())
 	{
