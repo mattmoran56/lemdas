@@ -136,7 +136,7 @@ const Attributes = ({
 		<div className="w-full">
 			<table className="w-full border-l-2 p-0 border-oxfordblue">
 				<tbody>
-					{attributeGroup.attribute_group_name !== "root"
+					{attributeGroup.attribute_group_name !== "rootgroup"
 						? (
 							<tr>
 								<th
@@ -162,7 +162,7 @@ const Attributes = ({
 								</th>
 							</tr>
 						) : null}
-					{!collapsed || attributeGroup.attribute_group_name === "root"
+					{!collapsed || attributeGroup.attribute_group_name === "rootgroup"
 						? attributeList.map((attribute) => {
 							return (
 								<Attribute
@@ -176,7 +176,7 @@ const Attributes = ({
 							);
 						})
 						: null }
-					{(!collapsed || attributeGroup.attribute_group_name === "root")
+					{(!collapsed || attributeGroup.attribute_group_name === "rootgroup")
 						? attributeGroup.children.map((child) => {
 							return (
 								<tr>

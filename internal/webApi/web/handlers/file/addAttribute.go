@@ -34,6 +34,6 @@ func HandleCreateAttribute(c *gin.Context) {
 		return
 	}
 
-	c.JSON(201, attribute)
+	c.JSON(200, attribute)
 	return
 }

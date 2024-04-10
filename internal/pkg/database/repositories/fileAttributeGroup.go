@@ -24,7 +24,7 @@ func (d *FileAttributeGroupRepository) GetFileAttributeGroupByFileID(id string) 
 	var fileAttributeGroups []models.FileAttributeGroup
 	result := d.db.
 		Model(&models.FileAttributeGroup{}).
-		Where("file_id = ? AND attribute_group_name = 'root'", id).
+		Where("file_id = ? AND attribute_group_name = 'rootgroup'", id).
 		Preload("Children", preloadChildren).
 		Preload("Attributes").
 		Find(&fileAttributeGroups)
@@ -35,7 +35,7 @@ func (d *FileAttributeGroupRepository) GetFileAttributeGroupByFileIDOrderBy(id, 
 	var fileAttributeGroups []models.FileAttributeGroup
 	result := d.db.
 		Model(&models.FileAttributeGroup{}).
-		Where("file_id = ? AND attribute_group_name = 'root'", id).
+		Where("file_id = ? AND attribute_group_name = 'rootgroup'", id).
 		Preload("Children", preloadChildren).
 		Preload("Attributes").
 		Order(orderBy).
