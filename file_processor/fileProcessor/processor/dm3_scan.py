@@ -22,27 +22,45 @@ class DM3Scan(Scan):
             self.halted = True
             return
 
+    def tuple_to_string(self, tuple):
+        strVar = ""
+
+        for i in tuple:
+            strVar += str(i)
+            strVar += " "
+
+        return strVar
+
     def process(self):
         if self.halted:
             return False
 
         s = hs.load(".temp/"+self.file_id)
-        metadata = s.metadata.as_dictionary()
+        metadata = s.original_metadata.as_dictionary()
+
+        print(metadata)
+        
+        group_id = self.database.add_attribute_group(self.file_id, "root")
 
         for (key, value) in metadata.items():
             if isinstance(value, dict):
-                self.extract_metadata(value, key)
+                self.extract_metadata(value, key, group_id)
+            elif isinstance(value, tuple):
+                self.database.add_attribute(self.file_id, key, self.tuple_to_string(value), group_id)
             else:
-                self.database.add_attribute(self.file_id, key, value)
+                self.database.add_attribute(self.file_id, key, str(value), group_id)
 
         return True
 
-    def extract_metadata(self, metadata, prefix):
+    def extract_metadata(self, metadata, group_name, parent_group_id):
+        group_id = self.database.add_attribute_group(self.file_id, group_name, parent_group_id)
         for (key, value) in metadata.items():
             if isinstance(value, dict):
-                self.extract_metadata(value, prefix + "-" + key)
+                self.extract_metadata(value, key, group_id)
+            elif isinstance(value, tuple):
+                self.database.add_attribute(self.file_id, key, self.tuple_to_string(value), group_id)
             else:
-                self.database.add_attribute(self.file_id, prefix + "-" + key, value)
+                self.database.add_attribute(self.file_id, key, str(value), group_id)
 
     def get_preview(self):
         with nio.dm.fileDM(".temp/"+self.file_id) as dm:

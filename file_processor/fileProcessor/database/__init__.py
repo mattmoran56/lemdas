@@ -4,7 +4,7 @@ import uuid
 
 from sqlalchemy import select, update, insert
 
-from database.models import File, FileAttribute
+from database.models import File, FileAttribute, FileAttributeGroup
 
 
 class FileDatabase:
@@ -35,9 +35,18 @@ class FileDatabase:
             conn.execute(stmt)
             conn.commit()
 
-    def add_attribute(self, file_id, attribute_name, attribute_value):
+    def add_attribute(self, file_id, attribute_name, attribute_value, attribute_group_id):
         with self.engine.connect() as conn:
             id = str(uuid.uuid4())
-            stmt = insert(FileAttribute).values(id=id, file_id=file_id, attribute_name=attribute_name, attribute_value=attribute_value)
+            stmt = insert(FileAttribute).values(id=id, file_id=file_id, attribute_name=attribute_name, attribute_value=attribute_value, attribute_group_id=attribute_group_id)
             conn.execute(stmt)
             conn.commit()
+
+    def add_attribute_group(self, file_id, attribute_group_name, parent_group_id=None):
+        with self.engine.connect() as conn:
+            id = str(uuid.uuid4())
+            stmt = insert(FileAttributeGroup).values(id=id, file_id=file_id, attribute_group_name=attribute_group_name, parent_group_id=parent_group_id)
+            conn.execute(stmt)
+            conn.commit()
+
+            return id

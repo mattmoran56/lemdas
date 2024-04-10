@@ -34,3 +34,11 @@ class FileAttribute(Base, BaseAbstract):
     file_id = Column(String, ForeignKey("file.id"))
     attribute_name = Column(String)
     attribute_value = Column(String)
+    attribute_group_id = Column(String, ForeignKey("file_attribute_groups.id"))
+
+class FileAttributeGroup(Base, BaseAbstract):
+    __tablename__ = "file_attribute_groups"
+
+    file_id = Column(String, ForeignKey("file.id"))
+    attribute_group_name = Column(String)
+    parent_group_id = Column(String, ForeignKey("file_attribute_groups.id"))

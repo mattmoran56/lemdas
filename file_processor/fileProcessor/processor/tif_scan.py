@@ -32,21 +32,23 @@ class TifScan(Scan):
             return False
 
         with open(".temp/"+self.txt_file_id, 'r') as file:
+            group_id = self.database.add_attribute_group(self.file_id, "root")
             for raw_line in file:
                 line = raw_line.strip()
                 if "=" not in line:
                     continue
                 if "   " in line:
                     primary_attribute, child_attributes = line.split("=", 1)
+                    parent_id = self.database.add_attribute_group(self.file_id, primary_attribute, group_id)
                     attributes = child_attributes.split("   ")
                     for attribute in attributes:
                         key, value = attribute.split("=")
                         if value != "":
-                            self.database.add_attribute(self.file_id, primary_attribute + "-" + key, value)
+                            self.database.add_attribute(self.file_id, key, value, parent_id)
                     continue
                 key, value = line.split("=")
                 if value != "" or len(value) > 0:
-                    self.database.add_attribute(self.file_id, key, value)
+                    self.database.add_attribute(self.file_id, key, value, group_id)
 
         self.get_preview()
 

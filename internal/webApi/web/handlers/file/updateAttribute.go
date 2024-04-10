@@ -9,11 +9,12 @@ import (
 
 func HandleUpdateAttribute(c *gin.Context) {
 	fileId := c.Param("fileId")
-	attributeID := c.Param("attributeId")
+	attributeID := c.Param("fileAttributeId")
 
 	type attributeUpdate struct {
-		AttributeName  string `json:"attribute_name" binding:"required"`
-		AttributeValue string `json:"attribute_value" binding:"required"`
+		AttributeName    string `json:"attribute_name" binding:"required"`
+		AttributeValue   string `json:"attribute_value" binding:"required"`
+		AttributeGroupID string `json:"attribute_group_id" binding:"required"`
 	}
 
 	var r attributeUpdate
@@ -26,12 +27,14 @@ func HandleUpdateAttribute(c *gin.Context) {
 		Base: models.Base{
 			ID: attributeID,
 		},
-		FileID:         fileId,
-		AttributeName:  r.AttributeName,
-		AttributeValue: r.AttributeValue,
+		FileID:           fileId,
+		AttributeName:    r.AttributeName,
+		AttributeValue:   r.AttributeValue,
+		AttributeGroupID: r.AttributeGroupID,
 	}
 
 	attribute, err := database.FileAttributeRepo.UpdateFileAttribute(attribute)
+
 	if err != nil {
 		c.JSON(500, gin.H{"error": "Error updating attribute"})
 		return
