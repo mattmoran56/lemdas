@@ -109,12 +109,16 @@ const FilePage = () => {
 
 							<h2 className="mt-6 text-2xl font-semibold">File Attributes</h2>
 							<div className="w-full max-h-80 overflow-y-auto">
-								<Attributes
-									attributes={attributes}
-									fileId={fileId}
-									setNeedRefresh={setRefreshAttribute}
-									writeAccess={writeAccess}
-								/>
+								{attributes.length !== 0
+									? (
+										<Attributes
+											attributeGroup={attributes[0]}
+											fileId={fileId}
+											setNeedRefresh={setRefreshAttribute}
+											writeAccess={writeAccess}
+										/>
+									)
+									: null}
 							</div>
 						</div>
 						<div className="w-1/2 p-2">

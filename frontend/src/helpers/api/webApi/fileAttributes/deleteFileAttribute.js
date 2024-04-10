@@ -11,7 +11,7 @@ const deleteFileAttribute = async (fileId, attributeId) => {
 		throw new Error("Failed to delete attributes");
 	}
 
-	return response.json();
+	return true;
 };
 
 export default deleteFileAttribute;

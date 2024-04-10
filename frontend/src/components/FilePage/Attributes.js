@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { ChevronDownIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 
 import addFileAttribute from "../../helpers/api/webApi/fileAttributes/addFileAttribute";
 import deleteFileAttribute from "../../helpers/api/webApi/fileAttributes/deleteFileAttribute";
@@ -21,21 +21,21 @@ const Attribute = ({
 		if (attributeName === "" || value === "") {
 			setError(true);
 		} else if (attribute.id === undefined) {
-			addFileAttribute(fileId, attributeName, value).then((d) => {
+			addFileAttribute(fileId, attributeName, value, attribute.attribute_group_id).then((d) => {
 				addNewAttribute();
 				setAttributeId(d.id);
 			}).catch((e) => {
 				ErrorToast(e);
 			});
 		} else {
-			updateFileAttribute(fileId, attribute.id, attributeName, value).catch((e) => {
+			updateFileAttribute(fileId, attributeId, attributeName, value, attribute.attribute_group_id).catch((e) => {
 				ErrorToast(e);
 			});
 		}
 	};
 
 	const handleDelete = () => {
-		deleteFileAttribute(fileId, attribute.id).then(() => {
+		deleteFileAttribute(fileId, attributeId).then(() => {
 			setNeedRefresh(true);
 		}).catch((e) => {
 			ErrorToast(e);
@@ -56,7 +56,7 @@ const Attribute = ({
 
 	return (
 		<tr>
-			<td className="text-right font-light pr-2 flex" aria-label="New attribute">
+			<td className="text-right font-light pr-2 pl-4 flex" aria-label="New attribute">
 				<input
 					className={`outline-none border-b-2 w-full text-right pl-2 mt-[2px] border-transparent
 								${error ? "border-red-500 bg-red-100" : ""}
@@ -111,37 +111,96 @@ const Attribute = ({
 };
 
 const Attributes = ({
-	attributes, fileId, setNeedRefresh, writeAccess,
+	attributeGroup, fileId, setNeedRefresh, writeAccess,
 }) => {
 	const [attributeList, setAttributeList] = useState([]);
+	const [collapsed, setCollapsed] = useState(true);
 
 	const addNewAttribute = () => {
-		setAttributeList([...attributeList, { attribute_name: "", attribute_value: "" }]);
-	};
-
-	useEffect(() => {
-		setAttributeList([...attributes[0].attributes, {
+		setAttributeList([...attributeList, {
+			attribute_group_id: attributeGroup.id,
 			attribute_name: "",
 			attribute_value: "",
 		}]);
-	}, [attributes]);
+	};
+
+	useEffect(() => {
+		setAttributeList([...attributeGroup.attributes, {
+			attribute_name: "",
+			attribute_value: "",
+			attribute_group_id: attributeGroup.id,
+		}]);
+	}, [attributeGroup]);
 
 	return (
 		<div className="w-full">
-			<table className="w-fit mb-4">
+			<table className="w-full border-l-2 p-0 border-oxfordblue">
 				<tbody>
-					{attributeList.map((attribute) => {
-						return (
-							<Attribute
-								key={attribute.id ? attribute.id : "new"}
-								attribute={attribute}
-								fileId={fileId}
-								setNeedRefresh={setNeedRefresh}
-								addNewAttribute={addNewAttribute}
-								writeAccess={writeAccess}
-							/>
-						);
-					})}
+					{attributeGroup.attribute_group_name !== "root"
+						? (
+							<tr>
+								<th
+									className="text-center font-semibold bg-oxfordblue text-offwhite pr-2"
+									aria-label="Attribute"
+									colSpan={2}
+								>
+									{attributeGroup.attribute_group_name}
+								</th>
+								<th
+									className="text-right font-semibold bg-oxfordblue text-offwhite w-8"
+									aria-label="Collapse"
+								>
+									<button type="button" onClick={() => { setCollapsed(!collapsed); }}>
+										{collapsed
+											? <ChevronDownIcon className="h-6 w-6 p-1 text-offwhite" />
+											: (
+												<ChevronDownIcon
+													className="h-6 w-6 p-1 text-offwhite transform rotate-180"
+												/>
+											)}
+									</button>
+								</th>
+							</tr>
+						) : null}
+					{!collapsed || attributeGroup.attribute_group_name === "root"
+						? attributeList.map((attribute) => {
+							return (
+								<Attribute
+									key={attribute.id ? attribute.id : "new"}
+									attribute={attribute}
+									fileId={fileId}
+									setNeedRefresh={setNeedRefresh}
+									addNewAttribute={addNewAttribute}
+									writeAccess={writeAccess}
+								/>
+							);
+						})
+						: null }
+					{(!collapsed || attributeGroup.attribute_group_name === "root")
+						? attributeGroup.children.map((child) => {
+							return (
+								<tr>
+									<td
+										colSpan={3}
+										className="border-l-2 p-0 border-oxfordblue"
+										aria-label="Child Group"
+									>
+										<div className="flex">
+											<div className="">
+												<div className="h-10 w-4 bg-oxfordblue" />
+											</div>
+											<Attributes
+												key={child.id}
+												attributeGroup={child}
+												fileId={fileId}
+												setNeedRefresh={setNeedRefresh}
+												writeAccess={writeAccess}
+											/>
+										</div>
+									</td>
+								</tr>
+							);
+						}) : null }
 				</tbody>
 			</table>
 		</div>
