@@ -10,8 +10,9 @@ import (
 func HandleCreateAttribute(c *gin.Context) {
 	fileId := c.Param("fileId")
 	type NewAttribute struct {
-		AttributeName  string `json:"attribute_name" binding:"required"`
-		AttributeValue string `json:"attribute_value" binding:"required"`
+		AttributeName    string `json:"attribute_name" binding:"required"`
+		AttributeValue   string `json:"attribute_value" binding:"required"`
+		AttributeGroupID string `json:"attribute_group_id" binding:"required"`
 	}
 
 	var r NewAttribute
@@ -21,9 +22,10 @@ func HandleCreateAttribute(c *gin.Context) {
 	}
 
 	fileAttribute := models.FileAttribute{
-		FileID:         fileId,
-		AttributeName:  r.AttributeName,
-		AttributeValue: r.AttributeValue,
+		FileID:           fileId,
+		AttributeName:    r.AttributeName,
+		AttributeValue:   r.AttributeValue,
+		AttributeGroupID: r.AttributeGroupID,
 	}
 
 	attribute, err := database.FileAttributeRepo.CreateFileAttribute(fileAttribute)

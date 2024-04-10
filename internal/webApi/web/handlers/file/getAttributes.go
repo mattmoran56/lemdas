@@ -10,20 +10,20 @@ func HandleGetAttributes(c *gin.Context) {
 	orderBy, found := c.GetQuery("orderBy")
 
 	if found {
-		attributes, err := database.FileAttributeRepo.GetFileAttributeByFileIDOrderBy(fileId, orderBy)
+		attributes, err := database.FileAttributeGroupRepo.GetFileAttributeGroupByFileIDOrderBy(fileId, orderBy)
 		if err != nil {
 			c.JSON(500, gin.H{"error": "Error fetching attributes"})
 			return
 		}
-		c.JSON(200, gin.H{"attributes": attributes})
+		c.JSON(200, gin.H{"attribute_groups": attributes})
 		return
 	} else {
-		attributes, err := database.FileAttributeRepo.GetFileAttributeByFileID(fileId)
+		attributes, err := database.FileAttributeGroupRepo.GetFileAttributeGroupByFileID(fileId)
 		if err != nil {
 			c.JSON(500, gin.H{"error": "Error fetching attributes"})
 			return
 		}
-		c.JSON(200, gin.H{"attributes": attributes})
+		c.JSON(200, gin.H{"attribute_groups": attributes})
 		return
 	}
 

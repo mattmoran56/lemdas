@@ -16,6 +16,7 @@ var (
 	DatasetRepo             *repositories.DatasetRepository
 	DatasetAttributeRepo    *repositories.DatasetAttributeRepository
 	FileAttributeRepo       *repositories.FileAttributeRepository
+	FileAttributeGroupRepo  *repositories.FileAttributeGroupRepository
 	StaredDatasetRepo       *repositories.StaredDatasetRepository
 	DatasetCollaboratorRepo *repositories.DatasetCollaboratorRepository
 	GroupRepo               *repositories.GroupRepository
@@ -47,6 +48,7 @@ func ConnectToDatabase(username, password, dbName, host, port string) error {
 		&models.File{},
 		&models.Dataset{},
 		&models.DatasetAttribute{},
+		&models.FileAttributeGroup{},
 		&models.FileAttribute{},
 		&models.StaredDataset{},
 		&models.DatasetCollaborator{},
@@ -65,6 +67,7 @@ func ConnectToDatabase(username, password, dbName, host, port string) error {
 	DatasetRepo = repositories.NewDatasetRepository(db)
 	DatasetAttributeRepo = repositories.NewDatasetAttributeRepository(db)
 	FileAttributeRepo = repositories.NewFileAttributeRepository(db)
+	FileAttributeGroupRepo = repositories.NewFileAttributeGroupRepository(db)
 	StaredDatasetRepo = repositories.NewStaredDatasetRepository(db)
 	DatasetCollaboratorRepo = repositories.NewDatasetCollaboratorRepository(db)
 	GroupRepo = repositories.NewGroupRepository(db)
