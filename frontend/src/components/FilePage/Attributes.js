@@ -120,7 +120,7 @@ const Attributes = ({
 	};
 
 	useEffect(() => {
-		setAttributeList([...attributes, {
+		setAttributeList([...attributes[0].attributes, {
 			attribute_name: "",
 			attribute_value: "",
 		}]);

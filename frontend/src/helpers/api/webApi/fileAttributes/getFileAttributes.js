@@ -12,7 +12,7 @@ const getFileAttributes = async (fileId) => {
 	}
 
 	const data = await response.json();
-	return data.attributes;
+	return data.attribute_groups;
 };
 
 export default getFileAttributes;
