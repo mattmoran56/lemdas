@@ -1,6 +1,7 @@
 package dataset
 
 import (
+	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"github.com/mattmoran/fyp/api/pkg/database"
 	"github.com/mattmoran/fyp/api/pkg/database/models"
@@ -32,6 +33,28 @@ func HandleUpdateDataset(c *gin.Context) {
 	if err != nil {
 		c.JSON(500, gin.H{"error": "Error updating dataset"})
 		return
+	}
+
+	if datasetUpdate.IsPublic {
+		details := map[string]interface{}{
+			"dataset_name": dataset.DatasetName,
+		}
+		detailsJSON, err := json.Marshal(details)
+		if err != nil {
+			c.JSON(500, gin.H{"error": "Error marshaling details to JSON"})
+			return
+		}
+
+		activity := models.Activity{
+			UserID:  datasetUpdate.OwnerID,
+			Type:    "make_public",
+			Details: string(detailsJSON),
+		}
+		_, err = database.ActivityRepo.CreateActivity(activity)
+		if err != nil {
+			c.JSON(500, gin.H{"error": "Error creating activity"})
+			return
+		}
 	}
 
 	c.JSON(201, dataset)

@@ -5,6 +5,7 @@ import (
 	"github.com/mattmoran/fyp/api/auth/web/handlers"
 	"github.com/mattmoran/fyp/api/pkg/web/middleware"
 	"go.uber.org/zap"
+	"os"
 )
 
 func InitiateServer() *gin.Engine {
@@ -19,7 +20,12 @@ func InitiateServer() *gin.Engine {
 		return r
 	}
 
-	err := r.Run(":8080")
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
+	err := r.Run(":" + port)
 	if err != nil {
 		zap.S().Fatal("Couldn't start server")
 	}

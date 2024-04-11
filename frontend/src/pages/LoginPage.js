@@ -22,7 +22,7 @@ const LoginPage = () => {
 		const domain = process.env.REACT_APP_AUTH_DOMAIN;
 		const clientId = process.env.REACT_APP_AUTH_CLIENT_ID;
 		// eslint-disable-next-line max-len
-		window.location.href = `https://login.microsoftonline.com/${domain}/oauth2/v2.0/authorize?response_type=code&client_id=${clientId}&scope=User.Read`;
+		window.location.href = `https://login.microsoftonline.com/${domain}/oauth2/v2.0/authorize?response_type=code&client_id=${clientId}&scope=User.Read&redirect_uri=${encodeURIComponent("http://localhost:3000/auth")}`;
 	};
 
 	useEffect(() => {

@@ -14,6 +14,7 @@ import FilePage from "./pages/FilePage";
 import SimpleSearchPage from "./pages/SimpleSearchPage";
 import ErrorPage from "./pages/ErrorPage";
 import MyDataPage from "./pages/MyDataPage";
+import ProfilePage from "./pages/ProfilePage";
 import AdvancedSearchPage from "./pages/AdvancedSearchPage";
 
 const router = createBrowserRouter([
@@ -48,6 +49,10 @@ const router = createBrowserRouter([
 	{
 		path: "advancedSearch",
 		element: <AdvancedSearchPage />,
+	},
+	{
+		path: "/profile/:userId",
+		element: <ProfilePage />,
 	},
 	{
 		path: "*",

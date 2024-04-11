@@ -5,10 +5,12 @@ import (
 	"github.com/mattmoran/fyp/api/pkg/web/middleware"
 	"github.com/mattmoran/fyp/api/webApi/web/handlers/dataset"
 	"github.com/mattmoran/fyp/api/webApi/web/handlers/dataset/share"
+	"github.com/mattmoran/fyp/api/webApi/web/handlers/feed"
 	"github.com/mattmoran/fyp/api/webApi/web/handlers/file"
 	"github.com/mattmoran/fyp/api/webApi/web/handlers/group"
 	"github.com/mattmoran/fyp/api/webApi/web/handlers/user"
 	"go.uber.org/zap"
+	"os"
 )
 
 func InitiateServer() *gin.Engine {
@@ -18,9 +20,6 @@ func InitiateServer() *gin.Engine {
 
 	authGroup := r.Group("/", middleware.JWTAuthMiddleware())
 	{
-		authGroup.GET("user/search", user.HandleSearchForUser)
-		authGroup.GET("user/search/", user.HandleSearchForUser)
-
 		authGroup.GET("group/search", group.HandleSearchForGroup)
 		authGroup.GET("group/search/", group.HandleSearchForGroup)
 
@@ -171,13 +170,33 @@ func InitiateServer() *gin.Engine {
 			groupsGroup.DELETE("/member/:userId/", group.HandleDeleteMember)
 		}
 
+		feedGroup := authGroup.Group("/feed")
+		{
+			feedGroup.GET("/:userId", feed.HandleGetProfileFeed)
+			feedGroup.GET("/:userId/", feed.HandleGetProfileFeed)
+		}
+
+		userGroup := authGroup.Group("/user")
+		{
+			userGroup.GET("/search", user.HandleSearchForUser)
+			userGroup.GET("/search/", user.HandleSearchForUser)
+
+			userGroup.GET("/profile/:userId", user.HandleGetProfile)
+			userGroup.GET("/profile/:userId/", user.HandleGetProfile)
+		}
+
 	}
 
 	if gin.Mode() == "test" {
 		return r
 	}
 
-	err := r.Run(":8080")
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
+	err := r.Run(":" + port)
 	if err != nil {
 		zap.S().Fatal("Couldn't start server")
 	}
