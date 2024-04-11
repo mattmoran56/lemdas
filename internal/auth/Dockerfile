@@ -22,10 +22,9 @@ RUN ls -l
 # Build the Go app
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
 
-RUN ls -l
-
 RUN mkdir .temp
 
+RUN ls -la
 
 # Start a new stage from scratch
 FROM alpine:latest
