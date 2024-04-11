@@ -24,6 +24,7 @@ var (
 	UserShareDatasetRepo    *repositories.UserShareDatasetRepository
 	GroupShareDatasetRepo   *repositories.GroupShareDatasetRepository
 	SearchRepo              *repositories.SearchRepository
+	ActivityRepo            *repositories.ActivityRepository
 )
 
 func ConnectToDatabase(username, password, dbName, host, port string) error {
@@ -56,6 +57,7 @@ func ConnectToDatabase(username, password, dbName, host, port string) error {
 		&models.GroupMember{},
 		&models.UserShareDataset{},
 		&models.GroupShareDataset{},
+		&models.Activity{},
 	)
 	if err != nil {
 		zap.S().Warn("Error migrating tables ", err)
@@ -75,6 +77,7 @@ func ConnectToDatabase(username, password, dbName, host, port string) error {
 	UserShareDatasetRepo = repositories.NewUserShareDatasetRepository(db)
 	GroupShareDatasetRepo = repositories.NewGroupShareDatasetRepository(db)
 	SearchRepo = repositories.NewSearchRepository(db)
+	ActivityRepo = repositories.NewActivityRepository(db)
 
 	return nil
 

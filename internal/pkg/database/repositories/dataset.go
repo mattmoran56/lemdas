@@ -26,6 +26,12 @@ func (d *DatasetRepository) GetUsersDatasets(userId string) ([]models.Dataset, e
 	return datasets, result.Error
 }
 
+func (d *DatasetRepository) GetUsersPublicDatasets(userId string) ([]models.Dataset, error) {
+	var datasets []models.Dataset
+	result := d.db.Where("owner_id = ? AND is_public = 1", userId).Find(&datasets)
+	return datasets, result.Error
+}
+
 func (d *DatasetRepository) GetStaredDatasets(userID string) ([]models.Dataset, error) {
 	var datasets []models.Dataset
 	result := d.db.Select("datasets.*").

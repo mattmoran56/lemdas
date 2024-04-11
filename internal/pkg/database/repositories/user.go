@@ -59,3 +59,8 @@ func (u *UserRepo) DeleteUserByID(UserID string) error {
 	result := u.db.Where("ID = ?", UserID).Delete(&models.User{})
 	return result.Error
 }
+
+func (u *UserRepo) UpdateUser(user models.User) error {
+	result := u.db.Save(&user).Where("ID = ?", user.ID)
+	return result.Error
+}

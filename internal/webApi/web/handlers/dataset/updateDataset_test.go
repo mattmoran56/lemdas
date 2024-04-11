@@ -13,6 +13,8 @@ func TestHandleUpdateDataset(t *testing.T) {
 	group := router.Group("/", middleware.JWTAuthMiddleware(), middleware.CheckDatasetAccess())
 	group.PUT("dataset/:datasetId", HandleUpdateDataset)
 
+	if
+
 	apitesting.DatasetGroupTest(t, apitesting.Request{
 		Method:       "PUT",
 		Url:          "/dataset/testdataset",
