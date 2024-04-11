@@ -191,8 +191,8 @@ func InitiateServer() *gin.Engine {
 		return r
 	}
 
-	port := os.Getenv("PORT")
-	if port == "" {
+	port, set := os.LookupEnv("PORT")
+	if !set {
 		port = "8080"
 	}
 
