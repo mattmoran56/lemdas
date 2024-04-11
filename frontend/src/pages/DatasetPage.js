@@ -175,7 +175,12 @@ const DatasetPage = () => {
 									<div className="h-[2px] w-full bg-oxfordblue mb-4" />
 									<div className="w-full flex">
 										<p className="text-gray-800 mr-4">Author: </p>
-										<p className="font-medium">{dataset.owner_name}</p>
+										<a
+											className="font-medium hover:underline"
+											href={`/profile/${dataset.owner_id}`}
+										>
+											{dataset.owner_name}
+										</a>
 									</div>
 									<div className="w-full flex">
 										<p className="text-gray-800 mr-4">Collaborators: </p>
