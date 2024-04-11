@@ -26,9 +26,13 @@ func (d *DatasetRepository) GetUsersDatasets(userId string) ([]models.Dataset, e
 	return datasets, result.Error
 }
 
-func (d *DatasetRepository) GetUsersPublicDatasets(userId string) ([]models.Dataset, error) {
+func (d *DatasetRepository) GetUsersPublicDatasetsIncCollaboration(userId string) ([]models.Dataset, error) {
 	var datasets []models.Dataset
-	result := d.db.Where("owner_id = ? AND is_public = 1", userId).Find(&datasets)
+	result := d.db.
+		Distinct().
+		Joins("LEFT JOIN dataset_collaborators ON dataset_collaborators.dataset_id = datasets.id").
+		Where("(datasets.owner_id = ? OR dataset_collaborators.user_id = ?) AND datasets.is_public = 1", userId, userId).
+		Find(&datasets)
 	return datasets, result.Error
 }
 
