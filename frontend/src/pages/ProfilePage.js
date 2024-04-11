@@ -67,7 +67,7 @@ const ProfilePage = () => {
 									return (
 										<Activity
 											activity={activity}
-											last={index - 1 === profile.activity.length}
+											last={index + 1 === profile.activity.length}
 										/>
 									);
 								})
