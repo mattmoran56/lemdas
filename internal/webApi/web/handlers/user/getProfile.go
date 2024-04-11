@@ -37,7 +37,7 @@ func HandleGetProfile(c *gin.Context) {
 
 	profile.Activity = activity
 
-	datasets, err := database.DatasetRepo.GetUsersPublicDatasets(userId)
+	datasets, err := database.DatasetRepo.GetUsersPublicDatasetsIncCollaboration(userId)
 	if err != nil {
 		c.JSON(500, gin.H{"error": err.Error()})
 		return
