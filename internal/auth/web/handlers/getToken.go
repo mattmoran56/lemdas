@@ -58,7 +58,6 @@ func HandleToken(c *gin.Context) {
 	writer.WriteField("client_id", os.Getenv("CLIENT_ID"))
 	writer.WriteField("client_secret", os.Getenv("CLIENT_SECRET"))
 	writer.WriteField("grant_type", "authorization_code")
-	writer.WriteField("redirect_uri", "http://localhost:3000/auth")
 
 	writer.Close()
 	// Set the Content-Type header
