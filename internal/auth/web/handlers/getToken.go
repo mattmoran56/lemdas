@@ -179,6 +179,7 @@ func getAvatar(user models.User, accessToken string) error {
 		filePath := ".temp/" + user.ID + ".jpg" // Specify the file path to save the avatar image
 		file, err := os.Create(filePath)
 		if err != nil {
+			err = error(fmt.Errorf("Error creating file: %v", err))
 			return err
 		}
 		defer file.Close()
@@ -203,7 +204,7 @@ func getAvatar(user models.User, accessToken string) error {
 		containerName := "fyp-profile-images"
 
 		// Open the file to upload
-		fileHandler, err := os.Open(".temp/" + user.ID + ".jpg")
+		fileHandler, err := os.Open(filePath)
 		if err != nil {
 			return err
 		}
@@ -222,7 +223,7 @@ func getAvatar(user models.User, accessToken string) error {
 			if err != nil {
 				return
 			}
-		}(".temp/" + user.ID + ".jpg")
+		}(filePath)
 
 		_, err = client.UploadFile(context.TODO(), containerName, user.ID+".jpg", fileHandler, &azblob.UploadBufferOptions{})
 		if err != nil {
