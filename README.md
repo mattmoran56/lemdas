@@ -20,96 +20,182 @@ LEMDAS (Leeds Electron Microscope Data Access System) is a comprehensive data ma
 ```mermaid
 erDiagram
     User ||--o{ Dataset : owns
+    User ||--o{ File : owns
+    User ||--o{ UserGroup : owns
     User ||--o{ StaredDataset : stars
     User ||--o{ Activity : performs
     User ||--o{ GroupMember : belongs_to
+    User ||--o{ DatasetCollaborator : collaborates_on
+    User ||--o{ UserShareDataset : receives_shared
     
-    UserGroup ||--o{ GroupMember : has
-    UserGroup ||--o{ GroupShareDataset : receives_access
+    UserGroup ||--o{ GroupMember : has_members
+    UserGroup ||--o{ GroupShareDataset : receives_shared_datasets
     
     Dataset ||--o{ File : contains
-    Dataset ||--o{ DatasetAttribute : has
-    Dataset ||--o{ DatasetCollaborator : has
-    Dataset ||--o{ UserShareDataset : shared_with_user
-    Dataset ||--o{ GroupShareDataset : shared_with_group
-    Dataset ||--o{ StaredDataset : starred_by
+    Dataset ||--o{ DatasetAttribute : has_attributes
+    Dataset ||--o{ DatasetCollaborator : has_collaborators
+    Dataset ||--o{ UserShareDataset : shared_with_users
+    Dataset ||--o{ GroupShareDataset : shared_with_groups
+    Dataset ||--o{ StaredDataset : starred_by_users
     
-    File ||--o{ FileAttribute : has
-    File ||--o{ FileAttributeGroup : has_grouped
+    File ||--o{ FileAttribute : has_attributes
+    File ||--o{ FileAttributeGroup : has_attribute_groups
     
-    FileAttributeGroup ||--o{ FileAttribute : groups
+    FileAttributeGroup ||--o{ FileAttribute : contains_attributes
+    FileAttributeGroup ||--o{ FileAttributeGroup : has_children
 
     User {
-        uuid id PK
-        string email
-        string firstName
-        string lastName
-        timestamp createdAt
+        string id PK "UUID"
+        string email "Unique email address"
+        string firstName "User's first name"
+        string lastName "User's last name"
+        string avatar "Avatar image URL"
+        string bio "User biography/description"
+        int64 createdAt "Timestamp (milliseconds)"
+        int64 updatedAt "Timestamp (milliseconds)"
     }
     
     Dataset {
-        uuid id PK
-        string name
-        string description
-        uuid ownerId FK
-        boolean public
-        timestamp createdAt
+        string id PK "UUID"
+        string datasetName "Name of the dataset"
+        string ownerId FK "References User.id"
+        boolean isPublic "Public visibility flag"
+        int64 createdAt "Timestamp (milliseconds)"
+        int64 updatedAt "Timestamp (milliseconds)"
     }
     
     File {
-        uuid id PK
-        string name
-        string fileType
-        int fileSize
-        uuid datasetId FK
-        string blobName
-        timestamp uploadedAt
+        string id PK "UUID"
+        string name "File name with extension"
+        string ownerId FK "References User.id"
+        string datasetId FK "References Dataset.id"
+        string status "Status: uploaded|processing|processed|failed"
+        int64 createdAt "Timestamp (milliseconds)"
+        int64 updatedAt "Timestamp (milliseconds)"
     }
     
     DatasetAttribute {
-        uuid id PK
-        uuid datasetId FK
-        string key
-        string value
+        string id PK "UUID"
+        string datasetId FK "References Dataset.id"
+        string attributeName "Attribute key/name"
+        string attributeValue "Attribute value"
+        int64 createdAt "Timestamp (milliseconds)"
+        int64 updatedAt "Timestamp (milliseconds)"
     }
     
     FileAttribute {
-        uuid id PK
-        uuid fileId FK
-        string key
-        string value
-        uuid groupId FK
+        string id PK "UUID"
+        string fileId FK "References File.id"
+        string attributeName "Attribute key/name"
+        string attributeValue "Attribute value"
+        string attributeGroupId FK "References FileAttributeGroup.id (nullable)"
+        int64 createdAt "Timestamp (milliseconds)"
+        int64 updatedAt "Timestamp (milliseconds)"
+    }
+    
+    FileAttributeGroup {
+        string id PK "UUID"
+        string attributeGroupName "Group name"
+        string fileId FK "References File.id"
+        string parentGroupId FK "Self-reference for hierarchy (nullable)"
+        int64 createdAt "Timestamp (milliseconds)"
+        int64 updatedAt "Timestamp (milliseconds)"
     }
     
     UserGroup {
-        uuid id PK
-        string name
-        uuid ownerId FK
+        string id PK "UUID"
+        string groupName "Name of the group"
+        string ownerId FK "References User.id"
+        int64 createdAt "Timestamp (milliseconds)"
+        int64 updatedAt "Timestamp (milliseconds)"
     }
     
     GroupMember {
-        uuid groupId FK
-        uuid userId FK
+        string id PK "UUID"
+        string groupId FK "References UserGroup.id"
+        string userId FK "References User.id"
+        int64 createdAt "Timestamp (milliseconds)"
+        int64 updatedAt "Timestamp (milliseconds)"
     }
     
     DatasetCollaborator {
-        uuid datasetId FK
-        uuid userId FK
-        string accessLevel
+        string id PK "UUID"
+        string userId FK "References User.id"
+        string datasetId FK "References Dataset.id"
+        int64 createdAt "Timestamp (milliseconds)"
+        int64 updatedAt "Timestamp (milliseconds)"
     }
     
     UserShareDataset {
-        uuid datasetId FK
-        uuid userId FK
-        string accessLevel
+        string id PK "UUID"
+        string userId FK "References User.id"
+        string datasetId FK "References Dataset.id"
+        boolean writeAccess "Write permission flag"
+        int64 createdAt "Timestamp (milliseconds)"
+        int64 updatedAt "Timestamp (milliseconds)"
     }
     
     GroupShareDataset {
-        uuid datasetId FK
-        uuid groupId FK
-        string accessLevel
+        string id PK "UUID"
+        string groupId FK "References UserGroup.id"
+        string datasetId FK "References Dataset.id"
+        boolean writeAccess "Write permission flag"
+        int64 createdAt "Timestamp (milliseconds)"
+        int64 updatedAt "Timestamp (milliseconds)"
+    }
+    
+    StaredDataset {
+        string id PK "UUID"
+        string userId FK "References User.id"
+        string datasetId FK "References Dataset.id"
+        int64 createdAt "Timestamp (milliseconds)"
+        int64 updatedAt "Timestamp (milliseconds)"
+    }
+    
+    Activity {
+        string id PK "UUID"
+        string type "Activity type"
+        string userId FK "References User.id"
+        string details "Activity details JSON"
+        int64 createdAt "Timestamp (milliseconds)"
+        int64 updatedAt "Timestamp (milliseconds)"
     }
 ```
+
+### Data Model Details
+
+#### Core Entities
+
+- **User**: Central entity representing system users with profile information (email, name, avatar, bio)
+- **Dataset**: Collection of related files owned by a user, can be public or private
+- **File**: Individual files within datasets, tracked with processing status
+- **UserGroup**: Named groups for collaborative access management
+
+#### Metadata & Attributes
+
+- **DatasetAttribute**: Key-value pairs for dataset-level metadata
+- **FileAttribute**: Key-value pairs for file-level metadata, can be grouped
+- **FileAttributeGroup**: Hierarchical grouping of file attributes (supports nested groups via parentGroupId)
+
+#### Access Control & Sharing
+
+- **DatasetCollaborator**: Users with direct collaboration rights on a dataset
+- **UserShareDataset**: Individual user sharing with read/write permissions
+- **GroupShareDataset**: Group-based sharing with read/write permissions
+- **GroupMember**: Membership tracking for user groups
+
+#### User Interaction
+
+- **StaredDataset**: User bookmarks/favorites for quick access
+- **Activity**: Audit log of user actions in the system
+
+#### Key Design Patterns
+
+1. **UUID Primary Keys**: All entities use string UUIDs for distributed system compatibility
+2. **Soft Timestamps**: CreatedAt/UpdatedAt stored as int64 milliseconds for precision
+3. **Hierarchical Attributes**: FileAttributeGroup supports nested structure for complex metadata
+4. **Flexible Permissions**: Separate collaborator and sharing models for granular access control
+5. **Status Tracking**: Files have status field for processing pipeline (uploaded → processing → processed)
 
 ## Quick Start
 
