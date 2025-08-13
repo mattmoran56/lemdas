@@ -1,7 +1,5 @@
 # LEMDAS - Leeds Electron Microscope Data Access System
 
-[![Open in Codespaces](https://classroom.github.com/assets/launch-codespace-7f7980b617ed060a017424585567c406b6ee15c891e84e1186181d67ecf80aa0.svg)](https://classroom.github.com/open-in-codespaces?assignment_repo_id=13179005)
-
 ## Overview
 
 LEMDAS (Leeds Electron Microscope Data Access System) is a comprehensive data management platform developed in collaboration with the University of Leeds Electron Microscope team (LEMAS). The system provides academics and researchers with a centralized solution for storing, sharing, and viewing electron microscope data, facilitating collaborative research and data accessibility across the scientific community.
